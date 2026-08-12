@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#001224">
+    <title>SQL Mastery - Plataforma Premium</title>
+
+    <!-- Fuentes Premium -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@900&display=swap" rel="stylesheet">
+    
+    <!-- Librerías de CodeMirror (Editor de SQL) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    
+    <!-- Librería externa para Confeti Premium -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Hojas de Estilo Personalizadas -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Fondo Animado Estelar (Basado en tu diseño) -->
+    <div class="stars"></div>
+
+    <header>
+        <h1><span>SQL</span> MASTERY</h1>
+        <p>Entrenamiento Interactivo de Alto Rendimiento</p>
+    </header>
+
+    <div class="container-wrapper">
+        
+        <!-- Barra de Progreso y Nivel Superior -->
+        <section class="level-section card">
+            <div class="gem-wrapper">
+                <div class="gem-icon-svg-container">
+                    <!-- Icono SVG de Diamante (puedes reemplazar con el tuyo) -->
+                    <svg class="gem-svg" viewBox="0 0 100 100" fill="var(--accent-cyan)"><polygon points="50,10 90,40 50,90 10,40" /></svg>
+                </div>
+                <div class="rank-title">Rango de Analista</div>
+                <div class="rank-level">Nivel <span id="currentLevel">1</span></div>
+            </div>
+
+            <div class="level-progress-container">
+                <h3 class="mastery-title">Maestría de Datos</h3>
+                <div class="level-bar-bg">
+                    <div class="level-bar-fill" id="xpProgressFill" style="width: 0%;"></div>
+                    <div class="level-percentage-text"><span id="xpPercentage">0</span>%</div>
+                </div>
+                <div class="level-subtext">EXP: <span id="xpCurrent" class="level-subtext-highlight">0</span> / <span id="xpNextLevel">1000</span></div>
+            </div>
+
+            <div class="global-vaults">
+                <div class="vault-card">
+                    <span class="vault-icon">💰</span>
+                    <div class="vault-info">
+                        <span class="vault-label">Monedas</span>
+                        <span class="vault-value" id="coinBalance">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contenedor Principal: Reto y Consola -->
+        <main class="dashboard">
+            
+            <!-- Panel Izquierdo: Teoría y Reto -->
+            <section class="card" id="challengeCard">
+                <div class="card-header-flex">
+                    <h2>Misión Actual</h2>
+                </div>
+                
+                <div class="challenge-content">
+                    <h3 id="lessonTitle">Lección 1.5: Rangos con BETWEEN</h3>
+                    <p class="challenge-desc">
+                        El área de finanzas requiere extraer el <b>StockItemName</b> y el <b>UnitPrice</b> de la tabla <code>Warehouse_StockItems</code>.
+                    </p>
+                    <ul class="checklist-group">
+                        <li class="check-item">
+                            <span class="check-text">Filtra los productos que cuesten entre <b>50</b> y <b>100</b> dólares.</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="schema-info">
+                        <h4>Esquema de Tabla</h4>
+                        <div class="schema-box">
+                            <strong>Warehouse_StockItems</strong><br>
+                            <small>- StockItemID (INT)</small><br>
+                            <small>- StockItemName (VARCHAR)</small><br>
+                            <small>- UnitPrice (DECIMAL)</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel Derecho: Consola Interactiva SQL -->
+            <section class="card" id="consoleCard">
+                <div class="card-header-flex">
+                    <h2><span class="lightning-icon">⚡</span> Consola SQL</h2>
+                </div>
+
+                <div class="editor-container">
+                    <textarea id="sql-editor">-- Escribe tu consulta aquí
+SELECT * 
+FROM Warehouse_StockItems;</textarea>
+                </div>
+                
+                <div class="console-actions">
+                    <button id="executeBtn" class="btn-generate-routine" style="display:block;">
+                        Ejecutar Código
+                    </button>
+                </div>
+
+                <!-- Panel de Resultados -->
+                <div class="results-container">
+                    <div id="error-msg" class="auth-error"></div>
+                    <div id="success-msg" class="auth-success"></div>
+                    <div id="resultado" class="table-section"></div>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <!-- Scripts Modulares -->
+    <!-- CodeMirror & SQL.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+
+    <!-- Tus scripts personalizados -->
+    <script src="js/database.js"></script>
+    <script src="js/gamification.js"></script>
+    <script src="js/editor.js"></script>
+
+</body>
+</html>
