@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Mastery - Entrenamiento Interactivo</title>
+    <title>SQL Mastery - Entrenamiento Avanzado</title>
 
-    <!-- Tailwind CSS para el layout responsivo -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Fuentes Premium -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     
-    <!-- CodeMirror para el Editor SQL con resaltado de sintaxis -->
+    <!-- CodeMirror -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
     
-    <!-- SQL.js para la Base de Datos en el navegador -->
+    <!-- SQL.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
     
-    <!-- Confeti para celebraciones -->
+    <!-- Confeti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
             --bg-dark: #020617;
-            --panel-bg: rgba(15, 23, 42, 0.7);
+            --panel-bg: rgba(15, 23, 42, 0.75);
             --accent-cyan: #00e5ff;
             --accent-purple: #a855f7;
             --accent-green: #10b981;
             --accent-gold: #fbbf24;
+            --accent-rose: #f43f5e;
             --text-main: #f8fafc;
-            --text-muted: #94a3b8;
         }
 
         body {
@@ -41,24 +41,22 @@
             color: var(--text-main);
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 15% 50%, rgba(0, 229, 255, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.08), transparent 25%);
+                radial-gradient(circle at 15% 50%, rgba(0, 229, 255, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.05), transparent 25%);
         }
 
-        /* Títulos */
         h1, h2, h3 { font-family: 'Fredoka One', cursive; letter-spacing: 1px; }
 
-        /* Tarjetas Glassmorphism */
         .glass-panel {
             background: var(--panel-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 1.25rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         }
 
-        /* Animación del Borde de la Consola */
+        /* Editor Customization */
         .console-wrapper {
             position: relative;
             border-radius: 0.75rem;
@@ -68,42 +66,49 @@
         }
         .console-wrapper:focus-within {
             background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
         }
-
-        /* Sobrescribir CodeMirror para que sea redondeado */
         .CodeMirror {
             border-radius: 0.6rem;
-            height: 200px;
+            height: 180px;
             font-family: 'Fira Code', monospace;
             font-size: 0.95rem;
-            background: #282a36 !important;
+            background: #1e1e2e !important;
         }
 
-        /* Tablas de Resultados */
+        /* Tabla de Resultados */
         .sql-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         .sql-table th { 
-            background: rgba(0, 229, 255, 0.1); 
-            color: var(--accent-cyan); 
-            text-align: left; 
-            padding: 0.75rem; 
-            border-bottom: 2px solid var(--accent-cyan); 
-            text-transform: uppercase;
+            background: rgba(0, 229, 255, 0.1); color: var(--accent-cyan); 
+            text-align: left; padding: 0.75rem; border-bottom: 2px solid var(--accent-cyan); 
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        .sql-table td { 
-            padding: 0.75rem; 
-            border-bottom: 1px solid rgba(255,255,255,0.05); 
-            color: #cbd5e1;
-        }
-        .sql-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .sql-table td { padding: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; }
+        .sql-table tr:hover td { background: rgba(255,255,255,0.03); }
 
-        /* Scrollbars personalizados */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--accent-purple); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
 
-        /* Sistema de Toasts (Notificaciones) */
+        /* Retos Nav (Niveles de dificultad) */
+        .ex-pill {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 0.8rem; cursor: pointer;
+            border: 2px solid transparent; transition: all 0.2s;
+            opacity: 0.5;
+        }
+        .ex-pill:hover { opacity: 0.8; transform: scale(1.1); }
+        .ex-pill.active { opacity: 1; transform: scale(1.15); box-shadow: 0 0 15px currentColor; border-color: #fff; }
+        .ex-pill.completed { opacity: 1; border-color: currentColor; background-color: transparent !important; }
+        
+        .pill-easy { background: var(--accent-green); color: var(--accent-green); }
+        .pill-med  { background: var(--accent-gold); color: var(--accent-gold); }
+        .pill-hard { background: var(--accent-rose); color: var(--accent-rose); }
+        .pill-easy.active, .pill-med.active, .pill-hard.active { color: #fff; }
+
+        /* Toasts */
         .toast {
             position: fixed; bottom: 20px; right: 20px;
             padding: 1rem 1.5rem; border-radius: 1rem;
@@ -115,18 +120,17 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         .toast.show { transform: translateX(0); }
-        .toast-success { border-left: 4px solid var(--accent-green); }
-        .toast-error { border-left: 4px solid #ef4444; }
 
-        /* Lecciones en el Sidebar */
-        .lesson-item { transition: all 0.2s; border-left: 3px solid transparent; }
-        .lesson-item:hover { background: rgba(255,255,255,0.05); }
-        .lesson-item.active { 
-            background: linear-gradient(90deg, rgba(0, 229, 255, 0.15) 0%, transparent 100%);
-            border-left-color: var(--accent-cyan);
+        /* Metodología Box */
+        .method-box {
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+            border-left: 4px solid var(--accent-purple);
+            padding: 1rem; border-radius: 0 0.5rem 0.5rem 0;
         }
-        .lesson-item.completed .status-icon { color: var(--accent-green); text-shadow: 0 0 10px var(--accent-green); }
-        .lesson-item.locked { opacity: 0.5; pointer-events: none; }
+        .feedback-box {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="h-screen flex flex-col">
@@ -138,7 +142,7 @@
             </div>
             <div>
                 <h1 class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">SQL MASTERY</h1>
-                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Nivel <span id="ui-level" class="text-cyan-400">1</span> · <span id="ui-rank">Iniciado</span></p>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Módulo <span id="ui-level" class="text-cyan-400">1</span> · <span id="ui-rank">Iniciado</span></p>
             </div>
         </div>
         
@@ -149,10 +153,9 @@
                     <div class="w-32 md:w-48 h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
                         <div id="ui-xp-bar" class="h-full bg-gradient-to-r from-purple-500 to-cyan-400 transition-all duration-500 w-0"></div>
                     </div>
-                    <span id="ui-xp-text" class="text-sm font-bold text-cyan-300 w-12 text-right">0/100</span>
+                    <span id="ui-xp-text" class="text-sm font-bold text-cyan-300 w-12 text-right">0/1000</span>
                 </div>
             </div>
-            
             <div class="bg-slate-800/50 border border-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 shadow-inner">
                 <span class="text-xl drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]">🪙</span>
                 <span id="ui-coins" class="text-lg font-black text-amber-400">0</span>
@@ -162,78 +165,105 @@
 
     <main class="flex-1 flex flex-col md:flex-row gap-4 px-4 pb-4 overflow-hidden z-10">
         
-        <!-- SIDEBAR: Temario / Niveles -->
-        <aside class="glass-panel w-full md:w-80 flex flex-col shrink-0 overflow-hidden">
-            <div class="p-4 border-b border-slate-700/50">
-                <h2 class="text-lg text-white">🗺️ Ruta de Aprendizaje</h2>
+        <!-- SIDEBAR: Temario Principal -->
+        <aside class="glass-panel w-full md:w-72 flex flex-col shrink-0 overflow-hidden">
+            <div class="p-4 border-b border-slate-700/50 bg-slate-800/30">
+                <h2 class="text-lg text-white font-bold">🗺️ Temario</h2>
             </div>
-            <div id="lessons-container" class="flex-1 overflow-y-auto p-2 space-y-1">
-                <!-- Las lecciones se inyectan dinámicamente aquí -->
+            <div id="topics-container" class="flex-1 overflow-y-auto p-3 space-y-2">
+                <!-- Se inyectan los temas generales aquí -->
             </div>
         </aside>
 
-        <!-- CONTENIDO PRINCIPAL: Teoría y Práctica -->
+        <!-- AREA CENTRAL: Teoría, Misión y Editor -->
         <section class="flex-1 flex flex-col gap-4 overflow-hidden">
             
-            <!-- Panel Superior: Teoría y Reto -->
-            <div class="glass-panel p-5 shrink-0 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+            <!-- PANEL SUPERIOR: Teoría y Navegador de Ejercicios -->
+            <div class="glass-panel shrink-0 flex flex-col md:flex-row overflow-hidden max-h-[45vh]">
                 
-                <div class="flex justify-between items-start mb-2">
-                    <h2 id="lesson-title" class="text-xl text-cyan-300">Cargando módulo...</h2>
-                    <span id="lesson-reward-badge" class="bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
-                        Recompensa: --
-                    </span>
-                </div>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
-                    <div>
-                        <h3 class="text-sm text-slate-400 uppercase tracking-wider mb-2 font-bold">📖 Teoría</h3>
-                        <div id="lesson-theory" class="text-sm text-slate-300 leading-relaxed space-y-2">
-                            <!-- Teoría dinámica -->
-                        </div>
+                <!-- Columna Izquierda: Teoría Dinámica -->
+                <div class="flex-1 p-5 border-r border-slate-700/50 overflow-y-auto relative">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
+                    <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
+                    <div id="topic-theory" class="space-y-4">
+                        <!-- La teoría con la metodología de 3 pasos se inyecta aquí -->
                     </div>
-                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
-                        <h3 class="text-sm text-amber-400 uppercase tracking-wider mb-2 font-bold flex items-center gap-2">
+                </div>
+
+                <!-- Columna Derecha: Misión y Ejercicio Actual -->
+                <div class="w-full md:w-5/12 p-5 bg-slate-900/40 flex flex-col">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-700/50 pb-2">
+                        <h3 class="text-amber-400 uppercase tracking-wider font-black flex items-center gap-2">
                             <span>🎯</span> Tu Misión
                         </h3>
-                        <p id="lesson-task" class="text-sm text-white font-medium"></p>
-                        
-                        <div class="mt-4 pt-4 border-t border-slate-700/50">
-                            <span class="text-xs text-slate-400 uppercase font-bold">Esquema Disponible:</span>
-                            <div id="lesson-schema" class="mt-2 text-xs text-cyan-200 font-mono bg-black/40 p-2 rounded-lg">
-                                -- Cargando esquema...
-                            </div>
+                        <!-- Recompensas -->
+                        <div class="flex gap-2">
+                            <span id="ex-xp-badge" class="bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded text-xs font-bold border border-purple-500/30">10 XP</span>
+                            <span id="ex-coin-badge" class="bg-amber-900/50 text-amber-300 px-2 py-0.5 rounded text-xs font-bold border border-amber-500/30">5 🪙</span>
+                        </div>
+                    </div>
+                    
+                    <p id="ex-task" class="text-sm text-white font-medium leading-relaxed flex-1"></p>
+                    
+                    <div class="mt-4 pt-3 border-t border-slate-700/50">
+                        <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Esquema Requerido:</span>
+                        <div id="ex-schema" class="mt-1 text-xs text-cyan-200 font-mono bg-black/50 p-2 rounded-lg border border-slate-800">
+                            Cargando...
+                        </div>
+                    </div>
+
+                    <!-- Navegador de los 9 Ejercicios -->
+                    <div class="mt-4 pt-3 border-t border-slate-700/50">
+                        <div class="flex justify-between text-[10px] text-slate-400 uppercase font-bold mb-2">
+                            <span>Fácil</span><span>Medio</span><span>Difícil</span>
+                        </div>
+                        <div class="flex justify-between items-center gap-1" id="exercise-navigator">
+                            <!-- Los 9 botones circulares se generan por JS -->
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Panel Inferior: Consola y Resultados -->
-            <div class="flex-1 glass-panel flex flex-col overflow-hidden">
+            <div class="flex-1 glass-panel flex flex-col overflow-hidden relative">
+                
+                <!-- Feedback Dinámico Flotante (Retroalimentación Inteligente) -->
+                <div id="feedback-panel" class="hidden absolute top-4 right-4 left-4 z-20 feedback-box bg-slate-900/95 border-l-4 border-rose-500 p-4 rounded-xl shadow-2xl backdrop-blur-md">
+                    <div class="flex justify-between items-start">
+                        <div class="flex gap-3">
+                            <span class="text-2xl" id="feedback-icon">🤔</span>
+                            <div>
+                                <h4 class="text-rose-400 font-black tracking-wide uppercase text-sm mb-1" id="feedback-title">Análisis del Motor</h4>
+                                <p class="text-slate-300 text-sm font-medium" id="feedback-msg">Mensaje de error.</p>
+                            </div>
+                        </div>
+                        <button onclick="document.getElementById('feedback-panel').classList.add('hidden')" class="text-slate-400 hover:text-white">✖</button>
+                    </div>
+                </div>
+
                 <div class="p-3 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30">
                     <h2 class="text-sm text-white font-bold tracking-wide flex items-center gap-2">
                         <span class="text-cyan-400">⚡</span> CONSOLA SQL
                     </h2>
-                    <button id="run-btn" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white px-6 py-1.5 rounded-lg text-sm font-black uppercase tracking-wider shadow-[0_0_10px_rgba(0,229,255,0.3)] transition-all transform active:scale-95">
+                    <button id="run-btn" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white px-8 py-1.5 rounded-lg text-sm font-black uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all transform active:scale-95">
                         Ejecutar (▶)
                     </button>
                 </div>
                 
-                <!-- Área Dividida: Editor arriba, Resultados abajo -->
-                <div class="flex-1 flex flex-col">
-                    <div class="console-wrapper m-3">
+                <div class="flex-1 flex flex-col md:flex-row">
+                    <!-- Editor -->
+                    <div class="console-wrapper m-3 flex-1">
                         <textarea id="sql-editor"></textarea>
                     </div>
                     
-                    <div class="flex-1 bg-black/40 mx-3 mb-3 rounded-xl border border-slate-700/50 overflow-hidden flex flex-col">
-                        <div class="bg-slate-800/80 px-3 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-700/50 flex justify-between">
-                            <span>Resultados de Salida</span>
-                            <span id="row-count" class="text-cyan-500">0 filas</span>
+                    <!-- Resultados -->
+                    <div class="flex-1 bg-black/60 mx-3 mb-3 md:mt-3 rounded-xl border border-slate-700/50 overflow-hidden flex flex-col">
+                        <div class="bg-slate-800/80 px-3 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-700/50 flex justify-between items-center">
+                            <span>Salida de Datos</span>
+                            <span id="row-count" class="bg-slate-900 px-2 py-1 rounded text-cyan-400">0 filas</span>
                         </div>
-                        <div id="results-container" class="flex-1 overflow-auto p-0">
-                            <div class="flex items-center justify-center h-full text-slate-500 text-sm font-medium italic">
-                                Ejecuta una consulta para ver los resultados aquí.
+                        <div id="results-container" class="flex-1 overflow-auto p-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-sm font-medium italic p-4 text-center">
+                                Escribe tu consulta y presiona Ejecutar para evaluar los datos.
                             </div>
                         </div>
                     </div>
@@ -243,7 +273,7 @@
         </section>
     </main>
 
-    <!-- Toasts para feedback -->
+    <!-- Toasts -->
     <div id="toast" class="toast">
         <span id="toast-icon" class="text-xl">✅</span>
         <div>
@@ -253,223 +283,262 @@
     </div>
 
     <script>
-        // --- 1. ESTADO DEL JUGADOR Y GAMIFICACIÓN ---
+        // ==========================================
+        // 1. BASE DE DATOS Y ESTADO DEL JUGADOR
+        // ==========================================
+        let db;
+        let sqlEditor;
+        
         let playerState = {
             xp: 0,
             level: 1,
             coins: 0,
-            completedLessons: []
+            completedExercises: [] // Guarda IDs de ejercicios, ej: "t1_e1"
         };
 
-        const RANKS = ["Iniciado", "Aprendiz", "Explorador", "Analista", "Ingeniero", "Maestro", "Leyenda"];
-        
-        function getXpForNextLevel(level) {
-            return level * 150; // Nv1->150, Nv2->300, Nv3->450...
-        }
+        // Estado UI de navegación
+        let currentTopicIdx = 0;
+        let currentExerciseIdx = 0; // De 0 a 8
 
-        function updatePlayerUI() {
-            const nextXp = getXpForNextLevel(playerState.level);
-            const xpPct = Math.min(100, (playerState.xp / nextXp) * 100);
-            
-            document.getElementById('ui-level').textContent = playerState.level;
-            document.getElementById('ui-rank').textContent = RANKS[Math.min(playerState.level - 1, RANKS.length - 1)];
-            document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${nextXp}`;
-            document.getElementById('ui-xp-bar').style.width = `${xpPct}%`;
-            
-            // Animación de monedas
-            const coinsEl = document.getElementById('ui-coins');
-            coinsEl.textContent = playerState.coins;
-        }
-
-        function addRewards(xp, coins) {
-            playerState.xp += xp;
-            playerState.coins += coins;
-            
-            let nextXp = getXpForNextLevel(playerState.level);
-            let leveledUp = false;
-            
-            while (playerState.xp >= nextXp) {
-                playerState.xp -= nextXp;
-                playerState.level++;
-                nextXp = getXpForNextLevel(playerState.level);
-                leveledUp = true;
-            }
-
-            updatePlayerUI();
-            
-            if (leveledUp) {
-                fireConfetti(true);
-                showToast("⭐ ¡NIVEL ALCANZADO!", `Has ascendido al Nivel ${playerState.level}`, "success");
-            } else {
-                fireConfetti(false);
-                showToast("✨ ¡RETO SUPERADO!", `+${xp} XP | +${coins} Monedas`, "success");
-            }
-        }
-
-        // --- 2. CURRÍCULO (LAS LECCIONES) ---
-        // Aquí estructuramos los temas basados en el mapa mental
-        const LESSONS = [
+        // ==========================================
+        // 2. CURRÍCULO PROFUNDO (TEMAS Y 9 EJERCICIOS)
+        // ==========================================
+        const TOPICS = [
             {
-                id: "l1",
-                title: "1. El Comando SELECT Básico",
-                theory: "Para extraer datos de una base de datos relacional usamos <code>SELECT</code>. Le decimos qué columnas queremos y con <code>FROM</code> de qué tabla.<br><br><b>Sintaxis:</b><br><code>SELECT columna1, columna2 FROM Tabla;</code><br><br>Si quieres TODAS las columnas, puedes usar un asterisco (<code>*</code>).",
-                task: "Extrae TODAS las columnas (usando *) de la tabla de clientes llamada 'Sales_Customers'.",
-                schemaText: "Sales_Customers (CustomerID, CustomerName, CreditLimit)",
-                defaultCode: "-- Escribe tu consulta aquí\n",
-                expectedQuery: "SELECT * FROM Sales_Customers;",
-                xpReward: 50,
-                coinReward: 10
+                id: "t1",
+                title: "1. Fundamentos y Análisis Lógico",
+                theory: `
+                    <div class="method-box mb-5">
+                        <h4 class="text-white font-bold mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><span>🧠</span> Metodología de Construcción</h4>
+                        <p class="text-sm text-slate-300 mb-3">En SQL Server, toda consulta comienza entendiendo de qué tabla sacaremos la información (<code class="text-pink-400">FROM</code>), qué columnas queremos ver (<code class="text-pink-400">SELECT</code>) y qué condición deben cumplir esos datos (<code class="text-pink-400">WHERE</code>).</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h4 class="text-cyan-400 font-bold mb-2 uppercase tracking-wide text-xs">📖 Desglose del Código</h4>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 shadow-sm">
+                                <b class="text-pink-400 font-black">SELECT:</b> Le dice al motor qué columnas exactas queremos (separadas por comas).<br>
+                                <div class="mt-2 text-amber-400 bg-amber-900/20 p-2 rounded border border-amber-700/50 flex gap-2 items-start">
+                                    <span>💡</span>
+                                    <span><b>Buena práctica:</b> Evita usar <code class="text-white font-bold">SELECT *</code> en entornos de producción, ya que extrae todo y consume memoria innecesaria.</span>
+                                </div>
+                            </li>
+                            <li class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 shadow-sm">
+                                <b class="text-pink-400 font-black">FROM:</b> Indica el esquema (ej. <i>Sales</i>) y la tabla (ej. <i>Customers</i>).
+                            </li>
+                            <li class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 shadow-sm">
+                                <b class="text-pink-400 font-black">WHERE:</b> Es nuestro filtro. Los operadores relacionales comunes son <code class="text-cyan-300 font-bold">>, <, =, >=, <=</code> y <code class="text-cyan-300 font-bold"><></code> (diferente de).
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-cyan-400 font-bold mb-2 uppercase tracking-wide text-xs">💻 Ejemplo Práctico [MOD05]</h4>
+                        <p class="text-xs text-slate-400 mb-2 italic">"Dame el nombre y el límite de crédito de los clientes que tienen un límite mayor a $5,000".</p>
+                        <pre class="bg-black/80 p-3 rounded-lg text-xs font-mono text-emerald-300 border border-slate-700 shadow-inner">
+<span class="text-pink-400">SELECT</span> CustomerName, CreditLimit
+<span class="text-pink-400">FROM</span> Sales_Customers
+<span class="text-pink-400">WHERE</span> CreditLimit > 5000;</pre>
+                    </div>
+                `,
+                // 9 EJERCICIOS: 3 FÁCILES, 3 MEDIOS, 3 DIFÍCILES
+                exercises: [
+                    // FÁCIL (1-3)
+                    { id: "t1_e1", diff: "easy", task: "<b class='text-cyan-300'>El Escenario:</b><br>El departamento de cobranzas necesita contactar urgentemente a ciertos clientes. Te piden que extraigas una lista de la tabla <code>Sales_Customers</code>.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Escribe una consulta que devuelva el ID del cliente (<code>CustomerID</code>), el nombre (<code>CustomerName</code>) y su límite (<code>CreditLimit</code>).<br>Pero SOLO queremos a aquellos clientes cuyo límite de crédito sea exactamente igual a <b>3000</b> dólares.", expectedQuery: "SELECT CustomerID, CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit = 3000;", xp: 10, coins: 5, schema: "Sales_Customers (CustomerID, CustomerName, CreditLimit)" },
+                    { id: "t1_e2", diff: "easy", task: "La forma más rápida de ver qué contiene una tabla es extraerlo todo. Utilizando el comodín (*), extrae todas las columnas de la tabla <code>Warehouse_StockItems</code>.", expectedQuery: "SELECT * FROM Warehouse_StockItems;", xp: 15, coins: 5, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)" },
+                    
+                    // DIFÍCIL (7-9)
+                    { id: "t1_e7", diff: "hard", task: "Si una tabla tiene millones de registros, solo queremos ver una muestra. Usa la cláusula <code>LIMIT 3</code> al final de tu consulta para extraer solo las primeras 3 filas de TODAS las columnas de <code>Warehouse_StockItems</code>.", expectedQuery: "SELECT * FROM Warehouse_StockItems LIMIT 3;", xp: 80, coins: 40, schema: "Warehouse_StockItems (...)" },
+                    { id: "t1_e8", diff: "hard", task: "Concatenación: Junta texto fijo con datos. En SQLite se usa <code>||</code>. Extrae una sola columna que diga: <code>'El articulo ' || StockItemName</code> y renómbrala como <code>Descripcion</code>.", expectedQuery: "SELECT 'El articulo ' || StockItemName AS Descripcion FROM Warehouse_StockItems;", xp: 100, coins: 50, schema: "Warehouse_StockItems (StockItemName)" },
+                    { id: "t1_e9", diff: "hard", task: "El Reto Final del Módulo: Crea un reporte maestro. Escribe un comentario <code>-- Reporte Final</code>. Extrae el nombre como <code>Producto</code>, extrae la <code>Quantity</code> y extrae el valor total en inventario (<code>UnitPrice * Quantity</code>) renombrado como <code>ValorTotal</code>. Muestra solo los primeros 2 registros usando <code>LIMIT 2</code>.", expectedQuery: "-- Reporte Final\nSELECT StockItemName AS Producto, Quantity, UnitPrice * Quantity AS ValorTotal FROM Warehouse_StockItems LIMIT 2;", xp: 150, coins: 100, schema: "Warehouse_StockItems (StockItemName, Quantity, UnitPrice)" }
+                ]
             },
             {
-                id: "l2",
-                title: "2. Filtrando con WHERE",
-                theory: "Si extraes todo, el servidor colapsará. Usa <code>WHERE</code> para filtrar filas que cumplan una condición lógica matemática (<code>=, >, <, >=, <=, <></code>).<br><br><b>Ejemplo:</b><br><code>SELECT Nombre FROM Productos WHERE Precio > 100;</code>",
-                task: "Muestra el nombre del cliente (CustomerName) y su límite de crédito (CreditLimit) para aquellos clientes cuyo límite de crédito sea MAYOR a 2000.",
-                schemaText: "Sales_Customers (CustomerID, CustomerName, CreditLimit)",
-                defaultCode: "SELECT \nFROM Sales_Customers\nWHERE ;",
-                expectedQuery: "SELECT CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit > 2000;",
-                xpReward: 80,
-                coinReward: 15
-            },
-            {
-                id: "l3",
-                title: "3. Rangos financieros con BETWEEN",
-                theory: "Cuando analizas rangos (como fechas o precios), usar <code>>= AND <=</code> es redundante. El operador <code>BETWEEN</code> incluye los extremos y hace el código limpio.<br><br><b>Sintaxis:</b><br><code>WHERE Columna BETWEEN Valor1 AND Valor2;</code>",
-                task: "El área de almacén necesita una auditoría. Muestra el nombre del artículo (StockItemName) y su precio (UnitPrice) de la tabla 'Warehouse_StockItems' filtrando SOLAMENTE los que cuesten entre 50 y 100 dólares.",
-                schemaText: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice)",
-                defaultCode: "-- Reporte de gama media\nSELECT \nFROM Warehouse_StockItems\nWHERE ;",
-                expectedQuery: "SELECT StockItemName, UnitPrice FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 50 AND 100;",
-                xpReward: 100,
-                coinReward: 25
-            },
-            {
-                id: "l4",
-                title: "4. Agrupando Datos (GROUP BY)",
-                theory: "Para extraer métricas, debes agrupar filas que comparten un valor y aplicar 'Funciones de Agregado' como <code>SUM()</code>, <code>COUNT()</code> o <code>AVG()</code>.<br><br>El motor procesará el <code>FROM</code>, agrupará con <code>GROUP BY</code> y luego calculará el <code>SELECT</code>.",
-                task: "Queremos saber cuánto dinero tenemos en inventario agrupado por proveedor. Muestra el SupplierID y la SUMA de UnitPrice de la tabla 'Warehouse_StockItems' agrupado por proveedor.",
-                schemaText: "Warehouse_StockItems (StockItemID, StockItemName, SupplierID, UnitPrice)",
-                defaultCode: "SELECT SupplierID, SUM(UnitPrice) AS TotalInversion\nFROM Warehouse_StockItems\nGROUP BY ;",
-                expectedQuery: "SELECT SupplierID, SUM(UnitPrice) FROM Warehouse_StockItems GROUP BY SupplierID;",
-                xpReward: 150,
-                coinReward: 40
+                id: "t2",
+                title: "2. Filtros: WHERE y BETWEEN",
+                theory: `
+                    <div class="method-box mb-5">
+                        <h4 class="text-white font-bold mb-2 uppercase tracking-wide text-sm">Respondiendo a: ¿Qué requisitos deben cumplir?</h4>
+                        <p class="text-sm text-slate-300 mb-2">Aquí entra en juego la cláusula <code class="text-pink-400 font-bold">WHERE</code>. Se coloca DESPUÉS del <code>FROM</code>.</p>
+                        <p class="text-sm text-slate-300"><b>El Operador BETWEEN:</b> Como mencionaste en la teoría, en vez de usar <code>Precio >= 50 AND Precio <= 100</code>, el operador <code>BETWEEN</code> hace el código limpio y profesional, e incluye los extremos.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-cyan-400 font-bold mb-2 uppercase tracking-wide text-xs">📖 Diccionario Básico</h4>
+                        <ul class="text-sm text-slate-300 space-y-2">
+                            <li><code class="text-pink-400">WHERE columna = valor</code>: Igualdad exacta. (Para texto usar comillas simples <code>'texto'</code>).</li>
+                            <li><code class="text-pink-400">WHERE columna > valor</code>: Mayor que. Operadores válidos: <code><, >=, <=, <></code>(diferente).</li>
+                            <li><code class="text-pink-400">BETWEEN X AND Y</code>: Rango continuo entre X e Y.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-4">
+                        <h4 class="text-cyan-400 font-bold mb-1">💡 Ejemplo Práctico</h4>
+                        <pre class="bg-black/80 p-3 rounded-lg text-xs font-mono text-emerald-300 border border-slate-700">SELECT StockItemName
+FROM Warehouse_StockItems
+WHERE UnitPrice BETWEEN 10 AND 50;</pre>
+                    </div>
+                `,
+                exercises: [
+                    // FÁCIL
+                    { id: "t2_e1", diff: "easy", task: "¿Qué artículos cuestan más de 100 dólares? Extrae todas las columnas (<code>*</code>) donde el <code>UnitPrice</code> sea mayor a 100.", expectedQuery: "SELECT * FROM Warehouse_StockItems WHERE UnitPrice > 100;", xp: 10, coins: 5, schema: "Warehouse_StockItems (UnitPrice, ...)" },
+                    { id: "t2_e2", diff: "easy", task: "Busca un producto exacto. Extrae el <code>UnitPrice</code> donde el <code>StockItemName</code> sea igual a <code>'Webcam HD'</code>. (Usa comillas simples para el texto).", expectedQuery: "SELECT UnitPrice FROM Warehouse_StockItems WHERE StockItemName = 'Webcam HD';", xp: 15, coins: 5, schema: "Warehouse_StockItems (StockItemName, UnitPrice)" },
+                    { id: "t2_e3", diff: "easy", task: "Aplica el operador lógico <code>AND</code>. Muestra el <code>StockItemName</code> donde el <code>UnitPrice</code> sea mayor o igual a 50 AND menor o igual a 100.", expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems WHERE UnitPrice >= 50 AND UnitPrice <= 100;", xp: 20, coins: 10, schema: "Warehouse_StockItems (...)" },
+                    // MEDIO
+                    { id: "t2_e4", diff: "med", task: "¡Refactoriza el código anterior! Aplica el operador <code>BETWEEN</code> para extraer el <code>StockItemName</code> donde el <code>UnitPrice</code> esté entre 50 y 100.", expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 50 AND 100;", xp: 30, coins: 15, schema: "Warehouse_StockItems (...)" },
+                    { id: "t2_e5", diff: "med", task: "Como vimos en la metodología, añade un comentario <code>-- Rango Gama Media</code>. Luego, extrae <code>StockItemName</code> y <code>UnitPrice</code> donde el precio esté <code>BETWEEN</code> 50 <code>AND</code> 100.", expectedQuery: "-- Rango Gama Media\nSELECT StockItemName, UnitPrice FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 50 AND 100;", xp: 40, coins: 20, schema: "Warehouse_StockItems (...)" },
+                    { id: "t2_e6", diff: "med", task: "Filtros con NOT: Extrae todas las columnas de productos cuyo precio NO esté entre 50 y 100. Pista: Usa <code>NOT BETWEEN</code>.", expectedQuery: "SELECT * FROM Warehouse_StockItems WHERE UnitPrice NOT BETWEEN 50 AND 100;", xp: 50, coins: 25, schema: "Warehouse_StockItems (...)" },
+                    // DIFÍCIL
+                    { id: "t2_e7", diff: "hard", task: "Combina Filtros y Alias. Extrae el nombre como <code>Producto</code> de aquellos que tengan una <code>Quantity</code> menor a 20 o mayor a 100. (Pista: Usa el operador <code>OR</code>).", expectedQuery: "SELECT StockItemName AS Producto FROM Warehouse_StockItems WHERE Quantity < 20 OR Quantity > 100;", xp: 80, coins: 40, schema: "Warehouse_StockItems (StockItemName, Quantity)" },
+                    { id: "t2_e8", diff: "hard", task: "Usa <code>IN</code> para listas: En lugar de usar múltiples OR, extrae el <code>StockItemName</code> donde el <code>StockItemID</code> se encuentre en la lista (101, 103, 105).", expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems WHERE StockItemID IN (101, 103, 105);", xp: 100, coins: 50, schema: "Warehouse_StockItems (StockItemID, StockItemName)" },
+                    { id: "t2_e9", diff: "hard", task: "El Reto Final: Comenta <code>-- Auditoria Finanzas</code>. Extrae nombre como <code>Item</code>, precio, y cantidad. Las reglas son: Precio entre 20 y 90, Y que la cantidad sea diferente de 50. Ordena tus ideas lógicas.", expectedQuery: "-- Auditoria Finanzas\nSELECT StockItemName AS Item, UnitPrice, Quantity FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 20 AND 90 AND Quantity <> 50;", xp: 150, coins: 100, schema: "Warehouse_StockItems (...)" }
+                ]
             }
         ];
 
-        let currentLessonIndex = 0;
-
-        // --- 3. MOTOR DE BASE DE DATOS (SQL.js) ---
-        let db;
-        let sqlEditor;
-
-        async function initDatabase() {
-            try {
-                const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
-                db = new SQL.Database();
-                
-                // Cargar datos ficticios corporativos
-                db.run(`
-                    CREATE TABLE Sales_Customers (CustomerID INT, CustomerName VARCHAR, CreditLimit DECIMAL);
-                    INSERT INTO Sales_Customers VALUES (1, 'Tailwind Toys', 1500.00);
-                    INSERT INTO Sales_Customers VALUES (2, 'Wingtip Toys', 3500.00);
-                    INSERT INTO Sales_Customers VALUES (3, 'A Datum Corporation', 800.00);
-                    INSERT INTO Sales_Customers VALUES (4, 'Contoso Retail', 5000.00);
-
-                    CREATE TABLE Warehouse_StockItems (StockItemID INT, StockItemName VARCHAR, SupplierID INT, UnitPrice DECIMAL);
-                    INSERT INTO Warehouse_StockItems VALUES (101, 'USB Drive 8GB', 1, 15.00);
-                    INSERT INTO Warehouse_StockItems VALUES (102, 'Teclado Mecánico', 2, 85.50);
-                    INSERT INTO Warehouse_StockItems VALUES (103, 'Monitor 24 pulgadas', 2, 150.00);
-                    INSERT INTO Warehouse_StockItems VALUES (104, 'Ratón Inalámbrico', 1, 55.00);
-                    INSERT INTO Warehouse_StockItems VALUES (105, 'Silla Ergonómica', 3, 120.00);
-                    INSERT INTO Warehouse_StockItems VALUES (106, 'Cable HDMI', 1, 12.00);
-                    INSERT INTO Warehouse_StockItems VALUES (107, 'Webcam HD', 2, 60.00);
-                `);
-                console.log("DB Inicializada.");
-                
-                // Iniciar UI
-                initEditor();
-                renderSidebar();
-                loadLesson(0);
-                updatePlayerUI();
-                
-            } catch (err) {
-                console.error("Error al iniciar SQLite:", err);
-                showToast("Error de Sistema", "No se pudo cargar el motor SQL.", "error");
-            }
-        }
-
-        // --- 4. INTERFAZ Y LÓGICA DE EVENTOS ---
-        function initEditor() {
+        // ==========================================
+        // 3. INICIALIZACIÓN DEL SISTEMA Y MOTOR SQL
+        // ==========================================
+        async function initApp() {
+            // 1. Inicializar CodeMirror
             sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
                 mode: "text/x-sql",
                 theme: "dracula",
                 lineNumbers: true,
-                lineWrapping: true,
-                matchBrackets: true
+                lineWrapping: true
             });
-            
+
+            // 2. Event Listeners
             document.getElementById('run-btn').addEventListener('click', executeUserQuery);
+
+            // 3. Cargar Motor SQLite en Memoria (Ultra rápido, cero backend)
+            try {
+                const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
+                db = new SQL.Database();
+                
+                // Poblar BD con la tabla de Warehouse_StockItems enriquecida
+                db.run(`
+                    CREATE TABLE Sales_Customers (CustomerID INT, CustomerName VARCHAR, CreditLimit DECIMAL);
+                    INSERT INTO Sales_Customers VALUES (1, 'Tailwind Toys', 1500.00);
+                    INSERT INTO Sales_Customers VALUES (2, 'Wingtip Toys', 3000.00);
+                    INSERT INTO Sales_Customers VALUES (3, 'A Datum Corporation', 3000.00);
+                    INSERT INTO Sales_Customers VALUES (4, 'Contoso Retail', 5000.00);
+
+                    CREATE TABLE Warehouse_StockItems (StockItemID INT, StockItemName VARCHAR, UnitPrice DECIMAL, Quantity INT);
+                    INSERT INTO Warehouse_StockItems VALUES (101, 'USB Drive 8GB', 15.00, 200);
+                    INSERT INTO Warehouse_StockItems VALUES (102, 'Teclado Mecanico', 85.50, 45);
+                    INSERT INTO Warehouse_StockItems VALUES (103, 'Monitor 24 pulgadas', 150.00, 15);
+                    INSERT INTO Warehouse_StockItems VALUES (104, 'Raton Inalambrico', 55.00, 80);
+                    INSERT INTO Warehouse_StockItems VALUES (105, 'Silla Ergonomica', 120.00, 10);
+                    INSERT INTO Warehouse_StockItems VALUES (106, 'Cable HDMI', 12.00, 50);
+                    INSERT INTO Warehouse_StockItems VALUES (107, 'Webcam HD', 60.00, 30);
+                `);
+                
+                // 4. Renderizar UI
+                renderTopicsSidebar();
+                loadExercise(0, 0); // Inicia en Módulo 1, Ejercicio 1
+
+            } catch (err) {
+                showFeedback("Error Crítico", "El motor SQL WebAssembly no pudo cargar. Comprueba tu conexión.", "error");
+            }
         }
 
-        function renderSidebar() {
-            const container = document.getElementById('lessons-container');
+        // ==========================================
+        // 4. LÓGICA DE INTERFAZ Y NAVEGACIÓN
+        // ==========================================
+        function renderTopicsSidebar() {
+            const container = document.getElementById('topics-container');
             container.innerHTML = '';
             
-            LESSONS.forEach((lesson, index) => {
-                const isCompleted = playerState.completedLessons.includes(lesson.id);
-                const isActive = index === currentLessonIndex;
-                const isLocked = index > 0 && !playerState.completedLessons.includes(LESSONS[index-1].id); // Bloquear si la anterior no está hecha
-                
-                const div = document.createElement('div');
-                div.className = `lesson-item p-3 rounded-lg cursor-pointer flex items-center justify-between ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}`;
-                
-                let icon = isLocked ? '🔒' : (isCompleted ? '✅' : '▶️');
-                
-                div.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="status-icon text-sm ${isCompleted ? '' : 'text-slate-500'}">${icon}</span>
-                        <span class="text-sm font-bold ${isActive ? 'text-white' : 'text-slate-400'}">${lesson.title}</span>
-                    </div>
-                `;
-                
-                if (!isLocked) {
-                    div.onclick = () => loadLesson(index);
-                }
-                
-                container.appendChild(div);
+            TOPICS.forEach((topic, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3 rounded-xl mb-2 transition-all font-bold text-sm ${idx === currentTopicIdx ? 'bg-cyan-900/40 text-cyan-300 border border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.15)]' : 'bg-slate-800/40 text-slate-400 border border-transparent hover:bg-slate-700/50'}`;
+                btn.innerHTML = topic.title;
+                btn.onclick = () => loadExercise(idx, 0);
+                container.appendChild(btn);
             });
         }
 
-        function loadLesson(index) {
-            currentLessonIndex = index;
-            const lesson = LESSONS[index];
+        function loadExercise(topicIdx, exIdx) {
+            currentTopicIdx = topicIdx;
+            currentExerciseIdx = exIdx;
+            const topic = TOPICS[topicIdx];
+            const exercise = topic.exercises[exIdx];
+
+            // Render Teoría (Se asume que cambia por Tema, no por ejercicio, pero mostramos el bloque)
+            document.getElementById('topic-title').textContent = topic.title;
+            document.getElementById('topic-theory').innerHTML = topic.theory;
+
+            // Render Misión
+            document.getElementById('ex-task').innerHTML = exercise.task;
+            document.getElementById('ex-schema').innerHTML = exercise.schema;
+            document.getElementById('ex-xp-badge').textContent = `+${exercise.xp} XP`;
+            document.getElementById('ex-coin-badge').textContent = `+${exercise.coins} 🪙`;
             
-            document.getElementById('lesson-title').textContent = lesson.title;
-            document.getElementById('lesson-theory').innerHTML = lesson.theory;
-            document.getElementById('lesson-task').textContent = lesson.task;
-            document.getElementById('lesson-schema').textContent = lesson.schemaText;
-            document.getElementById('lesson-reward-badge').textContent = `Recompensa: ⚡ ${lesson.xpReward} XP | 🪙 ${lesson.coinReward}`;
-            
-            sqlEditor.setValue(lesson.defaultCode);
-            document.getElementById('results-container').innerHTML = '<div class="flex items-center justify-center h-full text-slate-500 text-sm font-medium italic">Ejecuta tu consulta para ver los resultados.</div>';
+            // Render Navegador de 9 Píldoras
+            renderExercisePills();
+
+            // Reset Consola
+            sqlEditor.setValue("-- Escribe tu código SQL aquí\n");
+            document.getElementById('results-container').innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-slate-500 text-sm font-medium italic p-4 text-center">Analizando sector ${topicIdx+1}.${exIdx+1}... Esperando instrucciones.</div>`;
             document.getElementById('row-count').textContent = '0 filas';
+            document.getElementById('feedback-panel').classList.add('hidden');
             
-            renderSidebar();
+            // Actualizar Sidebar
+            renderTopicsSidebar();
         }
 
-        // --- 5. EJECUCIÓN Y VALIDACIÓN ---
+        function renderExercisePills() {
+            const nav = document.getElementById('exercise-navigator');
+            nav.innerHTML = '';
+            const exercises = TOPICS[currentTopicIdx].exercises;
+
+            exercises.forEach((ex, idx) => {
+                const isCompleted = playerState.completedExercises.includes(ex.id);
+                const isActive = idx === currentExerciseIdx;
+                
+                // Determinar clase base por dificultad
+                let baseClass = "";
+                if (ex.diff === "easy") baseClass = "pill-easy";
+                else if (ex.diff === "med") baseClass = "pill-med";
+                else baseClass = "pill-hard";
+
+                // Armar estado de clase
+                let stateClass = "";
+                if (isActive) stateClass = "active";
+                else if (isCompleted) stateClass = "completed";
+
+                const btn = document.createElement('div');
+                btn.className = `ex-pill ${baseClass} ${stateClass}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => loadExercise(currentTopicIdx, idx);
+                
+                // Icono check si completó pero no está activo
+                if (isCompleted && !isActive) {
+                    btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                }
+
+                nav.appendChild(btn);
+            });
+        }
+
+        // ==========================================
+        // 5. MOTOR DE RETROALIMENTACIÓN INTELIGENTE
+        // ==========================================
         function executeUserQuery() {
             const query = sqlEditor.getValue().trim();
-            if(!query) return;
+            if (!query) return;
 
             const resContainer = document.getElementById('results-container');
             const rowCountEl = document.getElementById('row-count');
-            const currentLesson = LESSONS[currentLessonIndex];
+            const topic = TOPICS[currentTopicIdx];
+            const exercise = topic.exercises[currentExerciseIdx];
+
+            document.getElementById('feedback-panel').classList.add('hidden');
 
             try {
-                // 1. Ejecutar query del usuario
+                // Ejecución
                 const userResult = db.exec(query);
                 
-                // Renderizar tabla visual
+                // Renderizado Gráfico
                 if (userResult.length > 0) {
                     const columns = userResult[0].columns;
                     const values = userResult[0].values;
@@ -481,101 +550,151 @@
                     
                     values.forEach(row => {
                         tableHTML += '<tr>';
-                        row.forEach(val => tableHTML += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`);
+                        row.forEach(val => tableHTML += `<td>${val !== null ? val : '<i>NULL</i>'}</td>`);
                         tableHTML += '</tr>';
                     });
                     tableHTML += '</tbody></table>';
-                    
                     resContainer.innerHTML = tableHTML;
                 } else {
                     rowCountEl.textContent = '0 filas';
-                    resContainer.innerHTML = '<div class="p-4 text-cyan-400 font-bold">✔️ Consulta ejecutada correctamente (0 filas devueltas).</div>';
+                    resContainer.innerHTML = `<div class="p-4 text-emerald-400 font-bold flex items-center gap-2"><span>✔️</span> Ejecución sin errores (La tabla devolvió 0 resultados basándose en tu código).</div>`;
                 }
 
-                // 2. Validación Gamificada (La magia del sistema)
-                // Obtenemos el resultado de la consulta maestra oculta para comparar
+                // ==========================================
+                // LÓGICA DE VALIDACIÓN (Comparación Profunda)
+                // ==========================================
                 let isCorrect = false;
                 try {
-                    const expectedResult = db.exec(currentLesson.expectedQuery);
-                    // Comparamos los resultados serializados en JSON.
-                    // Esto evalúa que los DATOS devueltos sean exactamente los mismos,
-                    // sin importar si el usuario escribió la sintaxis en mayúsculas, minúsculas, con espacios extras, etc.
-                    if (JSON.stringify(userResult) === JSON.stringify(expectedResult)) {
+                    // Validar si piden comentarios
+                    let hasCommentIfRequired = true;
+                    if (exercise.expectedQuery.includes("--")) {
+                        if (!query.includes("--")) hasCommentIfRequired = false;
+                    }
+
+                    // Ignoramos comentarios para comparar la data pura
+                    const cleanExpected = exercise.expectedQuery.replace(/--.*?\n/g, "");
+                    const cleanUser = query.replace(/--.*?\n/g, "");
+
+                    const expectedResult = db.exec(cleanExpected);
+                    
+                    // Comparamos el objeto JSON resultante para asegurar que trajo la misma info
+                    if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && hasCommentIfRequired) {
                         isCorrect = true;
+                    } else if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && !hasCommentIfRequired) {
+                         showFeedback("Falta Documentación", "Los datos extraídos son correctos, pero olvidaste poner el comentario requerido (usando --).", "hint");
+                         return; // Detiene la asignación de puntos
                     }
                 } catch(e) {
-                    console.error("Error en query maestro:", e);
+                    console.error("Error en query maestro (Fallo del sistema de evaluación)", e);
                 }
 
                 if (isCorrect) {
-                    if (!playerState.completedLessons.includes(currentLesson.id)) {
-                        // Recompensa por primera vez
-                        playerState.completedLessons.push(currentLesson.id);
-                        addRewards(currentLesson.xpReward, currentLesson.coinReward);
-                        renderSidebar();
+                    if (!playerState.completedExercises.includes(exercise.id)) {
+                        playerState.completedExercises.push(exercise.id);
+                        grantRewards(exercise.xp, exercise.coins);
+                        renderExercisePills();
+                        showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1} de este módulo.`, "success");
+                        fireConfetti();
                         
-                        // Si hay siguiente lección, avisar
-                        if(currentLessonIndex < LESSONS.length - 1) {
-                            setTimeout(() => {
-                                showToast("Módulo Desbloqueado", "Nueva lección disponible en tu ruta.", "success");
-                            }, 2500);
+                        // Auto-avanzar si no es el último
+                        if (currentExerciseIdx < 8) {
+                            setTimeout(() => loadExercise(currentTopicIdx, currentExerciseIdx + 1), 2000);
+                        } else {
+                            setTimeout(() => showToast("🏆 Módulo Dominado", "Has completado los 9 ejercicios.", "success"), 2000);
                         }
                     } else {
-                        showToast("¡Excelente!", "Consulta correcta, pero ya habías cobrado la recompensa.", "success");
+                        showToast("Consulta Válida", "Código correcto, pero la recompensa ya fue cobrada.", "hint");
                     }
+                } else {
+                    // Retroalimentación si el query corre pero los datos no son los esperados
+                    showFeedback("Análisis Lógico", "Tu código no tiene errores de sintaxis, pero los datos devueltos no coinciden con lo que solicita la misión. Revisa si elegiste las columnas correctas o si la condición WHERE es precisa.", "hint");
                 }
 
             } catch (err) {
+                // ==========================================
+                // RETROALIMENTACIÓN DE SINTAXIS AMIGABLE
+                // ==========================================
                 rowCountEl.textContent = 'Error';
-                resContainer.innerHTML = `<div class="p-4 text-red-400 font-bold font-mono text-sm bg-red-900/20 h-full border-t-2 border-red-500">
-                    ❌ ERROR DEL MOTOR SQL:<br><br>${err.message}
-                </div>`;
-                showToast("Error de Sintaxis", "Revisa tu código SQL y vuelve a intentar.", "error");
+                resContainer.innerHTML = '';
+                
+                let errorMsg = err.message;
+                let friendlyMsg = "";
+                let title = "Error de Sintaxis";
+
+                if (errorMsg.includes("no such table")) {
+                    friendlyMsg = "Estás intentando sacar datos de una tabla que no existe. Revisa lo que escribiste en el comando <code>FROM</code>.";
+                    title = "Tabla no encontrada";
+                } else if (errorMsg.includes("no such column")) {
+                    friendlyMsg = "La base de datos no encuentra una de las columnas que escribiste en tu <code>SELECT</code>. Verifica la ortografía según el 'Esquema Disponible'.";
+                    title = "Columna Inexistente";
+                } else if (errorMsg.includes("syntax error")) {
+                    friendlyMsg = "El motor SQL no entiende el código. Revisa que las palabras clave como SELECT o FROM estén bien escritas, y que tu consulta termine en punto y coma (;).";
+                } else {
+                    friendlyMsg = "El motor detectó un problema: " + errorMsg;
+                }
+
+                showFeedback(title, friendlyMsg, "error");
             }
         }
 
-        // --- 6. EFECTOS ESPECIALES Y TOASTS ---
+        // ==========================================
+        // 6. SISTEMA DE GAMIFICACIÓN VISUAL
+        // ==========================================
+        function grantRewards(xp, coins) {
+            playerState.xp += xp;
+            playerState.coins += coins;
+            
+            let xpNext = playerState.level * 1000;
+            if (playerState.xp >= xpNext) {
+                playerState.xp -= xpNext;
+                playerState.level++;
+                xpNext = playerState.level * 1000;
+                showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success");
+            }
+
+            // Animar contadores
+            const xpPct = (playerState.xp / xpNext) * 100;
+            document.getElementById('ui-level').textContent = playerState.level;
+            document.getElementById('ui-xp-bar').style.width = `${xpPct}%`;
+            document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`;
+            document.getElementById('ui-coins').textContent = playerState.coins;
+        }
+
+        function showFeedback(title, msg, type) {
+            const panel = document.getElementById('feedback-panel');
+            const iconEl = document.getElementById('feedback-icon');
+            const titleEl = document.getElementById('feedback-title');
+            
+            document.getElementById('feedback-msg').innerHTML = msg;
+            titleEl.textContent = title;
+
+            if (type === "error") {
+                panel.className = "absolute top-4 right-4 left-4 z-20 feedback-box bg-slate-900/95 border-l-4 border-rose-500 p-4 rounded-xl shadow-2xl backdrop-blur-md";
+                iconEl.textContent = "🛑";
+                titleEl.className = "text-rose-400 font-black tracking-wide uppercase text-sm mb-1";
+            } else {
+                panel.className = "absolute top-4 right-4 left-4 z-20 feedback-box bg-slate-900/95 border-l-4 border-amber-500 p-4 rounded-xl shadow-2xl backdrop-blur-md";
+                iconEl.textContent = "💡";
+                titleEl.className = "text-amber-400 font-black tracking-wide uppercase text-sm mb-1";
+            }
+            
+            panel.classList.remove('hidden');
+        }
+
         function showToast(title, message, type) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-title').textContent = title;
             document.getElementById('toast-msg').textContent = message;
-            document.getElementById('toast-icon').textContent = type === 'success' ? '✅' : '⚠️';
-            
-            toast.className = `toast show ${type === 'success' ? 'toast-success' : 'toast-error'}`;
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
+            toast.className = `toast show`;
+            setTimeout(() => toast.classList.remove('show'), 3500);
         }
 
-        function fireConfetti(isLevelUp) {
-            const duration = isLevelUp ? 3000 : 1500;
-            const end = Date.now() + duration;
-
-            (function frame() {
-                confetti({
-                    particleCount: 5,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: ['#00e5ff', '#a855f7', '#fbbf24']
-                });
-                confetti({
-                    particleCount: 5,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: ['#00e5ff', '#a855f7', '#fbbf24']
-                });
-
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
+        function fireConfetti() {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00e5ff', '#a855f7', '#10b981', '#fbbf24'] });
         }
 
-        // Arrancar la aplicación al cargar la ventana
-        window.addEventListener('DOMContentLoaded', initDatabase);
+        // Arrancar
+        window.addEventListener('DOMContentLoaded', initApp);
 
     </script>
 </body>
