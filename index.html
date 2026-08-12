@@ -57,7 +57,7 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         }
 
-        /* Editor Customization */
+        /* Editor Customization - TERMINAL NEGRO PURO */
         .console-wrapper {
             position: relative;
             border-radius: 0.75rem;
@@ -70,7 +70,6 @@
             box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
         }
         
-        /* NUEVO: Forzamos el negro puro venciendo al tema Dracula (Fondo y barra de números) */
         .CodeMirror, .cm-s-dracula.CodeMirror, .cm-s-dracula .CodeMirror-gutters {
             background-color: #000000 !important;
             border-right: 1px solid rgba(255,255,255,0.05) !important;
@@ -82,9 +81,18 @@
             font-family: 'Fira Code', monospace;
             font-size: 0.95rem;
         }
-        .CodeMirror-placeholder {
-            color: #475569 !important; /* Color opaco para el texto fantasma */
-        }
+        .CodeMirror-placeholder { color: #475569 !important; }
+        .cm-s-dracula span.cm-keyword { color: #569cd6 !important; font-weight: bold; }
+        .cm-s-dracula span.cm-number { color: #b5cea8 !important; }
+        .cm-s-dracula span.cm-string { color: #ce9178 !important; }
+        .cm-s-dracula span.cm-operator { color: #d4d4d4 !important; }
+        .cm-s-dracula span.cm-punctuation { color: #d4d4d4 !important; }
+        .cm-s-dracula span.cm-variable, 
+        .cm-s-dracula span.cm-variable-2,
+        .cm-s-dracula span.cm-variable-3,
+        .cm-s-dracula span.cm-def { color: #ffffff !important; }
+        .cm-s-dracula.CodeMirror { color: #ffffff !important; }
+        .cm-s-dracula span.cm-comment { color: #608b4e !important; font-style: italic; }
 
         /* Tabla de Resultados */
         .sql-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
@@ -96,103 +104,82 @@
         .sql-table td { padding: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; }
         .sql-table tr:hover td { background: rgba(255,255,255,0.03); }
 
-        /* Scrollbars */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--accent-purple); border-radius: 4px; }
 
-        /* Retos Nav (Niveles de dificultad) */
+        /* Retos Nav (Línea de Tiempo) */
         .ex-pill {
-            width: 32px; height: 32px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 900; font-size: 0.8rem; cursor: pointer;
-            border: 2px solid transparent; transition: all 0.2s;
-            opacity: 0.5;
+            width: 2.25rem; height: 2.25rem;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 0.85rem; cursor: pointer; border: 2px solid;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: #0f172a; position: relative; z-index: 10;
         }
-        .ex-pill:hover { opacity: 0.8; transform: scale(1.1); }
-        .ex-pill.active { opacity: 1; transform: scale(1.15); box-shadow: 0 0 15px currentColor; border-color: #fff; }
-        .ex-pill.completed { opacity: 1; border-color: currentColor; background-color: transparent !important; }
+        .ex-pill:hover { transform: scale(1.15); z-index: 20; }
+        .ex-pill.active { transform: scale(1.2); box-shadow: 0 0 20px currentColor; color: #ffffff !important; }
+        .ex-pill.completed { background-color: currentColor !important; color: #ffffff !important; border-color: transparent; box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
         
-        .pill-easy { background: var(--accent-green); color: var(--accent-green); }
-        .pill-med  { background: var(--accent-gold); color: var(--accent-gold); }
-        .pill-hard { background: var(--accent-rose); color: var(--accent-rose); }
-        .pill-easy.active, .pill-med.active, .pill-hard.active { color: #fff; }
+        .pill-easy { border-color: var(--accent-green); color: var(--accent-green); }
+        .pill-easy:hover { box-shadow: 0 0 15px rgba(16,185,129,0.4); background: rgba(16,185,129,0.15); }
+        .pill-easy.active { background: var(--accent-green); }
+        .pill-med  { border-color: var(--accent-gold); color: var(--accent-gold); }
+        .pill-med:hover { box-shadow: 0 0 15px rgba(251,191,36,0.4); background: rgba(251,191,36,0.15); }
+        .pill-med.active { background: var(--accent-gold); }
+        .pill-hard { border-color: var(--accent-rose); color: var(--accent-rose); }
+        .pill-hard:hover { box-shadow: 0 0 15px rgba(244,63,94,0.4); background: rgba(244,63,94,0.15); }
+        .pill-hard.active { background: var(--accent-rose); }
 
         /* Toasts */
         .toast {
-            position: fixed; bottom: 20px; right: 20px;
-            padding: 1rem 1.5rem; border-radius: 1rem;
+            position: fixed; bottom: 20px; right: 20px; padding: 1rem 1.5rem; border-radius: 1rem;
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white; font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.1); color: white; font-weight: bold;
             transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 50; display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 50; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         .toast.show { transform: translateX(0); }
 
-        /* Metodología Box */
-        .method-box {
-            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
-            border-left: 4px solid var(--accent-purple);
-            padding: 1rem; border-radius: 0 0.5rem 0.5rem 0;
-        }
-        .feedback-box {
-            animation: slideIn 0.3s ease-out forwards;
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        #sidebar { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @media (min-width: 768px) { #sidebar.collapsed { width: 4.5rem !important; } #sidebar.collapsed #sidebar-chevron { transform: rotate(180deg); } }
+        @media (max-width: 767px) { #sidebar.collapsed { height: 4rem !important; } #sidebar.collapsed #sidebar-chevron { transform: rotate(-90deg); } }
+        #sidebar.collapsed #topics-container, #sidebar.collapsed .temario-text { display: none; opacity: 0; }
+        #sidebar-chevron { transition: transform 0.4s ease; }
 
-        /* Contenedores de Pistas y Errores Premium */
-        .error-panel {
-            background: #2a1215;
-            border: 1px solid rgba(220, 38, 38, 0.4);
-            border-radius: 0.5rem;
-            animation: slideIn 0.3s ease-out forwards;
-        }
-        .tech-detail-box {
-            background: #11131a;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 0.5rem;
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-        .hint-box {
-            background: #1e3a8a;
-            border-left: 4px solid #3b82f6;
-            padding: 0.75rem 1rem;
-            border-radius: 0.25rem;
-            margin-top: 0.5rem;
-            color: white;
-            font-size: 0.85rem;
-            animation: slideIn 0.3s ease-out forwards;
-        }
-        .hint-title {
-            font-weight: 900;
-            color: #93c5fd;
-            margin-bottom: 0.25rem;
-            font-size: 0.8rem;
-        }
+        .error-panel { background: #2a1215; border: 1px solid rgba(220, 38, 38, 0.4); border-radius: 0.5rem; animation: slideIn 0.3s ease-out forwards; }
+        .tech-detail-box { background: #11131a; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; overflow: hidden; margin-top: 0.5rem; }
+        .hint-box { background: #1e3a8a; border-left: 4px solid #3b82f6; padding: 0.75rem 1rem; border-radius: 0.25rem; margin-top: 0.5rem; color: white; font-size: 0.85rem; animation: slideIn 0.3s ease-out forwards; }
+        .hint-title { font-weight: 900; color: #93c5fd; margin-bottom: 0.25rem; font-size: 0.8rem; }
 
-        /* NUEVO: Efecto Premium para los bloques de código de ejemplo */
         .code-glow {
-            background-color: #000000;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            transition: all 0.3s ease;
+            background-color: #000000; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 229, 255, 0.3); transition: all 0.3s ease;
         }
-        .code-glow:hover {
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.8);
-            border-color: rgba(0, 229, 255, 0.6);
+        .code-glow:hover { box-shadow: 0 0 25px rgba(0, 229, 255, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.8); border-color: rgba(0, 229, 255, 0.6); }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .shake-animation { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
+
+        .quiz-option { border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s ease; cursor: pointer; }
+        .quiz-option:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); }
+        .quiz-option.correct { background: rgba(16, 185, 129, 0.2); border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        .quiz-option.correct .quiz-circle { border-color: #10b981; background: #10b981; }
+        .quiz-option.incorrect { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
+        .quiz-option.incorrect .quiz-circle { border-color: #ef4444; background: #ef4444; }
     </style>
 </head>
 <body class="h-screen flex flex-col">
 
     <header class="glass-panel m-4 p-4 flex flex-col md:flex-row justify-between items-center z-10 shrink-0">
         <div class="flex items-center gap-4 mb-4 md:mb-0">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">
-                👩‍💻
-            </div>
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">👩‍💻</div>
             <div>
                 <h1 class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">SQL MASTERY</h1>
                 <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Módulo <span id="ui-level" class="text-cyan-400">1</span> · <span id="ui-rank">Iniciado</span></p>
@@ -218,130 +205,120 @@
 
     <main class="flex-1 flex flex-col md:flex-row gap-4 px-4 pb-4 overflow-hidden z-10">
         
-        <!-- SIDEBAR: Temario Principal -->
-        <aside class="glass-panel w-full md:w-72 flex flex-col shrink-0 overflow-hidden">
-            <div class="p-4 border-b border-slate-700/50 bg-slate-800/30">
-                <h2 class="text-lg text-white font-bold">🗺️ Temario</h2>
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="glass-panel w-full md:w-72 flex flex-col shrink-0 overflow-hidden">
+            <div class="p-4 border-b border-slate-700/50 bg-slate-800/30 flex justify-between items-center cursor-pointer hover:bg-slate-700/60 transition-colors" onclick="window.toggleSidebar()" title="Ocultar/Mostrar Temario">
+                <h2 class="text-lg text-white font-bold flex items-center gap-2"><span>🗺️</span> <span class="temario-text">Temario</span></h2>
+                <span id="sidebar-chevron" class="text-slate-400 font-black text-xl leading-none">◀</span>
             </div>
-            <div id="topics-container" class="flex-1 overflow-y-auto p-3 space-y-2">
-                <!-- Se inyectan los temas generales aquí -->
-            </div>
+            <div id="topics-container" class="flex-1 overflow-y-auto p-3 space-y-2 transition-opacity duration-300"></div>
         </aside>
 
-        <!-- AREA CENTRAL: Teoría, Misión y Editor -->
+        <!-- AREA CENTRAL -->
         <section class="flex-1 flex flex-col gap-4 overflow-hidden">
             
-            <!-- PANEL SUPERIOR: Teoría y Navegador de Ejercicios -->
-            <div class="glass-panel shrink-0 flex flex-col md:flex-row overflow-hidden max-h-[45vh]">
+            <!-- PANEL SUPERIOR: Teoría y Misión -->
+            <div class="glass-panel shrink-0 flex flex-col md:flex-row overflow-hidden max-h-[50vh]">
                 
-                <!-- Columna Izquierda: Teoría Dinámica -->
-                <div class="flex-1 p-5 border-r border-slate-700/50 overflow-y-auto relative">
+                <!-- Columna Izquierda: Teoría -->
+                <div class="flex-1 p-5 border-r border-slate-700/50 overflow-y-auto relative" id="theory-scroll-container">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
                     <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
-                    <div id="topic-theory" class="space-y-4">
-                        <!-- La teoría con la metodología de 3 pasos se inyecta aquí -->
-                    </div>
+                    <div id="topic-theory" class="space-y-4 pb-4"></div>
                 </div>
 
-                <!-- Columna Derecha: Misión y Ejercicio Actual -->
-                <div class="w-full md:w-5/12 p-5 bg-slate-900/40 flex flex-col">
-                    <div class="flex justify-between items-center mb-3 border-b border-slate-700/50 pb-2">
-                        <h3 class="text-amber-400 uppercase tracking-wider font-black flex items-center gap-2">
-                            <span>🎯</span> Tu Misión
-                        </h3>
-                        <!-- Recompensas -->
+                <!-- Columna Derecha: Misión -->
+                <div class="w-full md:w-1/2 p-5 bg-slate-900/40 flex flex-col overflow-y-auto">
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-700/50 pb-2 shrink-0">
+                        <h3 class="text-amber-400 uppercase tracking-wider font-black flex items-center gap-2"><span>🎯</span> Tu Misión</h3>
                         <div class="flex gap-2">
                             <span id="ex-xp-badge" class="bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded text-xs font-bold border border-purple-500/30">10 XP</span>
                             <span id="ex-coin-badge" class="bg-amber-900/50 text-amber-300 px-2 py-0.5 rounded text-xs font-bold border border-amber-500/30">5 🪙</span>
                         </div>
                     </div>
                     
-                    <!-- NUEVO: Cambiado de <p> a <div> y añadido overflow-y-auto y padding derecho -->
-                    <div id="ex-task" class="text-sm text-white font-medium leading-relaxed flex-1 overflow-y-auto pr-3"></div>
+                    <div id="ex-task" class="text-sm leading-relaxed mb-4"></div>
                     
-                    <div class="mt-4 pt-3 border-t border-slate-700/50">
-                        <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Esquema Disponible:</span>
-                        <div id="ex-schema" class="mt-1 text-xs text-cyan-200 font-mono bg-black/50 p-2 rounded-lg border border-slate-800">
-                            Cargando...
+                    <div class="mt-auto pt-3 shrink-0">
+                        <!-- Esquema Disponible Premium -->
+                        <div class="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(16,185,129,0.1)] relative overflow-hidden group hover:border-emerald-400/50 transition-all duration-300">
+                            <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-emerald-400 to-cyan-500"></div>
+                            
+                            <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-md">
+                                <span class="text-emerald-400">🗃️</span> Esquema Disponible
+                            </h4>
+                            
+                            <div class="relative mb-3 mt-2">
+                                <div class="absolute -top-2.5 left-3 bg-emerald-950 border border-emerald-800 px-2 py-0.5 rounded text-[9px] text-emerald-400 font-bold uppercase tracking-widest z-10 flex items-center gap-1"><span>⚙️</span> Estructura</div>
+                                <div id="ex-schema" class="bg-[#050505] border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)] overflow-x-auto pt-4 pb-3 px-4 rounded-xl text-xs font-mono leading-relaxed text-emerald-200">Cargando...</div>
+                            </div>
+                            
+                            <div id="ex-schema-desc" class="mt-2"></div>
                         </div>
                     </div>
 
-                    <!-- Navegador de los 9 Ejercicios -->
-                    <div class="mt-4 pt-3 border-t border-slate-700/50">
-                        <div class="flex justify-between text-[10px] text-slate-400 uppercase font-bold mb-2">
-                            <span>Fácil</span><span>Medio</span><span>Difícil</span>
+                    <!-- Navegador Línea de Tiempo -->
+                    <div class="mt-4 shrink-0 bg-slate-900/60 border border-slate-700/50 rounded-2xl p-4 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] relative overflow-hidden group hover:border-slate-600/50 transition-colors">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500 opacity-40"></div>
+                        <div class="flex justify-between text-[10px] uppercase font-black mb-3 tracking-widest">
+                            <span class="text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">Fácil</span>
+                            <span class="text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]">Medio</span>
+                            <span class="text-rose-400 drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]">Difícil</span>
                         </div>
-                        <div class="flex justify-between items-center gap-1" id="exercise-navigator">
-                            <!-- Los 9 botones circulares se generan por JS -->
+                        <div class="relative">
+                            <div class="absolute top-1/2 left-2 right-2 h-0.5 bg-slate-700/50 -translate-y-1/2 rounded-full z-0"></div>
+                            <div class="flex justify-between items-center gap-1 relative z-10" id="exercise-navigator"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- PANEL INFERIOR: Consola SQL -->
             <div class="flex-1 glass-panel flex flex-col overflow-hidden relative">
-                
                 <div class="p-3 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30">
-                    <h2 class="text-sm text-white font-bold tracking-wide flex items-center gap-2">
-                        <span class="text-cyan-400">⚡</span> CONSOLA SQL
-                    </h2>
+                    <h2 class="text-sm text-white font-bold tracking-wide flex items-center gap-2"><span class="text-cyan-400">⚡</span> CONSOLA SQL</h2>
+                    <button onclick="window.openDatabaseModal()" class="bg-cyan-900/40 hover:bg-cyan-800/60 text-cyan-300 border border-cyan-700/50 px-3 py-1 rounded text-xs font-bold transition-colors shadow-[0_0_10px_rgba(0,229,255,0.1)] flex items-center gap-1"><span>👁️</span> Ver Tablas y Datos</button>
                 </div>
                 
                 <div class="flex-1 flex flex-col md:flex-row overflow-y-auto">
-                    <!-- Columna Izquierda: Editor, Controles, Errores y Pistas -->
                     <div class="m-3 flex-1 flex flex-col gap-4 overflow-y-auto pr-2">
                         <div class="text-sm font-bold text-white">Escribe tu consulta</div>
-                        <div class="console-wrapper shrink-0">
-                            <textarea id="sql-editor"></textarea>
-                        </div>
+                        <div class="console-wrapper shrink-0"><textarea id="sql-editor"></textarea></div>
                         
-                        <!-- Controles -->
                         <div class="flex items-center gap-4 shrink-0">
-                            <button id="run-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-bold transition-colors shadow-lg">
-                                Ejecutar consulta
-                            </button>
-                            <button id="reset-btn" class="text-blue-400 hover:text-blue-300 text-sm font-bold transition-colors">
-                                Restablecer
-                            </button>
+                            <button id="run-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-bold transition-colors shadow-lg">Ejecutar consulta</button>
+                            <button id="next-btn" class="hidden bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-lg text-sm font-bold transition-colors shadow-lg shadow-emerald-500/20">Siguiente Reto ➔</button>
+                            <button id="reset-btn" class="text-blue-400 hover:text-blue-300 text-sm font-bold transition-colors">Restablecer</button>
                         </div>
 
-                        <!-- Panel de Error Premium -->
                         <div id="error-container" class="error-panel p-4 hidden shrink-0">
                             <h4 class="text-white font-bold text-base mb-1">La consulta no se pudo ejecutar</h4>
-                            <p id="error-friendly-msg" class="text-slate-300 text-sm mb-3">Este ejercicio permite: SELECT. Revisa la sintaxis y el orden de las cláusulas.</p>
-                            
+                            <p id="error-friendly-msg" class="text-slate-300 text-sm mb-3"></p>
                             <div class="tech-detail-box">
-                                <button onclick="toggleTechDetail()" class="w-full text-left px-4 py-2 text-sm font-bold text-white flex items-center gap-2 hover:bg-white/5 transition-colors">
+                                <button onclick="window.toggleTechDetail()" class="w-full text-left px-4 py-2 text-sm font-bold text-white flex items-center gap-2 hover:bg-white/5 transition-colors">
                                     <span id="tech-detail-icon" class="text-xs transition-transform duration-200">▶</span> Ver detalle técnico
                                 </button>
-                                <div id="tech-detail-content" class="hidden px-4 py-3 border-t border-slate-700/50 text-red-400 font-mono text-xs overflow-x-auto">
-                                    Mensaje de error crudo del motor.
-                                </div>
+                                <div id="tech-detail-content" class="hidden px-4 py-3 border-t border-slate-700/50 text-red-400 font-mono text-xs overflow-x-auto"></div>
                             </div>
                         </div>
 
-                        <!-- Panel de Pistas -->
                         <div id="hints-container" class="hidden flex-col gap-2 shrink-0 pb-4">
                             <div class="flex gap-4 text-xs font-bold mt-2">
-                                <button id="btn-next-hint" onclick="revealHint()" class="text-blue-400 hover:text-blue-300 transition-colors">Ver otra pista (<span id="hints-left">2</span>)</button>
+                                <button id="btn-next-hint" onclick="window.revealHint()" class="text-blue-400 hover:text-blue-300 transition-colors">Ver otra pista (<span id="hints-left">2</span>)</button>
                                 <span id="no-more-hints" class="text-slate-500 hidden">No quedan más pistas</span>
-                                <button id="btn-show-solution" onclick="revealSolution()" class="text-blue-400 hover:text-blue-300 transition-colors">Ver la solución</button>
+                                <button id="btn-show-solution" onclick="window.revealSolution()" class="text-blue-400 hover:text-blue-300 transition-colors">Ver la solución</button>
                             </div>
-                            <div id="hints-list" class="flex flex-col gap-2 mt-2">
-                                <!-- Las pistas inyectadas van aquí -->
-                            </div>
+                            <div id="hints-list" class="flex flex-col gap-2 mt-2"></div>
                         </div>
                     </div>
                     
-                    <!-- Columna Derecha: Resultados de la Tabla -->
                     <div class="flex-1 bg-black/60 mx-3 mb-3 mt-8 md:mt-3 rounded-xl border border-slate-700/50 overflow-hidden flex flex-col min-h-[250px]">
                         <div class="bg-slate-800/80 px-3 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-700/50 flex justify-between items-center">
                             <span>Salida de Datos</span>
                             <span id="row-count" class="bg-slate-900 px-2 py-1 rounded text-cyan-400">0 filas</span>
                         </div>
                         <div id="results-container" class="flex-1 overflow-auto p-0 relative">
-                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-sm font-medium italic p-4 text-center">
-                                Escribe tu consulta y presiona Ejecutar para evaluar los datos.
-                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-sm font-medium italic p-4 text-center">Escribe tu consulta y presiona Ejecutar para evaluar los datos.</div>
                         </div>
                     </div>
                 </div>
@@ -350,7 +327,7 @@
         </section>
     </main>
 
-    <!-- Toasts -->
+    <!-- Toasts (Restaurado el ID correcto) -->
     <div id="toast" class="toast">
         <span id="toast-icon" class="text-xl">✅</span>
         <div>
@@ -359,139 +336,449 @@
         </div>
     </div>
 
+    <!-- Modal Explorador BD -->
+    <div id="db-modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl w-11/12 max-w-4xl max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-transform duration-300" id="db-modal-card">
+            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50 rounded-t-2xl">
+                <h2 class="text-lg font-black text-cyan-400 flex items-center gap-2"><span>👁️</span> Explorador de Base de Datos Requerida</h2>
+                <button onclick="window.closeDatabaseModal()" class="text-slate-400 hover:text-white text-3xl font-bold leading-none">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 space-y-8" id="db-modal-content"></div>
+        </div>
+    </div>
+
     <script>
-        // ==========================================
-        // 1. BASE DE DATOS Y ESTADO DEL JUGADOR
-        // ==========================================
         let db;
         let sqlEditor;
         
-        let playerState = {
-            xp: 0,
-            level: 1,
-            coins: 0,
-            completedExercises: [] // Guarda IDs de ejercicios, ej: "t1_e1"
-        };
-
-        // Estado UI de navegación
+        let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [] };
         let currentTopicIdx = 0;
-        let currentExerciseIdx = 0; // De 0 a 8
+        let currentExerciseIdx = 0;
         let revealedHintsCount = 0;
 
-        // ==========================================
-        // 2. CURRÍCULO PROFUNDO (TEMAS Y 18 EJERCICIOS COMPLETOS)
-        // ==========================================
+        // Función Helper para crear el diseño Premium de las misiones y el esquema
+        window.createMissionHTML = function(escenario, requerimiento, tip, schemaLine, descObj) {
+            let descHtml = `<p class="text-sm text-emerald-100/80 mb-3 italic">${descObj.title}</p><div class="bg-black/50 p-3 rounded-lg shadow-inner space-y-2">`;
+            descObj.cols.forEach(col => {
+                descHtml += `<div class="flex items-start gap-2"><code class="text-cyan-300 font-bold bg-cyan-900/30 border border-cyan-500/30 px-1.5 py-0.5 rounded text-xs">${col.name}</code><span class="text-sm text-emerald-50 mt-0.5">${col.desc}</span></div>`;
+            });
+            descHtml += `</div>`;
+
+            const taskHtml = `
+                <div class="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-slate-600/50 transition-all duration-300 mb-4">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-purple-600"></div>
+                    <h4 class="text-cyan-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span class="text-lg">🏢</span> El Escenario</h4>
+                    <p class="text-sm text-slate-300 leading-relaxed">${escenario}</p>
+                </div>
+                <div class="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-5 shadow-lg relative overflow-hidden group hover:border-slate-600/50 transition-all duration-300 mb-4">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-500 to-rose-500"></div>
+                    <h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span class="text-lg">⚙️</span> El Requerimiento</h4>
+                    <div class="bg-black/40 p-4 rounded-xl border border-slate-800 shadow-inner">
+                        <p class="text-sm text-white font-medium leading-relaxed">${requerimiento}</p>
+                    </div>
+                </div>
+                <div class="bg-blue-900/20 border-l-4 border-blue-500 p-3 rounded-r-xl shadow-md">
+                    <h4 class="text-blue-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>💡</span> Tip de Misión</h4>
+                    <p class="text-xs text-blue-200">${tip}</p>
+                </div>
+            `;
+            return { taskHtml, schemaLine, descHtml };
+        };
+
+        // Función Global de Quizzes
+        window.checkQuiz = function(btn, isCorrect, feedbackMsg) {
+            const container = btn.closest('.quiz-container');
+            const buttons = container.querySelectorAll('.quiz-option');
+            buttons.forEach(b => b.disabled = true);
+            const feedbackDiv = container.querySelector('.quiz-feedback');
+            feedbackDiv.classList.remove('hidden');
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
+                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
+                fireConfetti();
+                grantRewards(5, 1);
+            } else {
+                btn.classList.add('incorrect', 'shake-animation');
+                feedbackDiv.innerHTML = `<span class="text-red-400 text-lg">❌</span> <span class="text-red-300">${feedbackMsg}</span>`;
+                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-red-900/30 border border-red-500/50 flex items-start gap-2";
+                setTimeout(() => {
+                    btn.classList.remove('incorrect', 'shake-animation');
+                    feedbackDiv.classList.add('hidden');
+                    buttons.forEach(b => b.disabled = false);
+                }, 2000);
+            }
+        };
+
         const TOPICS = [
             {
                 id: "t1",
-                title: "1. Fundamentos y Análisis Lógico",
+                title: "🚀 Anatomía de una Consulta Maestra",
                 theory: `
-                    <div class="method-box mb-5">
-                        <h4 class="text-white font-bold mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><span>🧠</span> Metodología de Construcción</h4>
-                        <p class="text-sm text-slate-300 mb-3">En SQL Server, toda consulta comienza entendiendo de qué tabla sacaremos la información (<code class="text-pink-400">FROM</code>), qué columnas queremos ver (<code class="text-pink-400">SELECT</code>) y qué condición deben cumplir esos datos (<code class="text-pink-400">WHERE</code>).</p>
+                    <!-- Introducción Glassmorphism Premium -->
+                    <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div>
+                        <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-md">
+                            <span>🧠</span> Fundamentos Estructurales
+                        </h4>
+                        <p class="text-sm text-slate-300 mb-4 leading-relaxed">En SQL Server, cada consulta que escribes es una solicitud formal a la base de datos. Para que el motor entienda qué necesitas, debes estructurar tu pensamiento como un Arquitecto de Datos:</p>
+                        
+                        <div class="bg-black/50 rounded-xl p-4 shadow-inner border border-slate-800 space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-cyan-900 border border-cyan-500 flex items-center justify-center text-cyan-300 text-xs font-bold shadow-[0_0_10px_rgba(0,229,255,0.3)]">1</div>
+                                <p class="text-sm text-slate-300">¿Qué información específica necesito ver? <span class="text-cyan-500 font-bold ml-1">-> Define tu SELECT.</span></p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-cyan-900 border border-cyan-500 flex items-center justify-center text-cyan-300 text-xs font-bold shadow-[0_0_10px_rgba(0,229,255,0.3)]">2</div>
+                                <p class="text-sm text-slate-300">¿En qué tabla o contenedor está guardada? <span class="text-cyan-500 font-bold ml-1">-> Define tu FROM.</span></p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-cyan-900 border border-cyan-500 flex items-center justify-center text-cyan-300 text-xs font-bold shadow-[0_0_10px_rgba(0,229,255,0.3)]">3</div>
+                                <p class="text-sm text-slate-300">¿Qué requisitos deben cumplir los registros? <span class="text-cyan-500 font-bold ml-1">-> Define tu WHERE.</span></p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-5">
-                        <h4 class="text-cyan-400 font-bold mb-2 uppercase tracking-wide text-xs">📖 Desglose del Código</h4>
-                        <ul class="space-y-3 text-sm text-slate-300">
-                            <li class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 shadow-sm">
-                                <b class="text-pink-400 font-black">SELECT:</b> Le dice al motor qué columnas exactas queremos (separadas por comas).<br>
-                                <div class="mt-2 text-amber-400 bg-amber-900/20 p-2 rounded border border-amber-700/50 flex gap-2 items-start">
-                                    <span>💡</span>
-                                    <span><b>Buena práctica:</b> Evita usar <code class="text-white font-bold">SELECT *</code> en entornos de producción, ya que extrae todo y consume memoria innecesaria.</span>
+                    <!-- Desglose de Código Interactivo Premium -->
+                    <div class="mb-6">
+                        <h4 class="text-cyan-400 font-bold mb-4 uppercase tracking-wide text-xs flex items-center gap-2"><span>📖</span> Diccionario de Comandos Base</h4>
+                        <div class="grid gap-3">
+                            <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-pink-500/40 hover:shadow-[0_0_20px_rgba(244,114,182,0.15)] transition-all">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                                    <code class="bg-black/50 border border-pink-500/50 text-pink-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">SELECT</code>
+                                    <p class="text-sm text-slate-300">Le dice al motor qué columnas exactas queremos que se proyecten en pantalla (separadas por comas).</p>
                                 </div>
-                            </li>
-                            <li class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 shadow-sm">
-                                <b class="text-pink-400 font-black">FROM:</b> Indica el esquema (ej. <i>Sales</i>) y la tabla (ej. <i>Customers</i>).
-                            </li>
-                            <li class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 shadow-sm">
-                                <b class="text-pink-400 font-black">WHERE:</b> Es nuestro filtro. Los operadores relacionales comunes son <code class="text-cyan-300 font-bold">>, <, =, >=, <=</code> y <code class="text-cyan-300 font-bold"><></code> (diferente de).
-                            </li>
-                        </ul>
+                            </div>
+                            <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                                    <code class="bg-black/50 border border-blue-500/50 text-blue-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">FROM</code>
+                                    <p class="text-sm text-slate-300">Indica el esquema (ej. <span class="text-cyan-300">Sales</span>) y la tabla de origen de los datos (ej. <span class="text-cyan-300">Customers</span>).</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-emerald-500/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                                    <code class="bg-black/50 border border-emerald-500/50 text-emerald-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">WHERE</code>
+                                    <p class="text-sm text-slate-300">Es nuestro filtro condicional matemático evaluando fila por fila (<code class="text-cyan-300 font-bold">&gt;</code>, <code class="text-cyan-300 font-bold">&lt;</code>, <code class="text-cyan-300 font-bold">=</code>, <code class="text-cyan-300 font-bold">&lt;&gt;</code>).</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <h4 class="text-cyan-400 font-bold mb-2 uppercase tracking-wide text-xs">💻 Ejemplo Práctico [MOD05]</h4>
-                        <p class="text-xs text-slate-400 mb-2 italic">"Dame el nombre y el límite de crédito de los clientes que tienen un límite mayor a $5,000".</p>
-                        <pre class="code-glow p-3 rounded-lg text-xs font-mono">
-<span class="text-blue-400 font-bold">SELECT</span> <span class="text-white">CustomerName</span><span class="text-slate-400">,</span> <span class="text-white">CreditLimit</span>
-<span class="text-blue-400 font-bold">FROM</span> <span class="text-white">Sales_Customers</span>
-<span class="text-blue-400 font-bold">WHERE</span> <span class="text-white">CreditLimit</span> <span class="text-slate-400">&gt;</span> <span class="text-green-300">5000</span><span class="text-slate-400">;</span></pre>
+                    <!-- Buenas Prácticas Premium -->
+                    <div class="mb-6 bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(99,102,241,0.1)] relative overflow-hidden group hover:border-indigo-400/50 transition-all duration-300">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-purple-500"></div>
+                        <h4 class="text-indigo-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span>🛡️</span> Buenas Prácticas Corporativas</h4>
+                        <p class="text-sm text-slate-300 mb-3">En un entorno de producción, documentar tu código es obligatorio. En SQL Server usamos:</p>
+                        <div class="bg-black/40 rounded-xl p-3 shadow-inner border border-slate-800 space-y-2">
+                            <div class="flex items-center gap-3">
+                                <code class="text-green-400 font-bold bg-green-900/20 px-2 py-1 rounded text-xs border border-green-500/30">-- Texto</code>
+                                <span class="text-sm text-slate-300">Comenta la línea (Notas rápidas).</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <code class="text-green-400 font-bold bg-green-900/20 px-2 py-1 rounded text-xs border border-green-500/30">/* Texto */</code>
+                                <span class="text-sm text-slate-300">Comenta bloques grandes (Cabeceras).</span>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-slate-700/50 text-xs text-indigo-200">
+                                💡 <b>Alerta:</b> Evita usar <code class="text-white font-bold">SELECT *</code> en producción, satura la memoria del servidor.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Error Habitual Premium -->
+                    <div class="mb-6 bg-slate-900/80 border border-red-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(239,68,68,0.15)] relative overflow-hidden group hover:border-red-400/50 transition-all duration-300">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-red-500 to-rose-600"></div>
+                        <h4 class="text-red-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]">
+                            <span class="text-lg">🛑</span> Un error habitual [Sintaxis Fatal]
+                        </h4>
+                        <p class="text-sm text-slate-300 mb-4 font-medium">Asumir que el motor de base de datos puede adivinar qué tabla quieres consultar si solo escribes el nombre de la columna.</p>
+                        
+                        <div class="relative mb-4">
+                            <div class="absolute -top-3 left-3 bg-red-950 border border-red-800 px-2 py-0.5 rounded text-[10px] text-red-400 font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div>
+                            <pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono"><span class="text-blue-400 font-bold">SELECT</span> <span class="text-white">CustomerName</span><span class="text-slate-400">;</span></pre>
+                        </div>
+                        
+                        <div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4">
+                            <h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en la vida real</h5>
+                            <p class="text-sm text-slate-300">Un sistema bancario puede tener 50 tablas diferentes con una columna 'CustomerName'. Si omites el <code class="text-pink-400 font-bold">FROM</code>, el servidor SQL rechazará compilar tu código de inmediato protegiendo el sistema de consultas ambiguas.</p>
+                        </div>
+
+                        <div class="relative">
+                            <div class="absolute -top-3 left-3 bg-emerald-950 border border-emerald-800 px-2 py-0.5 rounded text-[10px] text-emerald-400 font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div>
+                            <pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono leading-relaxed"><span class="text-blue-400 font-bold">SELECT</span> 
+    <span class="text-white">CustomerName</span> <span class="text-green-400 italic">-- Columna específica solicitada</span>
+<span class="text-blue-400 font-bold">FROM</span> 
+    <span class="text-white">Sales_Customers</span><span class="text-slate-400">;</span> <span class="text-green-400 italic">-- Tabla de origen declarada correctamente</span></pre>
+                        </div>
+                    </div>
+
+                    <!-- Ejemplo Práctico Premium -->
+                    <div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div>
+                        <h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]">
+                            <span>💡</span> Ejemplo Práctico de Extracción
+                        </h4>
+                        
+                        <div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner mb-4">
+                            <p class="text-sm text-amber-100/80 italic flex items-start gap-2">
+                                <span class="text-lg not-italic mt-0.5">🏢</span> "El equipo de auditoría te pide extraer el nombre y el límite de crédito de los clientes que tengan un riesgo financiero con límite superior a 5,000 dólares".
+                            </p>
+                        </div>
+
+                        <div class="relative mt-2">
+                            <div class="absolute -top-3 right-3 bg-blue-900/80 border border-blue-500/50 px-2 py-0.5 rounded text-[9px] text-blue-200 font-bold uppercase tracking-widest z-10 shadow-md">Solución SQL</div>
+                            <pre class="code-glow overflow-x-auto pt-5 pb-4 px-4 rounded-xl text-sm font-mono leading-relaxed"><span class="text-blue-400 font-bold">SELECT</span> 
+    <span class="text-white">CustomerName</span><span class="text-slate-400">,</span> 
+    <span class="text-white">CreditLimit</span>
+<span class="text-blue-400 font-bold">FROM</span> 
+    <span class="text-white">Sales_Customers</span>
+<span class="text-blue-400 font-bold">WHERE</span> 
+    <span class="text-white">CreditLimit</span> <span class="text-slate-400">&gt;</span> <span class="text-green-300">5000</span><span class="text-slate-400">;</span></pre>
+                        </div>
+                    </div>
+
+                    <!-- QUIZZES TEMA 1 -->
+                    <div class="mt-8 space-y-6">
+                        <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                            <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz 1/3: Propósito del SELECT</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">¿Para qué sirve exactamente la cláusula SELECT en una instrucción de base de datos?</p>
+                            <div class="space-y-2">
+                                <button onclick="window.checkQuiz(this, true, '¡Correcto! El SELECT determina las columnas específicas que se proyectarán en pantalla.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">A) Para indicar qué columnas exactas queremos visualizar.</span>
+                                </button>
+                                <button onclick="window.checkQuiz(this, false, 'Incorrecto. La ubicación de la tabla se especifica con FROM.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">B) Para declarar el nombre exacto de la tabla de origen.</span>
+                                </button>
+                            </div>
+                            <div class="quiz-feedback hidden"></div>
+                        </div>
+                        <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                            <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz 2/3: Buenas Prácticas</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">¿Por qué se considera una mala práctica abusar de SELECT * en producción?</p>
+                            <div class="space-y-2">
+                                <button onclick="window.checkQuiz(this, false, 'Incorrecto. Sí es sintácticamente válido, pero ineficiente.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">A) Porque el motor SQL arroja error de sintaxis automático.</span>
+                                </button>
+                                <button onclick="window.checkQuiz(this, true, '¡Correcto! Extraer columnas innecesarias satura la red.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">B) Porque extrae datos innecesarios y consume memoria excesiva.</span>
+                                </button>
+                            </div>
+                            <div class="quiz-feedback hidden"></div>
+                        </div>
+                        <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                            <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz 3/3: El rol del WHERE</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">¿En qué momento actúa la cláusula WHERE dentro de la ejecución de una consulta?</p>
+                            <div class="space-y-2">
+                                <button onclick="window.checkQuiz(this, true, '¡Correcto! El WHERE evalúa fila por fila y descarta las que no cumplan la condición.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">A) Evaluando fila por fila para aplicar filtros estrictos.</span>
+                                </button>
+                                <button onclick="window.checkQuiz(this, false, 'Incorrecto. El ordenamiento final se hace con ORDER BY.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">B) Ordenando alfabéticamente los resultados devueltos.</span>
+                                </button>
+                            </div>
+                            <div class="quiz-feedback hidden"></div>
+                        </div>
                     </div>
                 `,
                 exercises: [
-                    // FÁCIL (1-3)
-                    { id: "t1_e1", diff: "easy", task: "<b class='text-cyan-300'>El Escenario:</b><br>El departamento de cobranzas necesita contactar urgentemente a ciertos clientes. Te piden que extraigas una lista de la base de datos.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Escribe una consulta que devuelva el ID del cliente (<code>CustomerID</code>), el nombre (<code>CustomerName</code>) y su límite (<code>CreditLimit</code>) de la tabla <code>Sales_Customers</code>. SOLO queremos a aquellos clientes cuyo límite de crédito sea exactamente igual a <b>3000</b> dólares.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Estructura tu mente: ¿Qué columnas? (SELECT) -> ¿De dónde? (FROM) -> ¿Con qué filtro exacto? (WHERE).</div>", expectedQuery: "SELECT CustomerID, CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit = 3000;", xp: 10, coins: 5, schema: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", hints: ["Empieza tu consulta usando la cláusula SELECT seguida de las columnas.", "Las columnas que necesitas son CustomerID, CustomerName y CreditLimit separadas por comas.", "Usa WHERE CreditLimit = 3000 al final para filtrar los resultados exactos."] },
-                    { id: "t1_e2", diff: "easy", task: "<b class='text-cyan-300'>El Escenario:</b><br>Acabas de ser asignado como analista al área de almacén y necesitas hacer una auditoría rápida para ver qué estructura de datos tienes disponible.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Utilizando el comodín asterisco (<code>*</code>), extrae TODAS las columnas de la tabla <code>Warehouse_StockItems</code>.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> El asterisco (*) reemplaza a escribir cada columna manualmente, ideal para vistas rápidas.</div>", expectedQuery: "SELECT * FROM Warehouse_StockItems;", xp: 15, coins: 5, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["El asterisco (*) es el comodín para seleccionar todas las columnas.", "Tu consulta debe comenzar con SELECT *.", "Asegúrate de indicar la tabla correcta usando FROM Warehouse_StockItems;"] },
-                    { id: "t1_e3", diff: "easy", task: "<b class='text-cyan-300'>El Escenario:</b><br>El equipo de marketing está preparando una campaña de correos y solo necesita una lista general de clientes y sus créditos, sin aplicar ningún filtro por ahora.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Selecciona únicamente las columnas <code>CustomerName</code> y <code>CreditLimit</code> de la tabla <code>Sales_Customers</code>. No uses WHERE.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Una consulta SQL puede terminar perfectamente justo después de declarar la tabla en el FROM si no se requieren filtros.</div>", expectedQuery: "SELECT CustomerName, CreditLimit FROM Sales_Customers;", xp: 15, coins: 5, schema: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", hints: ["Escribe SELECT seguido de las dos columnas solicitadas.", "Separa CustomerName y CreditLimit con una coma.", "No olvides especificar FROM Sales_Customers al final."] },
-                    
-                    // MEDIO (4-6)
-                    { id: "t1_e4", diff: "med", task: "<b class='text-cyan-300'>El Escenario:</b><br>El área de ventas quiere imprimir un catálogo de precios actualizado y requiere los datos limpios y directos del sistema.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Extrae el nombre del artículo (<code>StockItemName</code>) y su precio unitario (<code>UnitPrice</code>) de la tabla <code>Warehouse_StockItems</code>.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Verifica bien la ortografía de las columnas apoyándote en la caja de 'Esquema Disponible'.</div>", expectedQuery: "SELECT StockItemName, UnitPrice FROM Warehouse_StockItems;", xp: 30, coins: 15, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Inicia tu consulta con SELECT.", "Solicita las columnas StockItemName, UnitPrice.", "Extrae los datos FROM Warehouse_StockItems."] },
-                    { id: "t1_e5", diff: "med", task: "<b class='text-cyan-300'>El Escenario:</b><br>El director comercial quiere invitar a los clientes VIP a un evento exclusivo y necesita la lista de invitados.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Muestra el nombre de los clientes (<code>CustomerName</code>) de la tabla <code>Sales_Customers</code> que tengan un límite de crédito (<code>CreditLimit</code>) ESTRICTAMENTE MAYOR a 1500 dólares.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> El operador > evalúa valores 'estrictamente mayores'. El operador >= incluye el valor base.</div>", expectedQuery: "SELECT CustomerName FROM Sales_Customers WHERE CreditLimit > 1500;", xp: 40, coins: 20, schema: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", hints: ["Solo necesitas extraer una columna: CustomerName.", "Usa la tabla Sales_Customers.", "Aplica el filtro matemático: WHERE CreditLimit > 1500;"] },
-                    { id: "t1_e6", diff: "med", task: "<b class='text-cyan-300'>El Escenario:</b><br>Logística necesita confirmar si hay suficiente inventario disponible para una venta masiva institucional.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Extrae el nombre del artículo (<code>StockItemName</code>) y la cantidad en stock (<code>Quantity</code>) de la tabla <code>Warehouse_StockItems</code> de aquellos productos que tengan 50 unidades o más disponibles.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> '50 o más' significa que el valor 50 está incluido, por lo tanto debes usar el operador '>='.</div>", expectedQuery: "SELECT StockItemName, Quantity FROM Warehouse_StockItems WHERE Quantity >= 50;", xp: 50, coins: 25, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Selecciona StockItemName y Quantity.", "La tabla a consultar es Warehouse_StockItems.", "El operador para 'mayor o igual' es >="] },
-
-                    // DIFÍCIL (7-9)
-                    { id: "t1_e7", diff: "hard", task: "<b class='text-cyan-300'>El Escenario:</b><br>La base de datos tiene millones de registros y ejecutar una consulta completa podría saturar el servidor. Solo necesitas un pequeño set de datos para ver la estructura real de la tabla.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Extrae TODAS las columnas de la tabla <code>Warehouse_StockItems</code>, pero usa la cláusula <code>LIMIT 3</code> al final de tu consulta para extraer exclusivamente las primeras 3 filas.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> LIMIT es vital en el análisis exploratorio. En SQL Server moderno se usa TOP, pero en motores ligeros como SQLite/Postgres usamos LIMIT al final.</div>", expectedQuery: "SELECT * FROM Warehouse_StockItems LIMIT 3;", xp: 80, coins: 40, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Usa SELECT * para traer todas las columnas.", "Indica la tabla Warehouse_StockItems.", "Añade LIMIT 3 al ultimísimo final de tu consulta."] },
-                    { id: "t1_e8", diff: "hard", task: "<b class='text-cyan-300'>El Escenario:</b><br>El sistema de impresión de etiquetas necesita que el texto venga pre-formateado desde la base de datos para ahorrar tiempo de programación en el Frontend.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Utiliza concatenación. Extrae una sola columna combinando el texto estático <code>'El articulo '</code> con la columna dinámica <code>StockItemName</code> de la tabla <code>Warehouse_StockItems</code>. Renombra el resultado usando AS como <code>Descripcion</code>.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> En SQLite (nuestro motor interno), se usa el operador || para concatenar. Ej: 'Hola ' || Nombre AS Saludo.</div>", expectedQuery: "SELECT 'El articulo ' || StockItemName AS Descripcion FROM Warehouse_StockItems;", xp: 100, coins: 50, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["El texto estático debe ir entre comillas simples: 'El articulo '", "Usa el operador || para unir el texto estático con la columna StockItemName.", "Usa la palabra reservada AS para renombrar toda esa operación a Descripcion."] },
-                    { id: "t1_e9", diff: "hard", task: "<b class='text-cyan-300'>El Escenario:</b><br>¡Reto Final del Módulo! El Gerente General necesita un resumen financiero del valor total del inventario retenido, combinando buenas prácticas de documentación y matemáticas en la consulta.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Crea un reporte maestro a partir de <code>Warehouse_StockItems</code>:<br>1. Inicia tu script con el comentario <code>-- Reporte Final</code>.<br>2. Extrae el <code>StockItemName</code> renombrado AS <code>Producto</code>.<br>3. Extrae la <code>Quantity</code> normal.<br>4. Multiplica (<code>UnitPrice * Quantity</code>) y renómbralo AS <code>ValorTotal</code>.<br>5. Muestra solo los primeros 2 registros (<code>LIMIT 2</code>).<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> SQL permite hacer operaciones aritméticas al vuelo en el bloque SELECT sin alterar los datos originales de la tabla.</div>", expectedQuery: "-- Reporte Final\nSELECT StockItemName AS Producto, Quantity, UnitPrice * Quantity AS ValorTotal FROM Warehouse_StockItems LIMIT 2;", xp: 150, coins: 100, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Empieza tu script escribiendo el comentario en la primera línea exactamente como se pide.", "Puedes multiplicar columnas matemáticamente directo en el SELECT separándolo con comas como si fuera otra columna.", "Asegúrate de aplicar los AS correctos y poner LIMIT 2 al puro final del script."] }
+                    { id: "t1_e1", diff: "easy", get data() { return window.createMissionHTML("El departamento de cobranzas detectó un lote de facturas atrasadas. Necesitan que extraigas urgentemente una lista de la base de datos para comenzar a llamar a los clientes afectados antes del cierre de mes.", "Escribe una consulta que devuelva el ID del cliente (<code>CustomerID</code>), el nombre (<code>CustomerName</code>) y su límite (<code>CreditLimit</code>) de la tabla <code>Sales_Customers</code>.<br><br>SOLO queremos a aquellos clientes cuyo límite de crédito sea exactamente igual a <b>3000</b> dólares.", "La consulta debe iniciar invocando las tres columnas separadas por comas. El filtro será WHERE CreditLimit = 3000;", "Sales_Customers (CustomerID, CustomerName, CreditLimit)", {title: "Esta tabla maestra almacena el registro oficial y financiero de todas las empresas que compran en WideWorldImporters.", cols: [{name: "CustomerID", desc: "ID numérico único del cliente."}, {name: "CustomerName", desc: "Nombre oficial de la empresa."}, {name: "CreditLimit", desc: "Límite de crédito en dólares."}]}) }, expectedQuery: "SELECT CustomerID, CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit = 3000;", xp: 10, coins: 5, hints: ["La consulta debe iniciar invocando las tres columnas solicitadas usando SELECT.", "Asegúrate de separarlas por comas: CustomerID, CustomerName, CreditLimit.", "Tu filtro será: WHERE CreditLimit = 3000;"] },
+                    { id: "t1_e2", diff: "easy", get data() { return window.createMissionHTML("Acabas de ser asignado como analista al área de almacén. Para familiarizarte con el sistema, el líder técnico te pide que hagas una extracción rápida y visualices toda la estructura de datos que tienes disponible.", "Utilizando el comodín asterisco (<code class='text-pink-400'>*</code>), extrae TODAS las columnas de la tabla <code>Warehouse_StockItems</code>.", "El asterisco (*) es el comodín para pedir todas las columnas. Tu consulta debe ser corta y directa.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT * FROM Warehouse_StockItems;", xp: 15, coins: 5, hints: ["El asterisco (*) es el comodín para seleccionar todas las columnas.", "Tu consulta debe comenzar con SELECT *.", "Asegúrate de indicar la tabla correcta usando FROM Warehouse_StockItems;"] },
+                    { id: "t1_e3", diff: "easy", get data() { return window.createMissionHTML("El equipo de marketing está preparando una campaña de correos masiva y agresiva para Navidad. Necesitan una lista general de clientes y sus créditos de inmediato, sin excluir a absolutamente nadie de la base de datos.", "Selecciona únicamente las columnas <code>CustomerName</code> y <code>CreditLimit</code> de la tabla <code>Sales_Customers</code>. No apliques ningún filtro condicional (es decir, omite la cláusula WHERE por completo).", "Simplemente escribe SELECT seguido de las dos columnas, y finaliza apuntando al FROM de la tabla.", "Sales_Customers (CustomerID, CustomerName, CreditLimit)", {title: "Esta tabla maestra almacena el registro oficial y financiero de todas las empresas que compran en WideWorldImporters.", cols: [{name: "CustomerID", desc: "ID numérico único del cliente."}, {name: "CustomerName", desc: "Nombre oficial de la empresa."}, {name: "CreditLimit", desc: "Límite de crédito en dólares."}]}) }, expectedQuery: "SELECT CustomerName, CreditLimit FROM Sales_Customers;", xp: 15, coins: 5, hints: ["Escribe SELECT seguido de las dos columnas solicitadas.", "Separa CustomerName y CreditLimit con una coma.", "Finaliza la instrucción apuntando a FROM Sales_Customers;"] },
+                    { id: "t1_e4", diff: "med", get data() { return window.createMissionHTML("El área de ventas presencial quiere imprimir un nuevo catálogo impreso actualizado a la fecha, y requiere que extraigas los datos de la forma más limpia y directa posible desde el sistema central.", "Extrae el nombre del artículo (<code>StockItemName</code>) y su precio unitario de venta (<code>UnitPrice</code>) de la tabla <code>Warehouse_StockItems</code>.", "Esta es una extracción limpia sin filtros. Pide las dos columnas separadas por comas desde la tabla de almacén.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT StockItemName, UnitPrice FROM Warehouse_StockItems;", xp: 30, coins: 15, hints: ["Inicia tu consulta con SELECT.", "Solicita las columnas StockItemName y UnitPrice.", "Extrae los datos FROM Warehouse_StockItems;"] },
+                    { id: "t1_e5", diff: "med", get data() { return window.createMissionHTML("El director comercial organizará un evento de gala para premiar la lealtad corporativa y requiere que le envíes una lista exclusiva de invitados de alto valor hoy mismo antes del mediodía.", "Muestra ÚNICAMENTE el nombre de los clientes (<code>CustomerName</code>) de la tabla <code>Sales_Customers</code> que tengan un límite de crédito otorgado (<code>CreditLimit</code>) ESTRICTAMENTE MAYOR a 1500 dólares.", "Tu bloque SELECT solo debe pedir una columna. Luego, aplica un filtro estricto usando el operador > en el WHERE.", "Sales_Customers (CustomerID, CustomerName, CreditLimit)", {title: "Esta tabla maestra almacena el registro oficial y financiero de todas las empresas que compran en WideWorldImporters.", cols: [{name: "CustomerID", desc: "ID numérico único del cliente."}, {name: "CustomerName", desc: "Nombre oficial de la empresa."}, {name: "CreditLimit", desc: "Límite de crédito en dólares."}]}) }, expectedQuery: "SELECT CustomerName FROM Sales_Customers WHERE CreditLimit > 1500;", xp: 40, coins: 20, hints: ["Debes usar un bloque SELECT pidiendo una sola columna.", "La tabla a utilizar es Sales_Customers.", "Aplica el filtro matemático: WHERE CreditLimit > 1500;"] },
+                    { id: "t1_e6", diff: "med", get data() { return window.createMissionHTML("El equipo de Logística Integral necesita confirmar a la brevedad si hay suficiente inventario disponible en las bodegas principales para lograr abastecer un pedido corporativo masivo de fin de año.", "Extrae el nombre del artículo (<code>StockItemName</code>) y la cantidad en stock actual (<code>Quantity</code>) de la tabla <code>Warehouse_StockItems</code> de aquellos productos que tengan <b>50 unidades o más</b> disponibles para la venta.", "El operador para 'mayor o igual' se escribe combinando ambos símbolos: >=", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT StockItemName, Quantity FROM Warehouse_StockItems WHERE Quantity >= 50;", xp: 50, coins: 25, hints: ["Selecciona las columnas StockItemName y Quantity.", "La tabla a consultar es Warehouse_StockItems.", "El operador para 'mayor o igual' es >="] },
+                    { id: "t1_e7", diff: "hard", get data() { return window.createMissionHTML("Sabes como desarrollador Senior que la tabla de inventario tiene millones de registros pesados en producción y ejecutar una consulta completa podría saturar la red local. Solo necesitas un pequeño set de datos para probar la interfaz.", "Extrae TODAS las columnas de la tabla <code>Warehouse_StockItems</code>, pero asegúrate de usar la cláusula limitadora especial <code>LIMIT 3</code> al final de tu script para proteger la memoria del servidor.", "El comando LIMIT siempre va al final absoluto de la consulta, restringiendo las filas devueltas.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT * FROM Warehouse_StockItems LIMIT 3;", xp: 80, coins: 40, hints: ["Usa SELECT * para traer todas las columnas sin tener que escribirlas.", "Indica la tabla Warehouse_StockItems en tu FROM.", "Añade LIMIT 3 al final, antes de tu punto y coma."] },
+                    { id: "t1_e8", diff: "hard", get data() { return window.createMissionHTML("El sistema de impresión automática de etiquetas adhesivas requiere que el texto venga pre-formateado directamente desde la base de datos para ahorrarle valioso tiempo de procesamiento al equipo de Frontend.", "Utiliza concatenación nativa de SQLite. Extrae una sola columna combinando el texto estático <code class='text-pink-300'>'El articulo '</code> (con espacio) y la columna dinámica <code>StockItemName</code> de <code>Warehouse_StockItems</code>. Renombra el resultado usando <b>AS</b> para que la columna final se llame <code>Descripcion</code>.", "Usa el operador de barras dobles || para unir el string estático con la columna, seguido de AS Descripcion.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT 'El articulo ' || StockItemName AS Descripcion FROM Warehouse_StockItems;", xp: 100, coins: 50, hints: ["El texto estático debe ir entre comillas simples: 'El articulo '", "Usa el operador || para unir el texto con la columna StockItemName.", "Inmediatamente después usa la palabra reservada AS Descripcion."] },
+                    { id: "t1_e9", diff: "hard", get data() { return window.createMissionHTML("¡Reto Final del Módulo! El Gerente General necesita un resumen financiero rápido del valor total del inventario retenido, y exige por políticas de calidad que el script incluya documentación obligatoria.", "Crea un reporte maestro a partir de <code>Warehouse_StockItems</code>:<br>1. Inicia documentando con el comentario: <code class='text-green-400'>-- Reporte Final</code>.<br>2. Extrae el nombre del producto renombrado <b>AS</b> <code>Producto</code>.<br>3. Extrae la columna <code>Quantity</code>.<br>4. Multiplica (<code>UnitPrice * Quantity</code>) y renombra ese cálculo <b>AS</b> <code>ValorTotal</code>.<br>5. Muestra solo los primeros 2 registros usando <code>LIMIT 2</code>.", "Este script tiene 2 líneas. Comentario primero, luego SELECT con 3 campos (el último es la multiplicación). Aplica AS a los que se piden.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "-- Reporte Final\nSELECT StockItemName AS Producto, Quantity, UnitPrice * Quantity AS ValorTotal FROM Warehouse_StockItems LIMIT 2;", xp: 150, coins: 100, hints: ["Empieza tu script escribiendo el comentario en la primera línea exactamente como se pide.", "El bloque SELECT tendrá 3 'columnas' separadas por comas. La última es la multiplicación.", "Asegúrate de aplicar los Alias (AS) correctos y poner LIMIT 2 al final del script."] }
                 ]
             },
             {
                 id: "t2",
-                title: "2. Filtros: WHERE y BETWEEN",
+                title: "🔭 El Poder de los Rangos Financieros",
                 theory: `
-                    <div class="method-box mb-5">
-                        <h4 class="text-white font-bold mb-2 uppercase tracking-wide text-sm">Respondiendo a: ¿Qué requisitos deben cumplir?</h4>
-                        <p class="text-sm text-slate-300 mb-2">Aquí entra en juego la cláusula <code class="text-pink-400 font-bold">WHERE</code>. Se coloca DESPUÉS del <code class="text-pink-400 font-bold">FROM</code> y antes de cualquier ordenamiento o límite.</p>
-                        <p class="text-sm text-slate-300"><b class="text-white">El Operador BETWEEN:</b> En vez de usar condiciones largas como <code class="text-cyan-300 font-bold">Precio >= 50 AND Precio <= 100</code>, el operador <code class="text-pink-400 font-bold">BETWEEN</code> hace el código limpio, profesional y fácil de auditar. Siempre incluye los valores extremos.</p>
+                    <!-- Introducción Glassmorphism Premium -->
+                    <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div>
+                        <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-md">
+                            <span>🎯</span> Evaluaciones Múltiples de Rango
+                        </h4>
+                        <p class="text-sm text-slate-300 mb-4 leading-relaxed">En el módulo anterior aprendimos a filtrar por un solo valor. Pero, ¿qué ocurre cuando necesitamos encontrar registros masivos que caigan dentro de un periodo de tiempo o una franja de precios específicos?</p>
+                        
+                        <div class="bg-black/50 rounded-xl p-4 shadow-inner border border-slate-800 space-y-3">
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 rounded-full bg-cyan-900 border border-cyan-500 flex items-center justify-center text-cyan-300 text-xs font-bold shadow-[0_0_10px_rgba(0,229,255,0.3)] shrink-0 mt-0.5">A</div>
+                                <p class="text-sm text-slate-300"><b class="text-white">El Operador Lógico AND:</b> Nos permite encadenar condiciones. (Ej. exigir que un precio sea > 10 <code class="text-pink-400 font-bold bg-pink-900/30 px-1 rounded">AND</code> < 50). Sin embargo, escribir el nombre de la columna dos veces hace el código extenso y propenso a errores humanos.</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 h-6 rounded-full bg-cyan-900 border border-cyan-500 flex items-center justify-center text-cyan-300 text-xs font-bold shadow-[0_0_10px_rgba(0,229,255,0.3)] shrink-0 mt-0.5">B</div>
+                                <p class="text-sm text-slate-300"><b class="text-white">La Solución BETWEEN:</b> Este operador avanzado hace la misma evaluación de forma limpia, declarando directamente el rango cerrado. <b class="text-cyan-400">Importante:</b> El BETWEEN siempre incluye en su filtro a los números extremos.</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-5">
-                        <h4 class="text-cyan-400 font-bold mb-2 uppercase tracking-wide text-xs">📖 Desglose del Código</h4>
-                        <ul class="space-y-3 text-sm text-slate-300">
-                            <li class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 shadow-sm">
-                                <b class="text-pink-400 font-black">WHERE columna = valor:</b> Igualdad exacta. (Si el valor es texto, debes usar comillas simples, ej. <code class="text-green-300">'Webcam HD'</code>).
-                            </li>
-                            <li class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 shadow-sm">
-                                <b class="text-pink-400 font-black">WHERE columna > valor:</b> Expresiones matemáticas. Operadores válidos: <code class="text-cyan-300 font-bold"><, >, >=, <=, <></code> (diferente de).
-                            </li>
-                            <li class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 shadow-sm">
-                                <b class="text-pink-400 font-black">BETWEEN X AND Y:</b> Establece un rango continuo entre un valor <code class="text-cyan-300 font-bold">X</code> y un valor <code class="text-cyan-300 font-bold">Y</code>.
-                            </li>
-                        </ul>
+                    <!-- Desglose de Código Interactivo Premium -->
+                    <div class="mb-6">
+                        <h4 class="text-cyan-400 font-bold mb-4 uppercase tracking-wide text-xs flex items-center gap-2"><span>📖</span> Diccionario de Operadores</h4>
+                        <div class="grid gap-3">
+                            <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-emerald-500/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                                    <code class="bg-black/50 border border-emerald-500/50 text-emerald-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">WHERE col = val</code>
+                                    <p class="text-sm text-slate-300">Igualdad exacta. Si el valor buscado es texto, envuélvelo siempre en comillas simples (ej. <code class="text-green-300">'Webcam'</code>).</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-emerald-500/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                                    <code class="bg-black/50 border border-emerald-500/50 text-emerald-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">WHERE col &gt; val</code>
+                                    <p class="text-sm text-slate-300">Expresiones matemáticas complejas usando operadores válidos: <code class="text-cyan-300 font-bold">&lt;</code>, <code class="text-cyan-300 font-bold">&gt;</code>, <code class="text-cyan-300 font-bold">&gt;=</code>, <code class="text-cyan-300 font-bold">&lt;=</code>, <code class="text-cyan-300 font-bold">&lt;&gt;</code> (diferente de).</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-amber-500/40 hover:shadow-[0_0_20px_rgba(251,191,36,0.15)] transition-all">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                                    <code class="bg-black/50 border border-amber-500/50 text-amber-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">BETWEEN X AND Y</code>
+                                    <p class="text-sm text-slate-300">Establece un rango matemático continuo y cerrado entre un valor inicial X y un valor final Y de forma óptima.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buenas Prácticas Premium -->
+                    <div class="mb-6 bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(99,102,241,0.1)] relative overflow-hidden group hover:border-indigo-400/50 transition-all duration-300">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-purple-500"></div>
+                        <h4 class="text-indigo-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span>🛡️</span> Código Verboso vs. Óptimo</h4>
+                        <p class="text-sm text-slate-300 mb-3">Cuando audites código de bases de datos antiguas, verás el uso excesivo de operadores relacionales anidados. Un desarrollador moderno refactoriza esto inmediatamente:</p>
+                        <div class="bg-black/40 rounded-xl p-4 shadow-inner border border-slate-800 space-y-4">
+                            <div>
+                                <span class="text-xs text-slate-500 font-bold uppercase tracking-wider block mb-1">Práctica No Recomendada:</span>
+                                <code class="font-mono text-xs text-slate-400 bg-black/50 p-2 rounded block border border-red-900/30"><span class="text-pink-400 font-bold">WHERE</span> Fecha <span class="text-cyan-300 font-bold">&gt;=</span> <span class="text-green-300">'2025-01-01'</span> <span class="text-pink-400 font-bold">AND</span> Fecha <span class="text-cyan-300 font-bold">&lt;=</span> <span class="text-green-300">'2025-12-31'</span></code>
+                            </div>
+                            <div>
+                                <span class="text-xs text-cyan-400 font-bold uppercase tracking-wider block mb-1">Práctica Óptima Profesional:</span>
+                                <code class="font-mono text-xs text-white bg-black/50 p-2 rounded block border border-cyan-900/30"><span class="text-pink-400 font-bold">WHERE</span> Fecha <span class="text-pink-400 font-bold">BETWEEN</span> <span class="text-green-300">'2025-01-01'</span> <span class="text-pink-400 font-bold">AND</span> <span class="text-green-300">'2025-12-31'</span></code>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div>
-                        <h4 class="text-cyan-400 font-bold mb-2 uppercase tracking-wide text-xs flex items-center gap-2"><span>💡</span> Ejemplo Práctico</h4>
-                        <p class="text-xs text-slate-400 mb-2 italic">"Muestra los nombres de los artículos cuyo precio oscile entre $10 y $50 dólares".</p>
-                        <pre class="code-glow p-3 rounded-lg text-xs font-mono">
-<span class="text-blue-400 font-bold">SELECT</span> <span class="text-white">StockItemName</span>
-<span class="text-blue-400 font-bold">FROM</span> <span class="text-white">Warehouse_StockItems</span>
-<span class="text-blue-400 font-bold">WHERE</span> <span class="text-white">UnitPrice</span> <span class="text-blue-400 font-bold">BETWEEN</span> <span class="text-green-300">10</span> <span class="text-blue-400 font-bold">AND</span> <span class="text-green-300">50</span><span class="text-slate-400">;</span></pre>
+                    <!-- Error Habitual Premium -->
+                    <div class="mb-6 bg-slate-900/80 border border-red-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(239,68,68,0.15)] relative overflow-hidden group hover:border-red-400/50 transition-all duration-300">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-red-500 to-rose-600"></div>
+                        <h4 class="text-red-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]">
+                            <span class="text-lg">🛑</span> Un error habitual [Lógica Invertida]
+                        </h4>
+                        <p class="text-sm text-slate-300 mb-4 font-medium">Declarar el límite superior antes que el límite inferior al definir el rango de evaluación en un BETWEEN.</p>
+                        
+                        <div class="relative mb-4">
+                            <div class="absolute -top-3 left-3 bg-red-950 border border-red-800 px-2 py-0.5 rounded text-[10px] text-red-400 font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div>
+                            <pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono"><span class="text-blue-400 font-bold">SELECT</span> <span class="text-white">StockItemName</span> <span class="text-blue-400 font-bold">FROM</span> <span class="text-white">Warehouse</span>
+<span class="text-blue-400 font-bold">WHERE</span> <span class="text-white">UnitPrice</span> <span class="text-pink-400 font-bold">BETWEEN</span> <span class="text-green-300">100</span> <span class="text-pink-400 font-bold">AND</span> <span class="text-green-300">50</span><span class="text-slate-400">;</span> <span class="text-green-400 italic">-- Rango invertido, retornará 0 registros</span></pre>
+                        </div>
+                        
+                        <div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4">
+                            <h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5>
+                            <p class="text-sm text-slate-300">El motor BETWEEN es rígido: primero exige el valor Mínimo y luego el Máximo. Si lo inviertes, el motor no te corrige, simplemente asume que es imposible ser matemáticamente "mayor a 100 y a la vez menor a 50", arruinando tu reporte al devolver una tabla vacía.</p>
+                        </div>
+
+                        <div class="relative">
+                            <div class="absolute -top-3 left-3 bg-emerald-950 border border-emerald-800 px-2 py-0.5 rounded text-[10px] text-emerald-400 font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div>
+                            <pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono leading-relaxed"><span class="text-blue-400 font-bold">SELECT</span> <span class="text-white">StockItemName</span> <span class="text-blue-400 font-bold">FROM</span> <span class="text-white">Warehouse</span>
+<span class="text-blue-400 font-bold">WHERE</span> <span class="text-white">UnitPrice</span> <span class="text-pink-400 font-bold">BETWEEN</span> <span class="text-green-300">50</span> <span class="text-pink-400 font-bold">AND</span> <span class="text-green-300">100</span><span class="text-slate-400">;</span> <span class="text-green-400 italic">-- El orden lógico correcto (Min AND Max)</span></pre>
+                        </div>
+                    </div>
+
+                    <!-- Ejemplo Práctico Premium -->
+                    <div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div>
+                        <h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]">
+                            <span>💡</span> Ejemplo Práctico de Rangos
+                        </h4>
+                        
+                        <div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner mb-4">
+                            <p class="text-sm text-amber-100/80 italic flex items-start gap-2">
+                                <span class="text-lg not-italic mt-0.5">🏢</span> "El gerente de logística ha solicitado confirmar los nombres de todos los artículos cuyo nivel de stock almacenado esté en un margen crítico entre 10 y 40 unidades para reabastecimiento".
+                            </p>
+                        </div>
+
+                        <div class="relative mt-2">
+                            <div class="absolute -top-3 right-3 bg-blue-900/80 border border-blue-500/50 px-2 py-0.5 rounded text-[9px] text-blue-200 font-bold uppercase tracking-widest z-10 shadow-md">Solución SQL</div>
+                            <pre class="code-glow overflow-x-auto pt-5 pb-4 px-4 rounded-xl text-sm font-mono leading-relaxed"><span class="text-blue-400 font-bold">SELECT</span> 
+    <span class="text-white">StockItemName</span>
+<span class="text-blue-400 font-bold">FROM</span> 
+    <span class="text-white">Warehouse_StockItems</span>
+<span class="text-blue-400 font-bold">WHERE</span> 
+    <span class="text-white">Quantity</span> <span class="text-pink-400 font-bold">BETWEEN</span> <span class="text-green-300">10</span> <span class="text-pink-400 font-bold">AND</span> <span class="text-green-300">40</span><span class="text-slate-400">;</span></pre>
+                        </div>
+                    </div>
+
+                    <!-- QUIZZES TEMA 2 -->
+                    <div class="mt-8 space-y-6">
+                        <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                            <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz 1/3: Inclusión del BETWEEN</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">¿El operador BETWEEN en SQL Server incluye o excluye los valores límite (extremos)?</p>
+                            <div class="space-y-2">
+                                <button onclick="window.checkQuiz(this, true, '¡Correcto! El BETWEEN siempre incluye de forma inclusiva los valores extremos.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">A) Incluye de forma inclusiva los valores límite (extremos).</span>
+                                </button>
+                                <button onclick="window.checkQuiz(this, false, 'Incorrecto. Sí los incluye. Para exclusividad, usa operadores > y <.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">B) Los excluye estrictamente de la evaluación.</span>
+                                </button>
+                            </div>
+                            <div class="quiz-feedback hidden"></div>
+                        </div>
+                        <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                            <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz 2/3: Orden estricto</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">¿Qué sucede si escribes WHERE Precio BETWEEN 100 AND 50 (invirtiendo los límites)?</p>
+                            <div class="space-y-2">
+                                <button onclick="window.checkQuiz(this, false, 'Incorrecto. El motor no asume el orden; devolverá 0 filas.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">A) El motor detecta el error y asume automáticamente el orden correcto.</span>
+                                </button>
+                                <button onclick="window.checkQuiz(this, true, '¡Correcto! El motor buscará un número mayor a 100 y menor a 50 a la vez, devolviendo vacío.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">B) Retornará una tabla de datos vacía (0 registros).</span>
+                                </button>
+                            </div>
+                            <div class="quiz-feedback hidden"></div>
+                        </div>
+                        <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                            <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz 3/3: Negación de Rangos</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">¿Cómo extraes los productos cuyo precio quede FUERA del rango de 50 a 100?</p>
+                            <div class="space-y-2">
+                                <button onclick="window.checkQuiz(this, true, '¡Correcto! Anteponiendo NOT antes de BETWEEN invierte la condición.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">A) Utilizando el operador NOT antes del BETWEEN (NOT BETWEEN).</span>
+                                </button>
+                                <button onclick="window.checkQuiz(this, false, 'Incorrecto. Eso buscaría un precio negativo o inválido.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">B) Escribiendo BETWEEN -50 AND -100.</span>
+                                </button>
+                            </div>
+                            <div class="quiz-feedback hidden"></div>
+                        </div>
                     </div>
                 `,
                 exercises: [
-                    // FÁCIL (1-3)
-                    { id: "t2_e1", diff: "easy", task: "<b class='text-cyan-300'>El Escenario:</b><br>El equipo de precios está evaluando la mercancía de gama alta para aplicar posibles descuentos de temporada.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Extrae TODAS las columnas (usando <code>*</code>) de la tabla <code>Warehouse_StockItems</code> donde el precio unitario (<code>UnitPrice</code>) sea estrictamente mayor a 100 dólares.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Une el comodín de columnas con un operador mayor que (>) en el WHERE.</div>", expectedQuery: "SELECT * FROM Warehouse_StockItems WHERE UnitPrice > 100;", xp: 10, coins: 5, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Recuerda usar SELECT * para pedir todas las columnas.", "La tabla objetivo es Warehouse_StockItems.", "El filtro final es WHERE UnitPrice > 100."] },
-                    { id: "t2_e2", diff: "easy", task: "<b class='text-cyan-300'>El Escenario:</b><br>Un cliente corporativo llamó preguntando el precio unitario específico de un equipo para salas de conferencias.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Extrae solo el <code>UnitPrice</code> de la tabla <code>Warehouse_StockItems</code> donde el nombre del producto (<code>StockItemName</code>) sea exactamente igual a <code>'Webcam HD'</code>.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Al ser un valor de texto (cadena de caracteres o String), recuerda poner el nombre siempre entre comillas simples.</div>", expectedQuery: "SELECT UnitPrice FROM Warehouse_StockItems WHERE StockItemName = 'Webcam HD';", xp: 15, coins: 5, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Extrae únicamente la columna UnitPrice.", "Al comparar texto, es obligatorio usar comillas simples.", "El filtro es WHERE StockItemName = 'Webcam HD';"] },
-                    { id: "t2_e3", diff: "easy", task: "<b class='text-cyan-300'>El Escenario:</b><br>Ventas necesita armar combos con productos que no sean ni muy baratos ni muy caros, creando una franja de precios aceptable.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Aplica el operador lógico AND. Muestra el <code>StockItemName</code> de la tabla <code>Warehouse_StockItems</code> donde el <code>UnitPrice</code> sea mayor o igual a 50 AND menor o igual a 100.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Tienes que escribir explícitamente la columna en ambas condiciones, ej: columna >= 50 AND columna <= 100.</div>", expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems WHERE UnitPrice >= 50 AND UnitPrice <= 100;", xp: 20, coins: 10, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Selecciona solo StockItemName.", "La primera condición es UnitPrice >= 50.", "Une la segunda condición asegurándote de volver a nombrar la columna: AND UnitPrice <= 100."] },
-                    
-                    // MEDIO (4-6)
-                    { id: "t2_e4", diff: "med", task: "<b class='text-cyan-300'>El Escenario:</b><br>El código anterior funciona, pero un ingeniero de software Senior te ha pedido que lo limpies y lo hagas más profesional.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>¡Refactoriza tu código! Usa el operador <code>BETWEEN</code> para extraer el <code>StockItemName</code> de <code>Warehouse_StockItems</code> donde el <code>UnitPrice</code> se encuentre entre 50 y 100 dólares.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> BETWEEN es mucho más elegante y fácil de leer. Su sintaxis básica es: columna BETWEEN X AND Y.</div>", expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 50 AND 100;", xp: 30, coins: 15, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["El operador BETWEEN reemplaza al >= y <= juntos.","La sintaxis es: WHERE columna BETWEEN valor1 AND valor2", "Aplica: WHERE UnitPrice BETWEEN 50 AND 100"] },
-                    { id: "t2_e5", diff: "med", task: "<b class='text-cyan-300'>El Escenario:</b><br>El mismo reporte de gama media (50 a 100 dólares) debe ser subido al repositorio del equipo, pero exigen que todo script lleve una nota explicativa en su primera línea.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>1. Añade un comentario en la primera línea que diga exactamente: <code>-- Rango Gama Media</code>.<br>2. En la siguiente línea extrae el <code>StockItemName</code> y el <code>UnitPrice</code> de <code>Warehouse_StockItems</code> donde el precio esté <code>BETWEEN</code> 50 <code>AND</code> 100.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Los comentarios con guiones dobles (--) son ignorados por el motor de base de datos pero leídos por los humanos.</div>", expectedQuery: "-- Rango Gama Media\nSELECT StockItemName, UnitPrice FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 50 AND 100;", xp: 40, coins: 20, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["La primera línea debe ser exactamente: -- Rango Gama Media", "En la segunda línea empieza tu SELECT normal pidiendo las 2 columnas.", "Finaliza con tu cláusula BETWEEN 50 AND 100."] },
-                    { id: "t2_e6", diff: "med", task: "<b class='text-cyan-300'>El Escenario:</b><br>Ahora finanzas quiere ver exactamente lo contrario. Quieren analizar los productos extremadamente baratos o los extremadamente costosos para ver sus márgenes.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Filtros inversos. Extrae TODAS las columnas de <code>Warehouse_StockItems</code> de los productos cuyo precio NO esté entre 50 y 100.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Puedes invertir cualquier filtro en SQL anteponiendo la palabra reservada NOT. Ejemplo: NOT BETWEEN.</div>", expectedQuery: "SELECT * FROM Warehouse_StockItems WHERE UnitPrice NOT BETWEEN 50 AND 100;", xp: 50, coins: 25, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Usa SELECT * para extraer todas las columnas.", "El operador inverso se escribe poniendo NOT justo antes de BETWEEN.", "El Filtro será: WHERE UnitPrice NOT BETWEEN 50 AND 100;"] },
-                    
-                    // DIFÍCIL (7-9)
-                    { id: "t2_e7", diff: "hard", task: "<b class='text-cyan-300'>El Escenario:</b><br>Alerta de inventario anómalo. El sistema necesita reportar artículos que estén a punto de agotarse o que tengan un exceso brutal de stock almacenado.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Extrae el nombre del artículo renombrado AS <code>Producto</code> de la tabla <code>Warehouse_StockItems</code>, de aquellos artículos que tengan una <code>Quantity</code> menor a 20, O que tengan una cantidad mayor a 100.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Usa el operador lógico OR para que el motor te devuelva registros que cumplan con la condición A o que cumplan con la condición B.</div>", expectedQuery: "SELECT StockItemName AS Producto FROM Warehouse_StockItems WHERE Quantity < 20 OR Quantity > 100;", xp: 80, coins: 40, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Usa AS para renombrar la columna principal a Producto.", "El operador OR permite que se cumpla al menos una de las dos condiciones extremas.", "Tu Filtro debe ser: WHERE Quantity < 20 OR Quantity > 100"] },
-                    { id: "t2_e8", diff: "hard", task: "<b class='text-cyan-300'>El Escenario:</b><br>Almacén encontró unas cajas con los IDs 101, 103 y 105 tiradas en un pasillo y necesitan saber rápidamente qué productos son sin buscar uno por uno.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>Usa el operador lógico IN. Extrae el <code>StockItemName</code> de <code>Warehouse_StockItems</code> donde el <code>StockItemID</code> se encuentre específicamente dentro de la lista de valores <code>(101, 103, 105)</code>.<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> El operador IN es la forma elegante y optimizada de evitar escribir muchos OR seguidos. Se usa con paréntesis.</div>", expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems WHERE StockItemID IN (101, 103, 105);", xp: 100, coins: 50, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Selecciona solo StockItemName de la tabla.", "El operador IN evalúa coincidencias exactas y múltiples dentro de paréntesis.", "El Filtro es: WHERE StockItemID IN (101, 103, 105)"] },
-                    { id: "t2_e9", diff: "hard", task: "<b class='text-cyan-300'>El Escenario:</b><br>¡Reto Final del Módulo! Auditoría Compleja de datos. Un investigador de finanzas te pide un script impecable que cruce condiciones anidadas para encontrar un producto anómalo.<br><br><b class='text-amber-400'>El Requerimiento:</b><br>1. Comenta en la primera línea exactamente: <code>-- Auditoria Finanzas</code>.<br>2. Extrae el nombre renombrado AS <code>Item</code>, el <code>UnitPrice</code>, y la <code>Quantity</code> de la tabla <code>Warehouse_StockItems</code>.<br>3. Filtra donde el Precio esté <code>BETWEEN</code> 20 y 90, <b>Y ADEMÁS</b> que la cantidad sea DIFERENTE de 50 (usando <code>&lt;&gt;</code>).<br><br><div class='mt-2 p-2 bg-blue-900/20 border border-blue-700/50 rounded text-blue-300 text-xs'><b>💡 Tip:</b> Puedes anidar el operador BETWEEN con operadores lógicos AND regulares para crear mallas de filtros muy específicas.</div>", expectedQuery: "-- Auditoria Finanzas\nSELECT StockItemName AS Item, UnitPrice, Quantity FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 20 AND 90 AND Quantity <> 50;", xp: 150, coins: 100, schema: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", hints: ["Pon el comentario en la línea 1 tal cual.", "Usa un AND normal para conectar la cláusula BETWEEN con la condición de exclusión.", "El filtro final será: WHERE UnitPrice BETWEEN 20 AND 90 AND Quantity <> 50;"] }
+                    { id: "t2_e1", diff: "easy", get data() { return window.createMissionHTML("El equipo de precios dinámicos está evaluando la mercancía de gama alta del almacén para aplicar posibles descuentos de Black Friday.", "Extrae TODAS las columnas (usando <code>*</code>) de la tabla <code>Warehouse_StockItems</code> donde el precio unitario (<code>UnitPrice</code>) sea estrictamente mayor a 100 dólares.", "Recuerda usar SELECT * para pedir todas las columnas, y tu filtro condicional al final del script debe ser: WHERE UnitPrice > 100;", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT * FROM Warehouse_StockItems WHERE UnitPrice > 100;", xp: 10, coins: 5, hints: ["Recuerda usar SELECT * para pedir todas las columnas.", "La tabla objetivo a la cual apuntar en el FROM es Warehouse_StockItems.", "El filtro condicional al final del script es WHERE UnitPrice > 100;"] },
+                    { id: "t2_e2", diff: "easy", get data() { return window.createMissionHTML("Un cliente corporativo llamó por teléfono a ventas preguntando urgentemente el precio unitario específico de un equipo para equipar sus nuevas salas de conferencias.", "Extrae solo el precio (<code>UnitPrice</code>) de la tabla <code>Warehouse_StockItems</code> donde el nombre del producto (<code>StockItemName</code>) sea exactamente igual a la cadena de texto <code class='text-green-300'>'Webcam HD'</code>.", "Al comparar texto, es obligatorio usar el signo igual (=) y envolver la palabra clave en comillas simples.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT UnitPrice FROM Warehouse_StockItems WHERE StockItemName = 'Webcam HD';", xp: 15, coins: 5, hints: ["La única columna que te pidieron extraer en el SELECT es UnitPrice.", "En el filtro WHERE, al comparar texto, usa el signo igual (=) y comillas simples.", "El filtro quedaría: WHERE StockItemName = 'Webcam HD';"] },
+                    { id: "t2_e3", diff: "easy", get data() { return window.createMissionHTML("El departamento de ventas corporativas necesita armar combos de regalos con productos que no sean ni muy baratos ni muy caros para una feria tecnológica.", "Aplica el operador lógico <b>AND</b>. Muestra el nombre del producto (<code>StockItemName</code>) de la tabla <code>Warehouse_StockItems</code> donde el precio (<code>UnitPrice</code>) sea mayor o igual a 50 <b>AND</b> menor o igual a 100.", "Encadena dos condicionales usando AND repitiendo la columna: WHERE UnitPrice >= 50 AND UnitPrice <= 100", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems WHERE UnitPrice >= 50 AND UnitPrice <= 100;", xp: 20, coins: 10, hints: ["Selecciona únicamente la columna StockItemName en tu SELECT.", "La primera parte de tu condición WHERE es UnitPrice >= 50.", "Para unir la segunda condición usa AND UnitPrice <= 100;"] },
+                    { id: "t2_e4", diff: "med", get data() { return window.createMissionHTML("Un Ingeniero de Datos Senior revisó tu script anterior y te ha pedido que lo limpies aplicando buenas prácticas modernas para hacerlo más legible para el equipo.", "¡Refactoriza tu código anterior! Reemplaza los operadores matemáticos por el operador especializado <code>BETWEEN</code> para extraer el <code>StockItemName</code> de la tabla <code>Warehouse_StockItems</code> donde el <code>UnitPrice</code> se encuentre en el rango entre 50 y 100 dólares.", "La estructura del bloque es mucho más limpia: WHERE columna BETWEEN inicio AND fin.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 50 AND 100;", xp: 30, coins: 15, hints: ["El operador BETWEEN reemplaza al >= y <= y hace el código más elegante.", "La estructura del bloque de filtro es: WHERE columna BETWEEN inicio AND fin.", "Aplica la lógica: WHERE UnitPrice BETWEEN 50 AND 100;"] },
+                    { id: "t2_e5", diff: "med", get data() { return window.createMissionHTML("El mismo reporte de gama media acaba de ser aprobado y debe ser subido permanentemente al repositorio oficial de código de la empresa para uso diario.", "1. Añade un comentario en la primera línea de la consola que diga exactamente: <code class='text-green-400'>-- Rango Gama Media</code>.<br>2. En la siguiente línea, realiza tu consulta habitual extrayendo el <code>StockItemName</code> y el <code>UnitPrice</code> de <code>Warehouse_StockItems</code> donde el precio esté <code>BETWEEN</code> 50 <code>AND</code> 100.", "Usa un doble guion -- al inicio para el comentario, da un salto de línea (Enter) y escribe tu consulta SELECT normal.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "-- Rango Gama Media\nSELECT StockItemName, UnitPrice FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 50 AND 100;", xp: 40, coins: 20, hints: ["La primera línea de tu script en la consola debe ser textualmente: -- Rango Gama Media", "En la segunda línea empieza tu instrucción SELECT normal pidiendo las 2 columnas requeridas.", "Finaliza con tu filtro: WHERE UnitPrice BETWEEN 50 AND 100;"] },
+                    { id: "t2_e6", diff: "med", get data() { return window.createMissionHTML("Ahora el área de Finanzas Corporativas quiere ver exactamente el espectro contrario de datos para un análisis de rentabilidad: productos extremadamente baratos y extremadamente costosos.", "Aplica filtros de negación lógicos. Extrae TODAS las columnas (usando <code>*</code>) de la tabla <code>Warehouse_StockItems</code> de aquellos productos cuyo precio <b>NO</b> se encuentre en el rango entre 50 y 100.", "Para negar un rango completo simplemente agrega la palabra clave NOT inmediatamente antes de llamar al operador BETWEEN.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT * FROM Warehouse_StockItems WHERE UnitPrice NOT BETWEEN 50 AND 100;", xp: 50, coins: 25, hints: ["Usa SELECT * en tu primer bloque para extraer todas las columnas de la tabla.", "El operador inverso se declara colocando la palabra NOT justo antes del BETWEEN.", "El bloque de filtro quedará: WHERE UnitPrice NOT BETWEEN 50 AND 100;"] },
+                    { id: "t2_e7", diff: "hard", get data() { return window.createMissionHTML("El sistema automatizado de alertas necesita un reporte de los artículos que estén a punto de agotarse o, por el contrario, que tengan un exceso brutal de stock almacenado ocupando espacio valioso.", "Extrae el nombre del artículo renombrando la columna <b>AS</b> <code>Producto</code> de la tabla <code>Warehouse_StockItems</code>.<br><br>Tu filtro debe capturar aquellos artículos que tengan una cantidad (<code>Quantity</code>) menor a 20, <b>O</b> que tengan una cantidad mayor a 100.", "El operador OR permite que se evalúen condiciones alternativas separadas. Escribe: WHERE Quantity < 20 OR Quantity > 100;", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT StockItemName AS Producto FROM Warehouse_StockItems WHERE Quantity < 20 OR Quantity > 100;", xp: 80, coins: 40, hints: ["En tu bloque SELECT, usa AS para renombrar la columna a Producto.", "El operador OR permite que se cumpla de forma independiente una de las dos condiciones extremas.", "La estructura de tu filtro debe ser: WHERE Quantity < 20 OR Quantity > 100;"] },
+                    { id: "t2_e8", diff: "hard", get data() { return window.createMissionHTML("Los operarios del almacén encontraron unas cajas de productos con códigos legibles, específicamente los IDs 101, 103 y 105, perdidas en un pasillo y necesitan saber qué son para reubicarlas.", "Usa el operador lógico de conjuntos <b>IN</b>. Extrae el nombre del artículo (<code>StockItemName</code>) de la tabla <code>Warehouse_StockItems</code> donde el ID del producto (<code>StockItemID</code>) se encuentre específicamente dentro de la lista de valores <code class='text-pink-300'>(101, 103, 105)</code>.", "El operador IN es ideal para buscar varios valores específicos a la vez sin usar cientos de OR. Se escribe: WHERE columna IN (val1, val2...)", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems WHERE StockItemID IN (101, 103, 105);", xp: 100, coins: 50, hints: ["Selecciona únicamente la columna StockItemName de la tabla Warehouse_StockItems.", "El operador IN evalúa coincidencias múltiples envueltas entre paréntesis.", "El bloque de filtro queda: WHERE StockItemID IN (101, 103, 105);"] },
+                    { id: "t2_e9", diff: "hard", get data() { return window.createMissionHTML("¡Reto Final del Módulo! Un Investigador de Auditoría Externa te exige un script impecable que cruce múltiples condiciones matemáticas anidadas en un solo barrido de datos.", "1. Inserta el comentario obligatorio en la línea uno exactamente así: <code class='text-green-400'>-- Auditoria Finanzas</code>.<br>2. Extrae el nombre del producto renombrado <b>AS</b> <code>Item</code>, seguido de <code>UnitPrice</code>, y <code>Quantity</code>.<br>3. Filtra la tabla donde el Precio esté <code>BETWEEN</code> 20 y 90, <b class='text-amber-300'>Y ADEMÁS (AND)</b> que la cantidad en stock sea ESTRICTAMENTE DIFERENTE de 50 unidades (operador <code class='text-cyan-300'>&lt;&gt;</code>).", "El poder de SQL radica en combinar. Usa un AND tradicional para unir tu evaluación de BETWEEN con la exclusión <> 50 al final del código.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Catálogo central de todos los productos físicos almacenados en las bodegas de la empresa.", cols: [{name: "StockItemID", desc: "ID único del producto."}, {name: "StockItemName", desc: "Descripción del artículo."}, {name: "UnitPrice", desc: "Precio unitario."}, {name: "Quantity", desc: "Cantidad en stock."}]}) }, expectedQuery: "-- Auditoria Finanzas\nSELECT StockItemName AS Item, UnitPrice, Quantity FROM Warehouse_StockItems WHERE UnitPrice BETWEEN 20 AND 90 AND Quantity <> 50;", xp: 150, coins: 100, hints: ["Pon el comentario forense en la línea 1 exactamente como se exige.", "Usa un AND tradicional para encadenar sin problemas la evaluación BETWEEN con la condición matemática de exclusión final.", "El filtro combinado maestro será: WHERE UnitPrice BETWEEN 20 AND 90 AND Quantity <> 50;"] }
                 ]
             }
         ];
 
         async function initApp() {
             try {
-                // 1. Inicializar CodeMirror (con placeholder)
                 sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
                     mode: "text/x-sql",
                     theme: "dracula",
@@ -500,22 +787,19 @@
                     placeholder: "Escribe tu consulta SQL aquí...\n"
                 });
 
-                // 2. Event Listeners
-                document.getElementById('run-btn').addEventListener('click', executeUserQuery);
-                document.getElementById('reset-btn').addEventListener('click', resetConsole);
+                document.getElementById('run-btn').addEventListener('click', window.executeUserQuery);
+                document.getElementById('next-btn').addEventListener('click', () => { window.loadExercise(currentTopicIdx, currentExerciseIdx + 1); });
+                document.getElementById('reset-btn').addEventListener('click', window.resetConsole);
 
-                // 3. Cargar Motor SQLite en Memoria
                 const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
                 db = new SQL.Database();
                 
-                // Poblar BD con la tabla de Warehouse_StockItems enriquecida
                 db.run(`
                     CREATE TABLE Sales_Customers (CustomerID INT, CustomerName VARCHAR, CreditLimit DECIMAL);
                     INSERT INTO Sales_Customers VALUES (1, 'Tailwind Toys', 1500.00);
                     INSERT INTO Sales_Customers VALUES (2, 'Wingtip Toys', 3000.00);
                     INSERT INTO Sales_Customers VALUES (3, 'A Datum Corporation', 3000.00);
                     INSERT INTO Sales_Customers VALUES (4, 'Contoso Retail', 5000.00);
-
                     CREATE TABLE Warehouse_StockItems (StockItemID INT, StockItemName VARCHAR, UnitPrice DECIMAL, Quantity INT);
                     INSERT INTO Warehouse_StockItems VALUES (101, 'USB Drive 8GB', 15.00, 200);
                     INSERT INTO Warehouse_StockItems VALUES (102, 'Teclado Mecanico', 85.50, 45);
@@ -526,61 +810,56 @@
                     INSERT INTO Warehouse_StockItems VALUES (107, 'Webcam HD', 60.00, 30);
                 `);
                 
-                // 4. Renderizar UI
-                renderTopicsSidebar();
-                loadExercise(0, 0); // Inicia en Módulo 1, Ejercicio 1
+                window.renderTopicsSidebar();
+                window.loadExercise(0, 0);
 
             } catch (err) {
-                console.error("Error crítico de inicialización:", err);
-                showToast("Error Crítico", "El motor SQL WebAssembly no pudo cargar. Comprueba tu conexión.", "error");
+                console.error("Error crítico:", err);
             }
         }
 
-        // ==========================================
-        // 4. LÓGICA DE INTERFAZ Y NAVEGACIÓN
-        // ==========================================
-        function renderTopicsSidebar() {
+        window.toggleSidebar = function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        };
+
+        window.renderTopicsSidebar = function() {
             const container = document.getElementById('topics-container');
             container.innerHTML = '';
-            
             TOPICS.forEach((topic, idx) => {
                 const btn = document.createElement('button');
                 btn.className = `w-full text-left p-3 rounded-xl mb-2 transition-all font-bold text-sm ${idx === currentTopicIdx ? 'bg-cyan-900/40 text-cyan-300 border border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.15)]' : 'bg-slate-800/40 text-slate-400 border border-transparent hover:bg-slate-700/50'}`;
                 btn.innerHTML = topic.title;
-                btn.onclick = () => loadExercise(idx, 0);
+                btn.onclick = () => window.loadExercise(idx, 0);
                 container.appendChild(btn);
             });
-        }
+        };
 
-        function loadExercise(topicIdx, exIdx) {
+        window.loadExercise = function(topicIdx, exIdx) {
             currentTopicIdx = topicIdx;
             currentExerciseIdx = exIdx;
-            revealedHintsCount = 0; // Resetear pistas al cambiar de ejercicio
+            revealedHintsCount = 0;
             
             const topic = TOPICS[topicIdx];
             const exercise = topic.exercises[exIdx];
+            const dynamicData = exercise.data; 
 
-            // Render Teoría (Se asume que cambia por Tema, no por ejercicio, pero mostramos el bloque)
             document.getElementById('topic-title').textContent = topic.title;
             document.getElementById('topic-theory').innerHTML = topic.theory;
 
-            // Render Misión
-            document.getElementById('ex-task').innerHTML = exercise.task;
-            document.getElementById('ex-schema').innerHTML = exercise.schema;
+            document.getElementById('ex-task').innerHTML = dynamicData.taskHtml;
+            document.getElementById('ex-schema').innerHTML = dynamicData.schemaLine;
+            document.getElementById('ex-schema-desc').innerHTML = dynamicData.descHtml;
             document.getElementById('ex-xp-badge').textContent = `+${exercise.xp} XP`;
             document.getElementById('ex-coin-badge').textContent = `+${exercise.coins} 🪙`;
             
-            // Render Navegador de 9 Píldoras
-            renderExercisePills();
+            window.renderExercisePills();
+            document.getElementById('run-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            window.resetConsole();
+            window.renderTopicsSidebar();
+        };
 
-            // Reset Consola
-            resetConsole();
-            
-            // Actualizar Sidebar
-            renderTopicsSidebar();
-        }
-
-        function renderExercisePills() {
+        window.renderExercisePills = function() {
             const nav = document.getElementById('exercise-navigator');
             nav.innerHTML = '';
             const exercises = TOPICS[currentTopicIdx].exercises;
@@ -588,72 +867,95 @@
             exercises.forEach((ex, idx) => {
                 const isCompleted = playerState.completedExercises.includes(ex.id);
                 const isActive = idx === currentExerciseIdx;
-                
-                // Determinar clase base por dificultad
-                let baseClass = "";
-                if (ex.diff === "easy") baseClass = "pill-easy";
-                else if (ex.diff === "med") baseClass = "pill-med";
-                else baseClass = "pill-hard";
-
-                // Armar estado de clase
-                let stateClass = "";
-                if (isActive) stateClass = "active";
-                else if (isCompleted) stateClass = "completed";
+                let baseClass = (ex.diff === "easy") ? "pill-easy" : (ex.diff === "med") ? "pill-med" : "pill-hard";
+                let stateClass = isActive ? "active" : (isCompleted ? "completed" : "");
 
                 const btn = document.createElement('div');
                 btn.className = `ex-pill ${baseClass} ${stateClass}`;
                 btn.textContent = idx + 1;
-                btn.onclick = () => loadExercise(currentTopicIdx, idx);
+                btn.onclick = () => window.loadExercise(currentTopicIdx, idx);
                 
-                // Icono check si completó pero no está activo
                 if (isCompleted && !isActive) {
                     btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
                 }
-
                 nav.appendChild(btn);
             });
-        }
+        };
 
-        // ==========================================
-        // 5. MOTOR DE RETROALIMENTACIÓN INTELIGENTE
-        // ==========================================
-        function resetConsole() {
+        window.openDatabaseModal = function() {
+            const backdrop = document.getElementById('db-modal-backdrop');
+            const card = document.getElementById('db-modal-card');
+            const content = document.getElementById('db-modal-content');
+            
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            const schemaText = exercise.data.schemaLine || "";
+            
+            let tablesToQuery = [];
+            if (schemaText.includes("Sales_Customers")) tablesToQuery.push("Sales_Customers");
+            if (schemaText.includes("Warehouse_StockItems")) tablesToQuery.push("Warehouse_StockItems");
+            
+            let html = '';
+            tablesToQuery.forEach(tableName => {
+                const res = db.exec("SELECT * FROM " + tableName);
+                if (res.length > 0) {
+                    html += `<h3 class="text-pink-400 font-bold mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><span>🗄️</span> Tabla: ${tableName}</h3>`;
+                    html += `<div class="bg-black/60 rounded-xl border border-slate-700/50 overflow-x-auto mb-8 shadow-inner"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
+                    res[0].columns.forEach(col => html += `<th>${col}</th>`);
+                    html += `</tr></thead><tbody>`;
+                    res[0].values.forEach(row => {
+                        html += `<tr>`;
+                        row.forEach(val => html += `<td>${val !== null ? val : '<i>NULL</i>'}</td>`);
+                        html += `</tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                }
+            });
+            content.innerHTML = html === '' ? "<div class='text-slate-400 text-center'>Sin datos asociadas.</div>" : html;
+            backdrop.classList.remove('hidden');
+            requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); });
+        };
+
+        window.closeDatabaseModal = function() {
+            const backdrop = document.getElementById('db-modal-backdrop');
+            const card = document.getElementById('db-modal-card');
+            backdrop.classList.add('opacity-0');
+            card.classList.add('scale-95');
+            setTimeout(() => { backdrop.classList.add('hidden'); }, 300);
+        };
+
+        window.resetConsole = function() {
             sqlEditor.setValue("");
             document.getElementById('results-container').innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-slate-500 text-sm font-medium italic p-4 text-center">Escribe tu consulta y presiona Ejecutar para evaluar los datos.</div>`;
             document.getElementById('row-count').textContent = '0 filas';
             document.getElementById('error-container').classList.add('hidden');
             document.getElementById('hints-container').classList.add('hidden');
             document.getElementById('hints-list').innerHTML = '';
-        }
+            document.getElementById('run-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+        };
 
-        function toggleTechDetail() {
+        window.toggleTechDetail = function() {
             const content = document.getElementById('tech-detail-content');
             const icon = document.getElementById('tech-detail-icon');
             if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.style.transform = "rotate(90deg)";
+                content.classList.remove('hidden'); icon.style.transform = "rotate(90deg)";
             } else {
-                content.classList.add('hidden');
-                icon.style.transform = "rotate(0deg)";
+                content.classList.add('hidden'); icon.style.transform = "rotate(0deg)";
             }
-        }
+        };
 
-        function showErrorBox(friendlyMsg, techErrorMsg) {
+        window.showErrorBox = function(friendlyMsg, techErrorMsg) {
             document.getElementById('error-container').classList.remove('hidden');
             document.getElementById('error-friendly-msg').textContent = friendlyMsg;
             document.getElementById('tech-detail-content').textContent = techErrorMsg;
-            
-            // Asegurar que el detalle técnico empiece cerrado
             document.getElementById('tech-detail-content').classList.add('hidden');
             document.getElementById('tech-detail-icon').style.transform = "rotate(0deg)";
-
-            // Mostrar el contenedor de pistas si hay error
             document.getElementById('hints-container').classList.remove('hidden');
             document.getElementById('hints-container').classList.add('flex');
-            updateHintsUI();
-        }
+            window.updateHintsUI();
+        };
 
-        function revealHint() {
+        window.revealHint = function() {
             const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
             if (revealedHintsCount < exercise.hints.length) {
                 const hintsList = document.getElementById('hints-list');
@@ -662,60 +964,49 @@
                 newHint.innerHTML = `<div class="hint-title">Pista ${revealedHintsCount + 1}</div><div>${exercise.hints[revealedHintsCount]}</div>`;
                 hintsList.appendChild(newHint);
                 revealedHintsCount++;
-                updateHintsUI();
+                window.updateHintsUI();
             }
-        }
+        };
 
-        function updateHintsUI() {
+        window.updateHintsUI = function() {
             const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
             const btnNext = document.getElementById('btn-next-hint');
-            const hintsLeftEl = document.getElementById('hints-left');
-            const noMoreMsg = document.getElementById('no-more-hints');
-            const btnShowSol = document.getElementById('btn-show-solution');
-
             const remaining = exercise.hints.length - revealedHintsCount;
-            
             if (remaining > 0) {
                 btnNext.classList.remove('hidden');
-                hintsLeftEl.textContent = remaining;
-                noMoreMsg.classList.add('hidden');
-                btnShowSol.classList.add('hidden');
+                document.getElementById('hints-left').textContent = remaining;
+                document.getElementById('no-more-hints').classList.add('hidden');
+                document.getElementById('btn-show-solution').classList.add('hidden');
             } else {
                 btnNext.classList.add('hidden');
-                noMoreMsg.classList.remove('hidden');
-                btnShowSol.classList.remove('hidden');
+                document.getElementById('no-more-hints').classList.remove('hidden');
+                document.getElementById('btn-show-solution').classList.remove('hidden');
             }
-        }
+        };
 
-        function revealSolution() {
+        window.revealSolution = function() {
             const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
             const hintsList = document.getElementById('hints-list');
             const solDiv = document.createElement('div');
             solDiv.className = 'hint-box';
-            solDiv.style.borderColor = '#10b981'; // Borde verde para solución
+            solDiv.style.borderColor = '#10b981';
             solDiv.style.background = '#064e3b';
             solDiv.innerHTML = `<div class="hint-title" style="color: #6ee7b7;">Solución Exacta</div><pre class="font-mono text-xs text-white bg-black/50 p-2 rounded mt-1 overflow-x-auto">${exercise.expectedQuery}</pre>`;
             hintsList.appendChild(solDiv);
             document.getElementById('btn-show-solution').classList.add('hidden');
-        }
+        };
 
-        function executeUserQuery() {
+        window.executeUserQuery = function() {
             const query = sqlEditor.getValue().trim();
             if (!query) return;
 
             const resContainer = document.getElementById('results-container');
             const rowCountEl = document.getElementById('row-count');
-            const topic = TOPICS[currentTopicIdx];
-            const exercise = topic.exercises[currentExerciseIdx];
-
-            // Ocultar error box en cada nueva ejecución
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
             document.getElementById('error-container').classList.add('hidden');
 
             try {
-                // Ejecución
                 const userResult = db.exec(query);
-                
-                // Renderizado Gráfico
                 if (userResult.length > 0) {
                     const columns = userResult[0].columns;
                     const values = userResult[0].values;
@@ -724,7 +1015,6 @@
                     let tableHTML = '<table class="sql-table"><thead><tr>';
                     columns.forEach(col => tableHTML += `<th>${col}</th>`);
                     tableHTML += '</tr></thead><tbody>';
-                    
                     values.forEach(row => {
                         tableHTML += '<tr>';
                         row.forEach(val => tableHTML += `<td>${val !== null ? val : '<i>NULL</i>'}</td>`);
@@ -734,91 +1024,74 @@
                     resContainer.innerHTML = tableHTML;
                 } else {
                     rowCountEl.textContent = '0 filas';
-                    resContainer.innerHTML = `<div class="p-4 text-emerald-400 font-bold flex items-center gap-2"><span>✔️</span> Ejecución sin errores (La tabla devolvió 0 resultados basándose en tu código).</div>`;
+                    resContainer.innerHTML = `<div class="p-4 text-emerald-400 font-bold flex items-center gap-2"><span>✔️</span> Ejecución sin errores (0 filas).</div>`;
                 }
 
-                // ==========================================
-                // LÓGICA DE VALIDACIÓN (Comparación Profunda)
-                // ==========================================
+                // Validación estricta
                 let isCorrect = false;
                 try {
-                    // Validar si piden comentarios
-                    let hasCommentIfRequired = true;
-                    if (exercise.expectedQuery.includes("--")) {
-                        if (!query.includes("--")) hasCommentIfRequired = false;
-                    }
-
-                    // Ignoramos comentarios para comparar la data pura
+                    let hasCommentIfRequired = exercise.expectedQuery.includes("--") ? query.includes("--") : true;
                     const cleanExpected = exercise.expectedQuery.replace(/--.*?\n/g, "");
                     const cleanUser = query.replace(/--.*?\n/g, "");
-
                     const expectedResult = db.exec(cleanExpected);
                     
-                    // Comparamos el objeto JSON resultante para asegurar que trajo la misma info
                     if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && hasCommentIfRequired) {
                         isCorrect = true;
                     } else if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && !hasCommentIfRequired) {
-                         showFeedback("Falta Documentación", "Los datos extraídos son correctos, pero olvidaste poner el comentario requerido (usando --).", "hint");
-                         return; // Detiene la asignación de puntos
+                         window.showErrorBox("Falta Documentación", "Olvidaste poner el comentario requerido (usando --).");
+                         return;
                     }
-                } catch(e) {
-                    console.error("Error en query maestro (Fallo del sistema de evaluación)", e);
-                }
+                } catch(e) {}
 
                 if (isCorrect) {
                     if (!playerState.completedExercises.includes(exercise.id)) {
                         playerState.completedExercises.push(exercise.id);
                         grantRewards(exercise.xp, exercise.coins);
-                        renderExercisePills();
-                        showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1} de este módulo.`, "success");
+                        window.renderExercisePills();
+                        showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success");
                         fireConfetti();
                         
-                        // Auto-avanzar si no es el último
                         if (currentExerciseIdx < 8) {
-                            setTimeout(() => loadExercise(currentTopicIdx, currentExerciseIdx + 1), 2500);
+                            document.getElementById('run-btn').classList.add('hidden');
+                            document.getElementById('next-btn').classList.remove('hidden');
                         } else {
-                            setTimeout(() => showToast("🏆 Módulo Dominado", "Has completado los 9 ejercicios.", "success"), 2500);
+                            setTimeout(() => showToast("🏆 Módulo Dominado", "Completaste los 9 ejercicios.", "success"), 1000);
                         }
                     } else {
-                        showToast("Consulta Válida", "Código correcto, pero la recompensa ya fue cobrada.", "hint");
+                        showToast("Consulta Válida", "Código correcto (Recompensa ya cobrada).", "hint");
+                        if (currentExerciseIdx < 8) {
+                            document.getElementById('run-btn').classList.add('hidden');
+                            document.getElementById('next-btn').classList.remove('hidden');
+                        }
                     }
                 } else {
-                    // Fallo Lógico (query corre pero los datos no son los esperados)
-                    showErrorBox(
-                        "La consulta se ejecutó, pero los datos devueltos no coinciden con lo que solicita la misión. Revisa las columnas seleccionadas y los filtros (WHERE).", 
-                        "Análisis Lógico: Las tablas de resultados JSON difieren. Verifica que estés extrayendo la información correcta."
+                    window.showErrorBox(
+                        "La consulta se ejecutó, pero la tabla no coincide con lo solicitado por el negocio.", 
+                        "Análisis en vivo:\n- Tu código arrojó un resultado diferente.\n- Revisa el panel 'Salida de Datos' y compáralo con el Requerimiento.\n- Asegúrate de invocar exactamente las columnas pedidas."
                     );
                 }
 
             } catch (err) {
-                // Fallo de Sintaxis SQL
-                rowCountEl.textContent = 'Error';
+                rowCountEl.textContent = 'Error crítico';
                 resContainer.innerHTML = '';
                 
                 let errorMsg = err.message;
                 let friendlyMsg = "";
+                let liveDiagnosis = "";
 
-                if (errorMsg.includes("no such table")) {
-                    friendlyMsg = "Estás intentando sacar datos de una tabla que no existe. Revisa lo que escribiste en la cláusula FROM.";
-                } else if (errorMsg.includes("no such column")) {
-                    friendlyMsg = "La base de datos no encuentra una de las columnas que escribiste en tu SELECT o WHERE. Verifica la ortografía según el 'Esquema Disponible'.";
-                } else if (errorMsg.includes("syntax error")) {
-                    friendlyMsg = "El motor SQL detectó un error de sintaxis. Revisa que las palabras clave (SELECT, FROM, WHERE) estén bien escritas y en el orden correcto.";
-                } else {
-                    friendlyMsg = "El motor detectó un problema en tu código.";
-                }
+                if (errorMsg.includes("near") && !query.includes(",")) liveDiagnosis = "⚠️ ¡Falta una coma! En SQL separa las columnas con (,).";
+                if (errorMsg.includes("no such table")) friendlyMsg = "La tabla invocada no existe en la base de datos.";
+                else if (errorMsg.includes("no such column")) friendlyMsg = "Estás invocando una columna que no existe.";
+                else if (errorMsg.includes("syntax error")) friendlyMsg = "Error de sintaxis. " + liveDiagnosis;
+                else friendlyMsg = "Fallo de compilación: " + errorMsg + " " + liveDiagnosis;
 
-                showErrorBox(friendlyMsg, "Error del Motor SQLite: " + errorMsg);
+                window.showErrorBox(friendlyMsg, "Detalle SQLite:\n" + errorMsg);
             }
-        }
+        };
 
-        // ==========================================
-        // 6. SISTEMA DE GAMIFICACIÓN VISUAL
-        // ==========================================
         function grantRewards(xp, coins) {
             playerState.xp += xp;
             playerState.coins += coins;
-            
             let xpNext = playerState.level * 1000;
             if (playerState.xp >= xpNext) {
                 playerState.xp -= xpNext;
@@ -826,34 +1099,11 @@
                 xpNext = playerState.level * 1000;
                 showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success");
             }
-
-            // Animar contadores
             const xpPct = (playerState.xp / xpNext) * 100;
             document.getElementById('ui-level').textContent = playerState.level;
             document.getElementById('ui-xp-bar').style.width = `${xpPct}%`;
             document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`;
             document.getElementById('ui-coins').textContent = playerState.coins;
-        }
-
-        function showFeedback(title, msg, type) {
-            const panel = document.getElementById('feedback-panel');
-            const iconEl = document.getElementById('feedback-icon');
-            const titleEl = document.getElementById('feedback-title');
-            
-            document.getElementById('feedback-msg').innerHTML = msg;
-            titleEl.textContent = title;
-
-            if (type === "error") {
-                panel.className = "absolute top-4 right-4 left-4 z-20 feedback-box bg-slate-900/95 border-l-4 border-rose-500 p-4 rounded-xl shadow-2xl backdrop-blur-md";
-                iconEl.textContent = "🛑";
-                titleEl.className = "text-rose-400 font-black tracking-wide uppercase text-sm mb-1";
-            } else {
-                panel.className = "absolute top-4 right-4 left-4 z-20 feedback-box bg-slate-900/95 border-l-4 border-amber-500 p-4 rounded-xl shadow-2xl backdrop-blur-md";
-                iconEl.textContent = "💡";
-                titleEl.className = "text-amber-400 font-black tracking-wide uppercase text-sm mb-1";
-            }
-            
-            panel.classList.remove('hidden');
         }
 
         function showToast(title, message, type) {
@@ -868,9 +1118,7 @@
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00e5ff', '#a855f7', '#10b981', '#fbbf24'] });
         }
 
-        // Arrancar
         window.addEventListener('DOMContentLoaded', initApp);
-
     </script>
 </body>
 </html>
