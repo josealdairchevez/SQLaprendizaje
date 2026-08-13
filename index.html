@@ -718,7 +718,7 @@
         function fireConfetti() { confetti({ particleCount: 50, spread: 60 }); }
 
         // ==========================================
-        // MOTOR IA - GEMINI 1.5 PRO LATEST
+        // MOTOR IA - SOLUCIÓN UNIVERSAL (gemini-pro)
         // ==========================================
         window.generateTopic = async function() {
             const apiKey = document.getElementById('ai-api-key').value.trim();
@@ -734,7 +734,7 @@
             const systemPrompt = `
                 Eres un generador de contenido JSON para una plataforma de aprendizaje SQL de estilo Cyberpunk/Premium.
                 El usuario te pide el tema: "${topicName}".
-                Devuelve ÚNICAMENTE un objeto JSON con esta estructura exacta, sin Markdown extra:
+                Devuelve ÚNICAMENTE un objeto JSON puro, sin bloques de código Markdown (sin \`\`\`json), con esta estructura exacta:
                 {
                     "title": "Nombre del Tema",
                     "intro": "Párrafo introductorio.",
@@ -749,16 +749,20 @@
             `;
 
             try {
-                // LLAMADA ACTUALIZADA A GEMINI 1.5 PRO LATEST (Soluciona el error en celulares)
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`, {
+                // LLAMADA ACTUALIZADA AL ALIAS UNIVERSAL (gemini-pro) QUE FUNCIONA EN TODAS LAS CUENTAS
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }]}], generationConfig: { responseMimeType: "application/json" } })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }]}] })
                 });
 
                 const data = await res.json();
                 if(data.error) throw new Error(data.error.message);
 
-                const generated = JSON.parse(data.candidates[0].content.parts[0].text);
+                // Extraemos el texto y limpiamos cualquier posible bloque de Markdown
+                let rawText = data.candidates[0].content.parts[0].text;
+                rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                
+                const generated = JSON.parse(rawText);
                 
                 // Construir HTML de Teoría
                 let theoryHtml = `
