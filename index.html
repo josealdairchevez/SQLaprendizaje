@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQL Mastery - Entrenamiento Avanzado</title>
 
+    <!-- 🌟 ETIQUETAS PWA (Manifiesto y Tema) -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#020617">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -26,6 +31,10 @@
     <!-- SQL.js y Confeti -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- 🌟 FIREBASE SDK (Sincronización en la Nube) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
     <style>
         :root {
@@ -211,7 +220,7 @@
             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">👩‍💻</div>
             <div>
                 <h1 class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">SQL MASTERY</h1>
-                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Módulo <span id="ui-level" class="text-cyan-400">1</span> · Iniciado</p>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Módulo <span id="ui-level" class="text-cyan-400">1</span> · Iniciado <span id="sync-status" class="ml-2 text-[9px] text-amber-500">☁️ Local</span></p>
             </div>
         </div>
         
@@ -452,9 +461,11 @@
         </div>
     </div>
 
+    <!-- 🌟 LOGICA PRINCIPAL DE LA APP -->
     <script>
         let db;
         let sqlEditor;
+        let dbFirestore = null; // Preparado para Firebase Firestore
         
         let playerState = {
             xp: 0,
@@ -467,18 +478,43 @@
         let currentExerciseIdx = 0;
         let revealedHintsCount = 0;
 
-        // NUEVAS FUNCIONES VISUALES
+        // 🌟 CONFIGURACIÓN DE FIREBASE (Ingresa tus credenciales aquí cuando crees tu proyecto)
+        const firebaseConfig = {
+            // apiKey: "TU_API_KEY",
+            // authDomain: "TU_PROYECTO.firebaseapp.com",
+            // projectId: "TU_PROYECTO",
+            // storageBucket: "TU_PROYECTO.appspot.com",
+            // messagingSenderId: "TU_SENDER_ID",
+            // appId: "TU_APP_ID"
+        };
+
+        // Inicializador de Firebase seguro
+        if (firebaseConfig.apiKey) {
+            firebase.initializeApp(firebaseConfig);
+            dbFirestore = firebase.firestore();
+            document.getElementById('sync-status').textContent = '☁️ Nube Activa';
+            document.getElementById('sync-status').classList.replace('text-amber-500', 'text-emerald-400');
+        }
+
+        // Registrar Service Worker para la PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js').catch(err => {
+                    console.log('Falló el registro del Service Worker: ', err);
+                });
+            });
+        }
+
+        // Funciones Visuales
         window.showToast = function(title, msg, type = 'success') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toast-icon');
             document.getElementById('toast-title').textContent = title;
             document.getElementById('toast-msg').textContent = msg;
-            
             if(type === 'success') icon.textContent = '✅';
             else if(type === 'error') icon.textContent = '❌';
             else if(type === 'hint') icon.textContent = '💡';
             else icon.textContent = '✨';
-            
             toast.classList.add('show');
             setTimeout(() => { toast.classList.remove('show'); }, 3000);
         };
@@ -1455,12 +1491,10 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 const newTopic = createTopicFromJSON(parsedData);
                 TOPICS.push(newTopic);
 
-                // Guardar custom topics
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
                 customTopics.push(parsedData);
                 localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
 
-                // Actualizar orden
                 const newOrder = TOPICS.map(t => t.id);
                 localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
 
