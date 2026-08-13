@@ -11,17 +11,15 @@
     <!-- Fuentes Premium -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     
-    <!-- CodeMirror (Editor de Código) -->
+    <!-- CodeMirror (Editor de Código) y Placeholder Addon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/display/placeholder.min.js"></script>
     
-    <!-- SQL.js -->
+    <!-- SQL.js y Confeti -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-    
-    <!-- Confeti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
@@ -57,7 +55,7 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         }
 
-        /* Editor Customization - 7 Líneas exactas (170px) */
+        /* Editor Customization - 7 Líneas exactas */
         .console-wrapper {
             position: relative;
             border-radius: 0.75rem;
@@ -77,13 +75,12 @@
 
         .CodeMirror {
             border-radius: 0.6rem;
-            height: 170px; /* ALTO EXACTO PARA 7 LÍNEAS VISIBLES */
+            height: 170px; /* ALTO MILIMÉTRICO PARA 7 LÍNEAS EXACTAS */
             font-family: 'Fira Code', monospace;
             font-size: 0.95rem;
-            line-height: 1.5;
+            line-height: 1.5; /* Fija la altura de cada línea */
         }
         .CodeMirror-placeholder { color: #475569 !important; }
-
         .cm-s-dracula span.cm-keyword { color: #569cd6 !important; font-weight: bold; }
         .cm-s-dracula span.cm-number { color: #b5cea8 !important; }
         .cm-s-dracula span.cm-string { color: #ce9178 !important; }
@@ -115,166 +112,180 @@
 
         /* Nav Pills */
         .ex-pill {
-            width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; font-size: 0.75rem; cursor: pointer; border: 2px solid; transition: all 0.3s;
+            width: 2.25rem; height: 2.25rem; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 0.85rem; cursor: pointer; border: 2px solid; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             background: #0f172a; position: relative; z-index: 10;
         }
         .ex-pill:hover { transform: scale(1.15); z-index: 20; }
-        .ex-pill.active { transform: scale(1.2); box-shadow: 0 0 15px currentColor; color: #ffffff !important; }
-        .ex-pill.completed { background-color: currentColor !important; color: #ffffff !important; border-color: transparent; }
+        .ex-pill.active { transform: scale(1.2); box-shadow: 0 0 20px currentColor; color: #ffffff !important; }
+        .ex-pill.completed { background-color: currentColor !important; color: #ffffff !important; border-color: transparent; box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
         
         .pill-easy { border-color: var(--accent-green); color: var(--accent-green); }
-        .pill-med { border-color: var(--accent-gold); color: var(--accent-gold); }
-        .pill-hard { border-color: var(--accent-rose); color: var(--accent-rose); }
-
-        /* NUEVO PANEL DE ERROR PREMIUM (ABISAL / NEÓN) */
-        .error-panel {
-            background-color: #0f111a;
-            border-left: 4px solid #ff4757;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 71, 87, 0.1);
-            animation: slideIn 0.3s ease-out forwards;
-            overflow: hidden;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            border-right: 1px solid rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        .pill-easy:hover { box-shadow: 0 0 15px rgba(16,185,129,0.4); background: rgba(16,185,129,0.15); }
+        .pill-easy.active { background: var(--accent-green); }
         
-        .error-icon-wrapper {
-            background-color: #2a1215;
-            border: 1px solid #ff4757;
-            box-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
-        }
-
-        /* Botón de Cápsula "Ver Análisis Detallado" */
-        .pill-button {
-            background-color: #161822;
-            border: 1px solid rgba(255, 71, 87, 0.3);
-            color: #ff8a95;
-            transition: all 0.3s ease;
-        }
-        .pill-button:hover {
-            border-color: #ff4757;
-            box-shadow: 0 0 10px rgba(255, 71, 87, 0.2);
-            color: #ffffff;
-        }
-
-        .code-glow {
-            background-color: #000000;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-        }
-
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-        .shake-animation { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
-
-        .quiz-option { border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; cursor: pointer; }
-        .quiz-option:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); }
-        .quiz-option.correct { background: rgba(16, 185, 129, 0.2); border-color: #10b981; }
-        .quiz-option.incorrect { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
+        .pill-med { border-color: var(--accent-gold); color: var(--accent-gold); }
+        .pill-med:hover { box-shadow: 0 0 15px rgba(251,191,36,0.4); background: rgba(251,191,36,0.15); }
+        .pill-med.active { background: var(--accent-gold); }
+        
+        .pill-hard { border-color: var(--accent-rose); color: var(--accent-rose); }
+        .pill-hard:hover { box-shadow: 0 0 15px rgba(244,63,94,0.4); background: rgba(244,63,94,0.15); }
+        .pill-hard.active { background: var(--accent-rose); }
 
         /* Toasts */
         .toast {
-            position: fixed; bottom: 20px; right: 20px;
-            padding: 1rem 1.5rem; border-radius: 1rem;
+            position: fixed; bottom: 20px; right: 20px; padding: 1rem 1.5rem; border-radius: 1rem;
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1); color: white;
-            transform: translateX(120%); transition: transform 0.4s;
+            border: 1px solid rgba(255,255,255,0.1); color: white; font-weight: bold;
+            transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 50; display: flex; align-items: center; gap: 10px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         .toast.show { transform: translateX(0); }
 
-        #sidebar { transition: all 0.3s; }
+        #sidebar { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         @media (min-width: 768px) { #sidebar.collapsed { width: 4.5rem !important; } #sidebar.collapsed #sidebar-chevron { transform: rotate(180deg); } }
         @media (max-width: 767px) { #sidebar.collapsed { height: 4rem !important; } #sidebar.collapsed #sidebar-chevron { transform: rotate(-90deg); } }
-        #sidebar.collapsed .hide-on-collapse { display: none; opacity: 0; }
-        
-        /* Modal de IA */
-        .ai-modal { backdrop-filter: blur(10px); background: rgba(0,0,0,0.85); }
+        #sidebar.collapsed #topics-container, #sidebar.collapsed .temario-text, #sidebar.collapsed #ai-btn-container { display: none; opacity: 0; }
+        #sidebar-chevron { transition: transform 0.4s ease; }
+
+        /* PANEL DE ERROR PREMIUM ABISAL */
+        .error-panel {
+            background: #0f111a;
+            border: 1px solid rgba(255, 71, 87, 0.15);
+            border-left: 4px solid #ff4757;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 71, 87, 0.05);
+            animation: slideIn 0.3s ease-out forwards;
+            position: relative;
+            overflow: hidden;
+            padding: 1.25rem;
+        }
+        .error-panel::before {
+            content: ''; position: absolute; top: -20px; left: -20px; width: 140px; height: 140px;
+            background: radial-gradient(circle, rgba(255, 71, 87, 0.15), transparent 60%);
+            pointer-events: none; z-index: 0;
+        }
+        .tech-detail-pill {
+            background-color: #161822; border: 1px solid rgba(255, 71, 87, 0.2); border-radius: 0.5rem;
+            padding: 0.6rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem;
+            color: #ff8a95; font-weight: 900; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase;
+            cursor: pointer; transition: all 0.3s ease; position: relative; z-index: 10;
+        }
+        .tech-detail-pill:hover { background-color: #1a1c27; border-color: rgba(255, 71, 87, 0.4); box-shadow: 0 0 15px rgba(255, 71, 87, 0.15); }
+
+        .code-glow { background-color: #000000; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.8); border: 1px solid rgba(0, 229, 255, 0.3); transition: all 0.3s ease; }
+        .code-glow:hover { box-shadow: 0 0 25px rgba(0, 229, 255, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.8); border-color: rgba(0, 229, 255, 0.6); }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .shake-animation { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .spinner { animation: spin 1s linear infinite; }
+
+        .quiz-option { border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s ease; cursor: pointer; }
+        .quiz-option:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); }
+        .quiz-option.correct { background: rgba(16, 185, 129, 0.2); border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        .quiz-option.correct .quiz-circle { border-color: #10b981; background: #10b981; }
+        .quiz-option.incorrect { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
+        .quiz-option.incorrect .quiz-circle { border-color: #ef4444; background: #ef4444; }
     </style>
 </head>
-<body class="h-screen flex flex-col">
+<body class="h-screen flex flex-col overflow-hidden">
 
     <header class="glass-panel m-4 p-4 flex flex-col md:flex-row justify-between items-center z-10 shrink-0">
-        <div class="flex items-center gap-4 mb-3 md:mb-0">
-            <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-xl md:text-2xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">👩‍💻</div>
+        <div class="flex items-center gap-4 mb-4 md:mb-0">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">👩‍💻</div>
             <div>
-                <h1 class="text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">SQL MASTERY</h1>
-                <p class="text-[10px] md:text-xs text-slate-400 uppercase tracking-widest font-bold">Módulo <span id="ui-level" class="text-cyan-400">1</span> · Iniciado</p>
+                <h1 class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">SQL MASTERY</h1>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Módulo <span id="ui-level" class="text-cyan-400">1</span> · Iniciado</p>
             </div>
         </div>
         
-        <div class="flex items-center gap-4 md:gap-6">
+        <div class="flex items-center gap-6">
             <div class="flex flex-col items-end">
-                <div class="text-[10px] md:text-xs text-slate-400 font-bold mb-1 uppercase tracking-wide">Experiencia</div>
+                <div class="text-xs text-slate-400 font-bold mb-1 uppercase tracking-wide">Experiencia</div>
                 <div class="flex items-center gap-2">
-                    <div class="w-24 md:w-48 h-2 md:h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                    <div class="w-32 md:w-48 h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
                         <div id="ui-xp-bar" class="h-full bg-gradient-to-r from-purple-500 to-cyan-400 transition-all duration-500 w-0"></div>
                     </div>
-                    <span id="ui-xp-text" class="text-xs md:text-sm font-bold text-cyan-300 w-10 md:w-12 text-right">0/1000</span>
+                    <span id="ui-xp-text" class="text-sm font-bold text-cyan-300 w-12 text-right">0/1000</span>
                 </div>
             </div>
-            <div class="bg-slate-800/50 border border-slate-700 px-3 py-1.5 md:px-4 md:py-2 rounded-xl flex items-center gap-2 shadow-inner">
-                <span class="text-lg md:text-xl drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]">🪙</span>
-                <span id="ui-coins" class="text-base md:text-lg font-black text-amber-400">0</span>
+            <div class="bg-slate-800/50 border border-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 shadow-inner">
+                <span class="text-xl drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]">🪙</span>
+                <span id="ui-coins" class="text-lg font-black text-amber-400">0</span>
             </div>
         </div>
     </header>
 
-    <!-- Uso de min-h-0 en main para domar flexbox -->
     <main class="flex-1 flex flex-col md:flex-row gap-4 px-4 pb-4 overflow-hidden z-10 min-h-0">
         
-        <!-- SIDEBAR -->
-        <aside id="sidebar" class="glass-panel w-full md:w-72 flex flex-col shrink-0 overflow-hidden">
-            <div class="p-4 border-b border-slate-700/50 bg-slate-800/30 flex justify-between items-center cursor-pointer hover:bg-slate-700/60 transition-colors" onclick="window.toggleSidebar()">
-                <h2 class="text-lg text-white font-bold flex items-center gap-2"><span>🗺️</span> <span class="hide-on-collapse">Temario</span></h2>
-                <span id="sidebar-chevron" class="text-slate-400 font-black text-xl leading-none transition-transform">◀</span>
+        <aside id="sidebar" class="glass-panel w-full md:w-72 flex flex-col shrink-0 overflow-hidden min-h-0">
+            <div class="p-4 border-b border-slate-700/50 bg-slate-800/30 flex justify-between items-center cursor-pointer hover:bg-slate-700/60 transition-colors" onclick="window.toggleSidebar()" title="Ocultar/Mostrar Temario">
+                <h2 class="text-lg text-white font-bold flex items-center gap-2"><span>🗺️</span> <span class="temario-text">Temario</span></h2>
+                <span id="sidebar-chevron" class="text-slate-400 font-black text-xl leading-none">◀</span>
             </div>
-            <div id="topics-container" class="flex-1 overflow-y-auto p-3 space-y-2 hide-on-collapse"></div>
+            <div id="topics-container" class="flex-1 overflow-y-auto p-3 space-y-2 transition-opacity duration-300 min-h-0"></div>
             
-            <!-- Botón IA Automatización -->
-            <div class="p-3 border-t border-slate-700/50 bg-slate-900/50 hide-on-collapse shrink-0">
-                <button onclick="window.openAIModal()" class="w-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/40 hover:to-orange-500/40 border border-amber-500/50 text-amber-300 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest shadow-[0_0_15px_rgba(251,191,36,0.15)] transition-all flex items-center justify-center gap-2 group">
-                    <span class="group-hover:scale-110 transition-transform">✨</span> Añadir Tema con IA
+            <!-- Botón para generar temas con IA -->
+            <div id="ai-btn-container" class="p-3 border-t border-slate-700/50 bg-slate-900/60 shrink-0">
+                <button onclick="window.openAIModal()" class="w-full bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-[0_0_15px_rgba(251,191,36,0.2)] hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] transition-all flex justify-center items-center gap-2">
+                    <span>✨</span> Añadir Tema con IA
                 </button>
             </div>
         </aside>
 
-        <!-- AREA CENTRAL -->
         <section class="flex-1 flex flex-col gap-4 overflow-hidden min-h-0">
             
-            <!-- PANEL SUPERIOR: Teoría y Misión (Altura ajustada a 40vh para dar espacio a la consola de 7 líneas) -->
+            <!-- PANEL SUPERIOR: Teoría y Misión -->
             <div class="glass-panel shrink-0 flex flex-col md:flex-row overflow-hidden max-h-[35vh] md:max-h-[40vh] min-h-0">
-                <div class="flex-1 p-5 border-r border-slate-700/50 overflow-y-auto relative min-h-0">
+                
+                <!-- Columna Izquierda: Teoría Dinámica -->
+                <div class="flex-1 p-5 border-r border-slate-700/50 overflow-y-auto relative min-h-0" id="theory-scroll-container">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
-                    <h2 id="topic-title" class="text-xl md:text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
+                    <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
                     <div id="topic-theory" class="space-y-4 pb-4"></div>
                 </div>
 
+                <!-- Columna Derecha: Misión y Ejercicio Actual -->
                 <div class="w-full md:w-1/2 p-5 bg-slate-900/40 flex flex-col overflow-y-auto relative min-h-0">
                     <div class="absolute right-0 top-0 w-1 h-full bg-gradient-to-b from-amber-400 to-purple-500 opacity-20"></div>
+
                     <div class="flex justify-between items-center mb-3 border-b border-slate-700/50 pb-2 shrink-0">
-                        <h3 class="text-amber-400 uppercase tracking-wider font-black flex items-center gap-2 text-sm"><span>🎯</span> Tu Misión</h3>
+                        <h3 class="text-amber-400 uppercase tracking-wider font-black flex items-center gap-2"><span>🎯</span> Tu Misión</h3>
                         <div class="flex gap-2">
-                            <span id="ex-xp-badge" class="bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded text-[10px] font-bold border border-purple-500/30"></span>
-                            <span id="ex-coin-badge" class="bg-amber-900/50 text-amber-300 px-2 py-0.5 rounded text-[10px] font-bold border border-amber-500/30"></span>
+                            <span id="ex-xp-badge" class="bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded text-xs font-bold border border-purple-500/30">10 XP</span>
+                            <span id="ex-coin-badge" class="bg-amber-900/50 text-amber-300 px-2 py-0.5 rounded text-xs font-bold border border-amber-500/30">5 🪙</span>
                         </div>
                     </div>
-                    <div id="ex-task" class="text-sm font-medium leading-relaxed mb-4"></div>
                     
-                    <div class="mt-auto pt-3 border-t border-slate-700/50 shrink-0">
-                        <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 font-black uppercase tracking-widest text-[10px] mb-2">🗃️ Esquema Disponible</h4>
-                        <div id="ex-schema" class="text-xs text-cyan-200 font-mono bg-black/50 p-2 rounded-lg border border-slate-800 shadow-inner"></div>
-                        <div id="ex-schema-desc" class="mt-2 text-xs text-slate-400"></div>
+                    <div id="ex-task" class="text-sm font-medium leading-relaxed mb-4 min-h-0 shrink-0"></div>
+                    
+                    <div class="mt-auto pt-3 shrink-0">
+                        <div class="bg-emerald-950/20 border border-emerald-900/50 rounded-xl overflow-hidden shadow-[0_0_15px_rgba(16,185,129,0.05)] relative">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-cyan-500"></div>
+                            <div class="p-3 border-b border-emerald-900/50 bg-black/40 flex items-center gap-2">
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 font-black uppercase tracking-widest text-xs drop-shadow-sm">🗃️ Esquema Disponible</span>
+                            </div>
+                            <div class="p-4 space-y-3">
+                                <div class="relative">
+                                    <div class="absolute -top-2.5 left-2 bg-[#050505] border border-cyan-800 px-2 py-0.5 rounded text-[9px] text-cyan-400 font-bold uppercase tracking-widest z-10 shadow-md">⚙️ Estructura</div>
+                                    <div id="ex-schema" class="text-[11px] text-cyan-200 font-mono bg-[#050505] pt-3.5 pb-2 px-3 rounded-lg border border-slate-800 shadow-inner overflow-x-auto whitespace-nowrap">Cargando...</div>
+                                </div>
+                                <div id="ex-schema-desc" class="text-xs text-slate-400"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mt-4 pt-3 border-t border-slate-700/50 shrink-0">
-                        <div class="flex justify-between text-[9px] uppercase font-black mb-1.5 tracking-widest">
-                            <span class="text-emerald-400">Fácil</span><span class="text-amber-400">Medio</span><span class="text-rose-400">Difícil</span>
+                        <div class="flex justify-between text-[10px] uppercase font-black mb-2 tracking-widest">
+                            <span class="text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">Fácil</span>
+                            <span class="text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]">Medio</span>
+                            <span class="text-rose-400 drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]">Difícil</span>
                         </div>
-                        <div class="relative bg-slate-950 p-1.5 rounded-xl border border-slate-800 shadow-inner">
+                        <div class="relative bg-slate-950 p-2 rounded-xl border border-slate-800 shadow-inner">
                             <div class="absolute top-1/2 left-4 right-4 h-0.5 bg-slate-700/50 -translate-y-1/2 rounded-full z-0"></div>
                             <div class="flex justify-between items-center gap-1 relative z-10" id="exercise-navigator"></div>
                         </div>
@@ -282,247 +293,627 @@
                 </div>
             </div>
 
-            <!-- PANEL INFERIOR: Consola y Salida (min-h-0 para evitar cortes en pantallas pequeñas) -->
+            <!-- PANEL INFERIOR: Consola SQL y Salida -->
             <div class="flex-1 glass-panel flex flex-col overflow-hidden relative min-h-0">
                 
-                <div class="px-4 py-2 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30 shrink-0">
-                    <h2 class="text-xs text-white font-bold tracking-wide flex items-center gap-2"><span class="text-cyan-400">⚡</span> CONSOLA SQL</h2>
-                    
-                    <!-- Botón Modal Premium -->
-                    <button onclick="window.openDatabaseModal()" class="bg-gradient-to-r from-cyan-900/60 to-blue-900/60 hover:from-cyan-800 hover:to-blue-800 text-cyan-100 border border-cyan-500/50 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] flex items-center gap-2">
-                        <span>👁️</span> Ver Tablas
+                <div class="p-3 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30 shrink-0">
+                    <h2 class="text-sm text-white font-bold tracking-wide flex items-center gap-2">
+                        <span class="text-cyan-400">⚡</span> CONSOLA SQL
+                    </h2>
+                    <button onclick="window.openDatabaseModal()" class="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 hover:from-cyan-800/60 hover:to-blue-800/60 border border-cyan-500/30 hover:border-cyan-400/60 text-cyan-300 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(0,229,255,0.15)] hover:shadow-[0_0_25px_rgba(0,229,255,0.3)] hover:-translate-y-0.5 flex items-center gap-2">
+                        <span class="text-sm">👁️</span> VER TABLAS
                     </button>
                 </div>
                 
-                <!-- min-h-0 es la clave aquí para Flexbox -->
+                <!-- WRAPPER: Divide la consola y la salida de datos -->
                 <div class="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
                     
-                    <!-- Columna Izquierda: Editor y Controles -->
-                    <div class="flex-1 flex flex-col p-3 overflow-y-auto pr-2 min-h-0 relative">
-                        <div class="console-wrapper shrink-0 mb-3">
+                    <!-- Columna Izquierda: Editor, Controles (Con min-h-0 y pb-2) -->
+                    <div class="m-3 flex-1 flex flex-col gap-3 overflow-y-auto pr-2 relative min-h-0 pb-2">
+                        <div class="console-wrapper shrink-0">
                             <textarea id="sql-editor"></textarea>
                         </div>
                         
-                        <!-- BOTONES COMPACTOS RESPONSIVOS (flex-wrap previene que se salgan) -->
-                        <div class="flex flex-wrap items-center gap-3 shrink-0">
-                            <button id="run-btn" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white px-5 py-2 rounded-lg text-xs font-black tracking-widest transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] flex items-center gap-2">
-                                <span>▶</span> EJECUTAR
+                        <!-- Controles IDE Premium (Compactos y Flex Wrap) -->
+                        <div class="flex flex-wrap items-center gap-2 shrink-0 mb-1">
+                            <button id="run-btn" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:-translate-y-0.5 flex items-center justify-center gap-1.5 shrink-0">
+                                <span class="text-sm">▶</span> EJECUTAR
                             </button>
-                            <button id="next-btn" class="hidden bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white px-5 py-2 rounded-lg text-xs font-black tracking-widest transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] flex items-center gap-2">
-                                SIGUIENTE <span>➔</span>
+                            <button id="next-btn" class="hidden bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:-translate-y-0.5 flex items-center justify-center gap-1.5 shrink-0">
+                                SIGUIENTE <span class="text-sm">➔</span>
                             </button>
-                            <button id="reset-btn" class="ml-auto bg-slate-800/50 hover:bg-slate-700/80 border border-slate-600 hover:border-slate-400 text-slate-300 hover:text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2">
-                                <span>🔄</span> RESET
+                            <button id="reset-btn" class="bg-slate-800/50 hover:bg-slate-700/80 border border-slate-600/50 hover:border-slate-400/80 text-slate-400 hover:text-white px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wide transition-all ml-auto flex items-center justify-center gap-1.5 shadow-inner shrink-0">
+                                <span class="text-sm">🔄</span> RESET
                             </button>
                         </div>
 
-                        <!-- PANEL DE ERROR PREMIUM ABISAL -->
-                        <div id="error-container" class="error-panel p-4 hidden shrink-0 mt-4">
-                            <div class="flex flex-col sm:flex-row sm:items-start gap-4">
-                                <div class="error-icon-wrapper w-10 h-10 rounded-full flex items-center justify-center text-red-500 shrink-0">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <!-- PANEL DE ERROR PREMIUM IDE (min-w-0 fix) -->
+                        <div id="error-container" class="error-panel shrink-0 mt-2 hidden">
+                            <div class="flex items-start gap-5 relative z-10 min-w-0">
+                                <div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative">
+                                    <div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div>
+                                    <svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                                 </div>
-                                <div class="flex-1 min-w-0"> <!-- min-w-0 evita desbordamiento por textos largos en flex -->
-                                    <h4 id="error-title-msg" class="text-white font-black uppercase tracking-wider text-sm mb-3">La consulta falló</h4>
+                                
+                                <div class="flex-1 pt-1 min-w-0">
+                                    <h4 id="error-title-msg" class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">LOS DATOS EXTRAÍDOS NO COINCIDEN</h4>
+                                    <p id="error-friendly-msg" class="text-slate-400 text-xs mb-3 hidden"></p>
                                     
-                                    <button onclick="window.toggleTechDetail()" class="pill-button px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 w-max mb-3">
-                                        <span id="tech-detail-icon" class="transition-transform duration-200">▶</span> VER ANÁLISIS DETALLADO
-                                    </button>
-                                    
-                                    <!-- Texto en blanco puro y cursiva -->
-                                    <div id="tech-detail-content" class="hidden text-white italic text-xs leading-relaxed border-l-2 border-slate-700 pl-3 py-1 mb-2"></div>
+                                    <div>
+                                        <button onclick="window.toggleTechDetail()" class="tech-detail-pill shrink-0">
+                                            <span id="tech-detail-icon" class="transition-transform duration-200 text-[11px]">▶</span> VER ANÁLISIS DETALLADO
+                                        </button>
+                                        <!-- Caja de análisis blanca y cursiva -->
+                                        <div id="tech-detail-content" class="hidden mt-3 p-4 border border-red-900/50 text-white italic font-mono text-xs overflow-x-auto whitespace-pre-line bg-black/80 rounded-lg shadow-inner relative z-10"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Pistas -->
-                        <div id="hints-container" class="hidden flex-col gap-3 shrink-0 pb-2 mt-4">
-                            <div class="flex flex-wrap items-center gap-2 w-full">
-                                <button id="btn-next-hint" onclick="window.revealHint()" class="flex items-center gap-2 bg-blue-900/40 hover:bg-blue-800/60 border border-blue-500/30 text-blue-300 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all">
-                                    <span>💡</span> Solicitar Pista (<span id="hints-left">2</span>)
+                        <!-- Barra dinámica de pistas -->
+                        <div id="hints-container" class="hidden flex-col gap-3 shrink-0 pb-2 mt-2 min-w-0">
+                            <div class="flex flex-wrap items-center gap-3 bg-slate-900/60 p-2.5 rounded-xl border border-slate-700/50 shadow-inner w-full">
+                                <button id="btn-next-hint" onclick="window.revealHint()" class="flex items-center gap-2 bg-blue-900/40 hover:bg-blue-800/60 border border-blue-500/30 text-blue-300 px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-[0_0_10px_rgba(59,130,246,0.1)] hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:-translate-y-0.5">
+                                    <span class="text-base">💡</span> Solicitar Pista (<span id="hints-left">2</span>)
                                 </button>
-                                <span id="no-more-hints" class="text-slate-500 text-[10px] font-medium hidden flex items-center gap-1"><span>📭</span> No hay más pistas</span>
-                                <button id="btn-show-solution" onclick="window.revealSolution()" class="hidden flex items-center gap-2 bg-emerald-900/40 border border-emerald-500/30 text-emerald-300 px-3 py-1.5 rounded-lg text-[10px] font-bold ml-auto">
-                                    <span>🗝️</span> Revelar Solución
+                                <span id="no-more-hints" class="text-slate-500 text-xs font-medium hidden flex items-center gap-1"><span class="text-slate-600">📭</span> No hay más pistas disponibles</span>
+                                <button id="btn-show-solution" onclick="window.revealSolution()" class="hidden flex items-center gap-2 bg-emerald-900/40 hover:bg-emerald-800/60 border border-emerald-500/30 text-emerald-300 px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 ml-auto">
+                                    <span class="text-base">🗝️</span> Revelar Solución
                                 </button>
                             </div>
-                            <div id="hints-list" class="flex flex-col gap-2"></div>
+                            <div id="hints-list" class="flex flex-col gap-3 min-w-0"></div>
                         </div>
                     </div>
                     
-                    <!-- Columna Derecha: Salida de Datos Abisal -->
-                    <div class="flex-1 output-panel mx-3 mb-3 mt-4 md:mt-3 rounded-xl overflow-hidden flex flex-col min-h-0 relative">
-                        <!-- Línea Neon Superior -->
-                        <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50"></div>
+                    <!-- Columna Derecha: NUEVA SALIDA DE DATOS PREMIUM -->
+                    <div class="flex-1 output-panel mx-3 mb-3 mt-4 md:mt-0 relative rounded-xl overflow-hidden flex flex-col min-h-0">
+                        <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50 z-20"></div>
                         
-                        <div class="px-4 py-2.5 text-[10px] font-black text-cyan-200 uppercase tracking-widest border-b border-cyan-900/50 flex justify-between items-center shrink-0 bg-[#090b14]/80">
-                            <span class="flex items-center gap-2"><span class="text-sm">📊</span> SALIDA DE DATOS</span>
-                            <span id="row-count" class="bg-cyan-950 border border-cyan-800 px-2.5 py-1 rounded-full text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.1)]">0 FILAS</span>
+                        <div class="bg-[#05060a]/80 px-4 py-2.5 text-xs font-black uppercase tracking-widest border-b border-cyan-900/50 flex justify-between items-center shrink-0 z-10 relative">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 flex items-center gap-2 drop-shadow-[0_0_5px_rgba(0,229,255,0.3)]">
+                                <span class="text-cyan-400">📊</span> SALIDA DE DATOS
+                            </span>
+                            <span id="row-count" class="bg-cyan-950/80 border border-cyan-500/50 px-2.5 py-1 rounded-md text-cyan-300 shadow-[0_0_10px_rgba(0,229,255,0.2)] font-mono">0 FILAS</span>
                         </div>
                         
-                        <div id="results-container" class="flex-1 overflow-auto p-0 relative min-h-0">
-                            <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                                <div class="w-16 h-16 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center text-2xl mb-4 shadow-inner">📡</div>
-                                <span class="text-slate-200 font-black uppercase tracking-widest text-sm mb-2">ESPERANDO CONSULTA...</span>
+                        <div id="results-container" class="flex-1 overflow-auto p-0 relative bg-gradient-to-b from-[#090b14] to-black min-h-0">
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                                <div class="w-16 h-16 rounded-full bg-slate-800/30 border border-slate-700/50 flex items-center justify-center mb-3 shadow-inner">
+                                    <span class="text-3xl drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">📡</span>
+                                </div>
+                                <span class="text-slate-300 font-black uppercase tracking-widest text-sm mb-1">Esperando Consulta...</span>
                                 <span class="text-slate-500 text-xs max-w-[80%] font-medium">Escribe tu código SQL y presiona Ejecutar para visualizar el dataset.</span>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
             </div>
         </section>
     </main>
 
-    <!-- Modal Explorador de Tablas (Premium Abisal) -->
-    <div id="db-modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-md z-40 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
-        <div class="bg-[#090b14] border border-cyan-900/50 rounded-2xl w-11/12 max-w-4xl max-h-[85vh] flex flex-col shadow-[0_0_50px_rgba(0,229,255,0.1)] transform scale-95 transition-transform duration-300 relative overflow-hidden" id="db-modal-card">
-            <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-cyan-500 to-purple-500"></div>
-            
-            <div class="p-5 border-b border-slate-800 flex justify-between items-center shrink-0">
-                <h2 class="text-sm font-black text-cyan-300 uppercase tracking-widest flex items-center gap-2"><span>👁️</span> Base de Datos Activa</h2>
-                <button onclick="window.closeDatabaseModal()" class="text-slate-500 hover:text-white text-2xl font-bold leading-none transition-colors">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto flex-1 space-y-8" id="db-modal-content"></div>
+    <div id="toast" class="toast">
+        <span id="toast-icon" class="text-xl">✅</span>
+        <div>
+            <div id="toast-title" class="text-sm font-black uppercase tracking-wide">Correcto</div>
+            <div id="toast-msg" class="text-xs text-slate-300 font-medium">Ganaste 50 XP</div>
         </div>
     </div>
 
-    <!-- Modal IA Generador -->
-    <div id="ai-modal" class="fixed inset-0 ai-modal z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
-        <div class="bg-slate-900 border border-amber-500/30 rounded-2xl w-11/12 max-w-md p-6 shadow-[0_0_40px_rgba(251,191,36,0.15)] relative transform scale-95 transition-transform duration-300" id="ai-modal-card">
-            <button onclick="window.closeAIModal()" class="absolute top-4 right-4 text-slate-500 hover:text-white bg-slate-800 rounded-full w-8 h-8 flex items-center justify-center">&times;</button>
-            
-            <h3 class="text-amber-400 font-black text-lg mb-1 uppercase tracking-widest flex items-center gap-2"><span>✨</span> Creador de Módulos IA</h3>
-            <p class="text-xs text-slate-400 mb-6 font-medium">Conéctate a Gemini Pro y genera temas personalizados al instante.</p>
-            
-            <div class="space-y-4">
+    <!-- Modal Explorador DB Premium -->
+    <div id="db-modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-md z-40 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-[#090b14] border border-cyan-500/30 rounded-2xl w-11/12 max-w-5xl max-h-[85vh] flex flex-col shadow-[0_0_50px_rgba(0,229,255,0.15)] transform scale-95 transition-transform duration-300 relative overflow-hidden" id="db-modal-card">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 z-50"></div>
+            <div class="p-5 border-b border-cyan-900/50 bg-[#05060a] flex justify-between items-center shrink-0 relative z-10">
+                <h2 class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 flex items-center gap-2 drop-shadow-md">
+                    <span class="text-cyan-400 text-xl">👁️</span> EXPLORADOR DE BASE DE DATOS
+                </h2>
+                <button onclick="window.closeDatabaseModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/50 hover:bg-red-900/50 border border-transparent hover:border-red-500/50 text-slate-400 hover:text-red-400 transition-all text-xl font-bold leading-none">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 bg-gradient-to-b from-[#090b14] to-black" id="db-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- NUEVO: Modal Generador IA Premium -->
+    <div id="ai-modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-[#0f111a] border border-amber-500/30 rounded-2xl w-11/12 max-w-lg flex flex-col shadow-[0_0_50px_rgba(251,191,36,0.15)] transform scale-95 transition-transform duration-300 relative overflow-hidden" id="ai-modal-card">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-yellow-600 z-50"></div>
+            <div class="p-5 border-b border-amber-900/50 bg-[#05060a] flex justify-between items-center shrink-0 relative z-10">
+                <h2 class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-500 flex items-center gap-2 drop-shadow-md">
+                    <span class="text-amber-400 text-xl">✨</span> CREADOR DE MÓDULOS IA
+                </h2>
+                <button onclick="window.closeAIModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/50 hover:bg-red-900/50 border border-transparent hover:border-red-500/50 text-slate-400 hover:text-red-400 transition-all text-xl font-bold leading-none">&times;</button>
+            </div>
+            <div class="p-6 flex flex-col gap-4">
+                <p class="text-sm text-slate-300 mb-2">Conecta tu cuenta de Gemini para generar automáticamente teoría, errores habituales, quizzes y 9 ejercicios jugables con base en el tema que desees.</p>
+                
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-1.5 ml-1">Clave API de Gemini:</label>
-                    <input type="password" id="ai-api-key" placeholder="AIzaSy..." class="w-full bg-black/50 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-colors">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-1.5 ml-1">Tema a aprender (YouTube):</label>
-                    <input type="text" id="ai-topic" placeholder="Ej: ORDER BY y LIMIT" class="w-full bg-black/50 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-colors">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-1">Tu Gemini API Key</label>
+                    <input type="password" id="ai-api-key" placeholder="AIzaSy..." class="w-full bg-black/50 border border-slate-700 text-slate-200 text-sm px-4 py-2.5 rounded-lg focus:outline-none focus:border-amber-500 focus:shadow-[0_0_15px_rgba(251,191,36,0.2)] transition-all">
+                    <p class="text-[10px] text-slate-500 mt-1">Tu clave se guarda localmente y nunca sale de tu navegador.</p>
                 </div>
                 
-                <div id="ai-loading" class="hidden flex-col items-center justify-center py-4 space-y-3">
-                    <div class="w-8 h-8 border-4 border-slate-700 border-t-amber-500 rounded-full animate-spin"></div>
-                    <p class="text-xs text-amber-300 font-bold animate-pulse">Construyendo arquitectura del nivel...</p>
+                <div>
+                    <label class="block text-xs font-bold text-amber-400 uppercase tracking-wide mb-1">Tema a Generar</label>
+                    <input type="text" id="ai-topic-input" placeholder="Ej. El uso de GROUP BY y HAVING" class="w-full bg-black/50 border border-slate-700 text-white font-bold text-sm px-4 py-2.5 rounded-lg focus:outline-none focus:border-amber-500 focus:shadow-[0_0_15px_rgba(251,191,36,0.2)] transition-all">
                 </div>
 
-                <div class="flex gap-3 pt-2" id="ai-buttons">
-                    <button onclick="window.closeAIModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2.5 rounded-xl text-xs font-bold transition-colors">Cancelar</button>
-                    <button onclick="window.generateTopic()" class="flex-1 bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-500 hover:to-orange-400 text-white py-2.5 rounded-xl text-xs font-black tracking-widest transition-all shadow-[0_0_15px_rgba(251,191,36,0.3)]">GENERAR</button>
+                <div class="mt-4 flex justify-end gap-3">
+                    <button onclick="window.closeAIModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors">Cancelar</button>
+                    <button id="ai-generate-btn" onclick="window.generateAITopic()" class="bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-white px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(251,191,36,0.3)] hover:shadow-[0_0_30px_rgba(251,191,36,0.5)] flex items-center justify-center min-w-[160px]">
+                        GENERAR MÓDULO
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Script Principal -->
     <script>
         let db;
         let sqlEditor;
         
-        let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [] };
+        let playerState = {
+            xp: 0,
+            level: 1,
+            coins: 0,
+            completedExercises: []
+        };
+
         let currentTopicIdx = 0;
         let currentExerciseIdx = 0;
         let revealedHintsCount = 0;
 
-        // Base de Datos Estática de Temas Iniciales
-        let TOPICS = [
-            {
-                id: "t1",
-                title: "1. Fundamentos y Extracción",
-                theory: `
-                    <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] mb-6 relative overflow-hidden group">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div>
-                        <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2"><span>🚀</span> Anatomía de una Consulta</h4>
-                        <p class="text-sm text-slate-300 mb-4">Estructura tu pensamiento: ¿Qué columnas necesito (SELECT) y de dónde las saco (FROM)?</p>
+        // FÁBRICA DE TEMAS: Convierte JSON a HTML Premium
+        function createTopicFromJSON(d) {
+            let topicId = "t" + (TOPICS.length + 1);
+            
+            let commandsHTML = d.commands.map(cmd => `
+                <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-pink-500/40 hover:shadow-[0_0_20px_rgba(244,114,182,0.15)] transition-all">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex flex-col md:flex-row md:items-center gap-3">
+                        <code class="bg-black/50 border border-pink-500/50 text-pink-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">${cmd.name}</code>
+                        <p class="text-sm text-slate-300">${cmd.desc}</p>
                     </div>
-                `,
-                exercises: [
-                    { id: "t1_e1", diff: "easy", get data() { return window.createMissionHTML("Extrae todos los registros de almacén.", "Usa SELECT * para la tabla Warehouse_StockItems.", "Usa *", "Warehouse_StockItems (...)", {title:"",cols:[]}) }, expectedQuery: "SELECT * FROM Warehouse_StockItems;", xp: 10, coins: 5, hints: ["Usa SELECT *", "El FROM apunta a Warehouse_StockItems", "SELECT * FROM Warehouse_StockItems;"] }
-                ]
-            }
-        ];
+                </div>
+            `).join('');
 
-        // Cargar temas guardados
-        const savedTopics = localStorage.getItem('sqlMastery_topics');
-        if (savedTopics) {
-            try {
-                const parsed = JSON.parse(savedTopics);
-                // Fusionamos los temas guardados, mapeando los 'get data()'
-                parsed.forEach((t, i) => {
-                    if(i > 0) { // Saltamos el T1 base
-                        t.exercises.forEach(ex => {
-                            const rawData = ex.rawData;
-                            Object.defineProperty(ex, 'data', {
-                                get: function() { return window.createMissionHTML(rawData.scenario, rawData.req, rawData.tip, rawData.schema, rawData.descObj); }
-                            });
-                        });
-                        TOPICS.push(t);
-                    }
-                });
-            } catch(e) { console.error("Error cargando temas guardados"); }
+            let quizzesHTML = d.quizzes.map((qz, idx) => {
+                let optionsHTML = qz.options.map(opt => `
+                    <button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${opt.feedback.replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                        <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span>
+                    </button>
+                `).join('');
+                return `
+                    <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                        <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz ${idx+1}/${d.quizzes.length}</h4>
+                        <p class="text-sm text-slate-300 mb-4 font-medium">${qz.question}</p>
+                        <div class="space-y-2">${optionsHTML}</div>
+                        <div class="quiz-feedback hidden"></div>
+                    </div>
+                `;
+            }).join('');
+
+            let theoryHTML = `
+                <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div>
+                    <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-md">
+                        <span>🚀</span> ${d.introTitle}
+                    </h4>
+                    <p class="text-sm text-slate-300 mb-4 leading-relaxed">${d.introText}</p>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-cyan-400 font-bold mb-4 uppercase tracking-wide text-xs flex items-center gap-2"><span>📖</span> Comandos Clave</h4>
+                    <div class="grid gap-3">${commandsHTML}</div>
+                </div>
+
+                <div class="mb-6 bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(99,102,241,0.1)] relative overflow-hidden group hover:border-indigo-400/50 transition-all duration-300">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-purple-500"></div>
+                    <h4 class="text-indigo-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span>🛡️</span> Buenas Prácticas Corporativas</h4>
+                    <p class="text-sm text-slate-300 mb-3">${d.bestPracticeText}</p>
+                </div>
+                
+                <!-- Error Premium Dinámico -->
+                <div class="mb-6 error-panel">
+                    <div class="flex items-start gap-5 relative z-10 min-w-0">
+                        <div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative">
+                            <div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div>
+                            <svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <div class="flex-1 pt-1 min-w-0">
+                            <h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">${d.errorTitle}</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">${d.errorIntro}</p>
+                            <div class="relative mb-4">
+                                <div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div>
+                                <pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono">${d.errorBadCode}</pre>
+                            </div>
+                            <div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4">
+                                <h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5>
+                                <p class="text-sm text-slate-300">${d.errorImpact}</p>
+                            </div>
+                            <div class="relative">
+                                <div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div>
+                                <pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono leading-relaxed">${d.errorGoodCode}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div>
+                    <h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]">
+                        <span>💡</span> Ejemplo Práctico
+                    </h4>
+                    <div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner mb-4">
+                        <p class="text-sm text-amber-100/80 italic flex items-start gap-2">
+                            <span class="text-lg not-italic mt-0.5">🏢</span> "${d.exampleContext}"
+                        </p>
+                    </div>
+                    <div class="relative mt-2">
+                        <div class="absolute -top-3 right-3 bg-blue-900/80 border border-blue-500/50 px-2 py-0.5 rounded text-[9px] text-blue-200 font-bold uppercase tracking-widest z-10 shadow-md">Solución SQL</div>
+                        <pre class="code-glow overflow-x-auto pt-5 pb-4 px-4 rounded-xl text-sm font-mono leading-relaxed">${d.exampleCode}</pre>
+                    </div>
+                </div>
+                <div class="mt-8 space-y-6">${quizzesHTML}</div>
+            `;
+
+            let mappedExercises = d.exercises.map((ex, i) => {
+                return {
+                    id: `${topicId}_e${i+1}`,
+                    diff: ex.diff,
+                    get data() { return window.createMissionHTML(ex.escenario, ex.requerimiento, ex.tip, ex.schemaLine, {title: ex.schemaTitle, cols: ex.schemaCols}); },
+                    expectedQuery: ex.expectedQuery,
+                    xp: ex.diff === "easy" ? 15 : (ex.diff === "med" ? 30 : 60),
+                    coins: ex.diff === "easy" ? 5 : (ex.diff === "med" ? 15 : 30),
+                    hints: ex.hints || ["Piensa en qué columnas requieres", "Revisa tu cláusula WHERE", "Asegúrate de escribir la sintaxis correcta."]
+                };
+            });
+
+            return { id: topicId, title: d.topicName, theory: theoryHTML, exercises: mappedExercises };
         }
 
-        window.createMissionHTML = function(escenario, requerimiento, tip, schemaLine, descObj) {
-            let descHtml = "";
-            if(descObj && descObj.cols) {
-                descHtml = `<p class="text-xs text-emerald-100/80 mb-2 italic">${descObj.title}</p><div class="bg-black/50 p-2 rounded-lg space-y-1">`;
-                descObj.cols.forEach(col => { descHtml += `<div class="flex items-start gap-2"><code class="text-cyan-300 font-bold bg-cyan-900/30 px-1 rounded text-[10px]">${col.name}</code><span class="text-xs text-emerald-50">${col.desc}</span></div>`; });
-                descHtml += `</div>`;
+        window.checkQuiz = function(btn, isCorrect, feedbackMsg) {
+            const container = btn.closest('.quiz-container');
+            const buttons = container.querySelectorAll('.quiz-option');
+            buttons.forEach(b => b.disabled = true);
+            const feedbackDiv = container.querySelector('.quiz-feedback');
+            feedbackDiv.classList.remove('hidden');
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
+                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
+                fireConfetti();
+                window.grantRewards(5, 1);
+            } else {
+                btn.classList.add('incorrect', 'shake-animation');
+                feedbackDiv.innerHTML = `<span class="text-red-400 text-lg">❌</span> <span class="text-red-300">${feedbackMsg}</span>`;
+                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-red-900/30 border border-red-500/50 flex items-start gap-2";
+                setTimeout(() => {
+                    btn.classList.remove('incorrect', 'shake-animation');
+                    feedbackDiv.classList.add('hidden');
+                    buttons.forEach(b => b.disabled = false);
+                }, 2000);
             }
+        };
+
+        window.createMissionHTML = function(escenario, requerimiento, tip, schemaLine, descObj) {
+            let descHtml = `<p class="text-sm text-emerald-100/80 mb-3 italic">${descObj.title}</p><div class="bg-black/50 p-3 rounded-lg shadow-inner space-y-2">`;
+            if (descObj && descObj.cols) {
+                descObj.cols.forEach(col => {
+                    descHtml += `<div class="flex items-start gap-2 min-w-0"><code class="text-cyan-300 font-bold bg-cyan-900/30 border border-cyan-500/30 px-1.5 py-0.5 rounded text-xs shrink-0">${col.name}</code><span class="text-sm text-emerald-50 mt-0.5 break-words">${col.desc}</span></div>`;
+                });
+            }
+            descHtml += `</div>`;
 
             const taskHtml = `
-                <div class="bg-slate-900/80 border border-slate-700/50 rounded-xl p-4 shadow-md mb-3 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                    <h4 class="text-cyan-300 font-black mb-2 uppercase tracking-widest text-[10px] flex items-center gap-2"><span>🏢</span> Escenario</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed">${escenario}</p>
+                <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-5 shadow-[0_0_20px_rgba(0,0,0,0.4)] relative overflow-hidden group hover:border-slate-600/50 transition-all duration-300 mb-4">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-purple-600"></div>
+                    <h4 class="text-cyan-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span class="text-lg">🏢</span> El Escenario</h4>
+                    <p class="text-sm text-slate-300 leading-relaxed">${escenario}</p>
                 </div>
-                <div class="bg-slate-900/80 border border-slate-700/50 rounded-xl p-4 shadow-md mb-3 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
-                    <h4 class="text-amber-400 font-black mb-2 uppercase tracking-widest text-[10px] flex items-center gap-2"><span>⚙️</span> Requerimiento</h4>
-                    <p class="text-xs text-white font-medium bg-black/40 p-2 rounded">${requerimiento}</p>
+                <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-5 shadow-[0_0_20px_rgba(0,0,0,0.4)] relative overflow-hidden group hover:border-slate-600/50 transition-all duration-300 mb-4">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-500 to-rose-500"></div>
+                    <h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span class="text-lg">⚙️</span> El Requerimiento</h4>
+                    <div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner">
+                        <p class="text-sm text-white font-medium leading-relaxed">${requerimiento}</p>
+                    </div>
+                </div>
+                <div class="bg-blue-900/20 border-l-4 border-blue-500 p-3 rounded-r-xl shadow-md">
+                    <h4 class="text-blue-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>💡</span> Tip de Misión</h4>
+                    <p class="text-xs text-blue-200">${tip}</p>
                 </div>
             `;
             return { taskHtml, schemaLine, descHtml };
         };
 
+        const TOPICS = [
+            {
+                id: "t1",
+                title: "1. Fundamentos y Análisis Lógico",
+                theory: `
+                    <!-- Introducción Glassmorphism -->
+                    <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div>
+                        <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-md">
+                            <span>🚀</span> Anatomía de una Consulta Maestra
+                        </h4>
+                        <p class="text-sm text-slate-300 mb-4 leading-relaxed">En SQL Server, cada consulta que escribes es una solicitud formal a la base de datos. Para que el motor entienda qué necesitas, debes estructurar tu pensamiento como un Arquitecto de Datos:</p>
+                        
+                        <div class="bg-black/50 rounded-xl p-4 shadow-inner border border-slate-800 space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-cyan-900 border border-cyan-500 flex items-center justify-center text-cyan-300 text-xs font-bold shadow-[0_0_10px_rgba(0,229,255,0.3)]">1</div>
+                                <p class="text-sm text-slate-300">¿Qué información específica necesito ver? <span class="text-cyan-500 font-bold ml-1">-> Define tu SELECT.</span></p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-cyan-900 border border-cyan-500 flex items-center justify-center text-cyan-300 text-xs font-bold shadow-[0_0_10px_rgba(0,229,255,0.3)]">2</div>
+                                <p class="text-sm text-slate-300">¿En qué tabla o contenedor está guardada? <span class="text-cyan-500 font-bold ml-1">-> Define tu FROM.</span></p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-cyan-900 border border-cyan-500 flex items-center justify-center text-cyan-300 text-xs font-bold shadow-[0_0_10px_rgba(0,229,255,0.3)]">3</div>
+                                <p class="text-sm text-slate-300">¿Qué requisitos deben cumplir los registros? <span class="text-cyan-500 font-bold ml-1">-> Define tu WHERE.</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diccionario de Comandos -->
+                    <div class="mb-6">
+                        <h4 class="text-cyan-400 font-bold mb-4 uppercase tracking-wide text-xs flex items-center gap-2"><span>📖</span> Diccionario de Comandos Base</h4>
+                        <div class="grid gap-3">
+                            <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-pink-500/40 hover:shadow-[0_0_20px_rgba(244,114,182,0.15)] transition-all">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                                    <code class="bg-black/50 border border-pink-500/50 text-pink-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">SELECT</code>
+                                    <p class="text-sm text-slate-300">Le dice al motor qué columnas exactas queremos que se proyecten en pantalla.</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                                    <code class="bg-black/50 border border-blue-500/50 text-blue-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">FROM</code>
+                                    <p class="text-sm text-slate-300">Indica el esquema y la tabla de origen de los datos.</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-emerald-500/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                                    <code class="bg-black/50 border border-emerald-500/50 text-emerald-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">WHERE</code>
+                                    <p class="text-sm text-slate-300">Filtro condicional matemático.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buenas Prácticas -->
+                    <div class="mb-6 bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(99,102,241,0.1)] relative overflow-hidden group hover:border-indigo-400/50 transition-all duration-300">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-purple-500"></div>
+                        <h4 class="text-indigo-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span>🛡️</span> Buenas Prácticas Corporativas</h4>
+                        <p class="text-sm text-slate-300 mb-3">Documentar tu código es obligatorio para que el equipo pueda leerlo. En SQL usamos:</p>
+                        <div class="bg-black/40 rounded-xl p-3 shadow-inner border border-slate-800 space-y-2">
+                            <div class="flex items-center gap-3">
+                                <code class="text-green-400 font-bold bg-green-900/20 px-2 py-1 rounded text-xs border border-green-500/30">-- Texto</code>
+                                <span class="text-sm text-slate-300">Comenta la línea (Notas rápidas).</span>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-slate-700/50 text-xs text-indigo-200">
+                                💡 <b>Alerta de Rendimiento:</b> Evita usar <code class="text-white font-bold">SELECT *</code> en producción. Extrae datos inútiles y satura la red.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Error Habitual -->
+                    <div class="mb-6 error-panel">
+                        <div class="flex items-start gap-5 relative z-10 min-w-0">
+                            <div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative">
+                                <div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div>
+                                <svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            </div>
+                            <div class="flex-1 pt-1 min-w-0">
+                                <h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">UN ERROR HABITUAL [SINTAXIS FATAL]</h4>
+                                <p class="text-sm text-slate-300 mb-4 font-medium">Asumir que el motor de base de datos puede adivinar qué tabla quieres consultar si solo escribes el nombre de la columna en el SELECT.</p>
+                                <div class="relative mb-4">
+                                    <div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div>
+                                    <pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono"><span class="text-blue-400 font-bold">SELECT</span> <span class="text-white">CustomerName</span><span class="text-slate-400">;</span></pre>
+                                </div>
+                                <div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4">
+                                    <h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en la vida real</h5>
+                                    <p class="text-sm text-slate-300">Si omites el <code class="text-pink-400 font-bold">FROM</code>, el servidor SQL rechazará compilar tu código de inmediato.</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div>
+                                    <pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono leading-relaxed"><span class="text-blue-400 font-bold">SELECT</span> 
+    <span class="text-white">CustomerName</span> 
+<span class="text-blue-400 font-bold">FROM</span> 
+    <span class="text-white">Sales_Customers</span><span class="text-slate-400">;</span></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quizzes -->
+                    <div class="mt-8 space-y-6">
+                        <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                            <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz 1/3: Propósito del SELECT</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">¿Para qué sirve exactamente la cláusula SELECT en una instrucción de base de datos?</p>
+                            <div class="space-y-2">
+                                <button onclick="window.checkQuiz(this, true, '¡Correcto! El SELECT determina las columnas específicas que se proyectarán en pantalla.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">A) Para indicar qué columnas exactas queremos visualizar.</span>
+                                </button>
+                                <button onclick="window.checkQuiz(this, false, 'Incorrecto. La ubicación de la tabla se especifica con FROM.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">B) Para declarar el nombre exacto de la tabla de origen.</span>
+                                </button>
+                            </div>
+                            <div class="quiz-feedback hidden"></div>
+                        </div>
+
+                        <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                            <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz 2/3: La Cláusula FROM</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">¿Qué función cumple la cláusula FROM en una consulta SQL?</p>
+                            <div class="space-y-2">
+                                <button onclick="window.checkQuiz(this, false, 'Incorrecto. El filtrado de datos se realiza con la cláusula WHERE.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">A) Filtra los registros basándose en una condición específica.</span>
+                                </button>
+                                <button onclick="window.checkQuiz(this, true, '¡Exacto! FROM le indica al motor de base de datos la tabla de la cual extraer la información.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">B) Define de qué tabla o tablas se van a consultar los datos.</span>
+                                </button>
+                            </div>
+                            <div class="quiz-feedback hidden"></div>
+                        </div>
+
+                        <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
+                            <h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz 3/3: Condiciones Matemáticas</h4>
+                            <p class="text-sm text-slate-300 mb-4 font-medium">Si necesitas extraer clientes cuyo límite de crédito sea mayor a 1000, ¿qué cláusula debes utilizar?</p>
+                            <div class="space-y-2">
+                                <button onclick="window.checkQuiz(this, true, '¡Correcto! WHERE se utiliza para establecer las condiciones o filtros que deben cumplir los registros.')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">A) WHERE</span>
+                                </button>
+                                <button onclick="window.checkQuiz(this, false, 'Incorrecto. SELECT solo selecciona columnas, no filtra registros (filas).')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center">
+                                    <div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">B) SELECT</span>
+                                </button>
+                            </div>
+                            <div class="quiz-feedback hidden"></div>
+                        </div>
+                    </div>
+                `,
+                exercises: [
+                    // --- NIVEL FÁCIL (1 - 3) ---
+                    { id: "t1_e1", diff: "easy", get data() { return window.createMissionHTML(
+                        "El departamento de cobranzas acaba de detectar facturas atrasadas. Necesitan que extraigas urgente una lista de la base de datos para comenzar a llamar a los clientes antes del cierre de mes.", 
+                        "Escribe una consulta que devuelva el ID del cliente (<code>CustomerID</code>), el nombre (<code>CustomerName</code>) y su límite de riesgo (<code>CreditLimit</code>) de la tabla <code>Sales_Customers</code>. SOLO queremos a aquellos con un límite exactamente igual a <b>3000</b> dólares.", 
+                        "La consulta debe iniciar invocando las tres columnas separadas por comas. El filtro final de tu código será: WHERE CreditLimit = 3000;", 
+                        "Sales_Customers (CustomerID, CustomerName, CreditLimit)", 
+                        {title: "Esta tabla maestra almacena el registro oficial de todas las empresas que compran en WideWorldImporters.", cols: [{name: "CustomerID", desc: "ID numérico único del cliente."}, {name: "CustomerName", desc: "Nombre oficial de la empresa registrada."}, {name: "CreditLimit", desc: "Límite de crédito otorgado en dólares."}]}
+                    ) }, expectedQuery: "SELECT CustomerID, CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit = 3000;", xp: 15, coins: 5, hints: ["La consulta debe iniciar invocando las tres columnas solicitadas usando SELECT.", "Asegúrate de separarlas por comas: CustomerID, CustomerName, CreditLimit.", "Tu filtro será: WHERE CreditLimit = 3000;"] },
+                    
+                    { id: "t1_e2", diff: "easy", get data() { return window.createMissionHTML(
+                        "El equipo de inventario necesita hacer una auditoría rápida de catálogo para lanzar la nueva tienda en línea corporativa.", 
+                        "Extrae el nombre del producto (<code>StockItemName</code>) y su precio unitario (<code>UnitPrice</code>) de todos los artículos almacenados en la tabla <code>Warehouse_StockItems</code>.", 
+                        "No necesitas usar la cláusula WHERE aquí, solo un comando SELECT básico.", 
+                        "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", 
+                        {title: "Inventario central del almacén corporativo.", cols: [{name: "StockItemName", desc: "Nombre del producto en stock."}, {name: "UnitPrice", desc: "Precio de venta al público."}]}
+                    ) }, expectedQuery: "SELECT StockItemName, UnitPrice FROM Warehouse_StockItems;", xp: 15, coins: 5, hints: ["Usa SELECT para listar las dos columnas pedidas separadas por coma.", "Indica la tabla correcta con la cláusula FROM.", "Termina tu consulta con punto y coma (;)."] },
+                    
+                    { id: "t1_e3", diff: "easy", get data() { return window.createMissionHTML(
+                        "El departamento de Marketing lanzará una campaña de fidelización exclusiva para clientes de alto perfil.", 
+                        "Encuentra los nombres de empresas (<code>CustomerName</code>) y el límite de crédito (<code>CreditLimit</code>) de la tabla <code>Sales_Customers</code> de clientes que tengan un límite MAYOR a 3000.", 
+                        "Usa el operador matemático mayor que (>) en tu filtro WHERE.", 
+                        "Sales_Customers (CustomerID, CustomerName, CreditLimit)", 
+                        {title: "Registro oficial de empresas registradas.", cols: [{name: "CustomerName", desc: "Nombre de la empresa."}, {name: "CreditLimit", desc: "Límite habilitado en dólares."}]}
+                    ) }, expectedQuery: "SELECT CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit > 3000;", xp: 15, coins: 5, hints: ["Tu SELECT debe pedir únicamente CustomerName, CreditLimit.", "Aplica el filtro: WHERE CreditLimit > 3000;"] },
+                    
+                    // --- NIVEL MEDIO (4 - 6) ---
+                    { id: "t1_e4", diff: "med", get data() { return window.createMissionHTML(
+                        "Alerta roja en los almacenes. Hay escasez de componentes y logística necesita enviar pedidos de reposición urgentemente.", 
+                        "Lista el nombre del producto (<code>StockItemName</code>) y cantidad (<code>Quantity</code>) de la tabla <code>Warehouse_StockItems</code>, solo para aquellos artículos cuya cantidad disponible sea MENOR a 50 unidades.", 
+                        "El operador matemático menor que es <.", 
+                        "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", 
+                        {title: "Inventario central de artículos.", cols: [{name: "StockItemName", desc: "Nombre del producto."}, {name: "Quantity", desc: "Unidades en almacén físico."}]}
+                    ) }, expectedQuery: "SELECT StockItemName, Quantity FROM Warehouse_StockItems WHERE Quantity < 50;", xp: 30, coins: 15, hints: ["Las columnas solicitadas son StockItemName, Quantity.", "El filtro es: WHERE Quantity < 50;"] },
+
+                    { id: "t1_e5", diff: "med", get data() { return window.createMissionHTML(
+                        "Soporte técnico reporta una incidencia crítica en la plataforma B2B de un cliente, pero solo nos han provisto su ID de sistema (4).", 
+                        "Extrae TODAS las columnas (usando <code>*</code>) de la tabla <code>Sales_Customers</code> para el cliente cuyo <code>CustomerID</code> sea exactamente igual a 4.", 
+                        "Puedes usar el asterisco (*) con SELECT para pedir todas las columnas de un tirón.", 
+                        "Sales_Customers (CustomerID, CustomerName, CreditLimit)", 
+                        {title: "Tabla matriz B2B.", cols: [{name: "*", desc: "El asterisco representa traer todas las columnas sin escribirlas una por una."}]}
+                    ) }, expectedQuery: "SELECT * FROM Sales_Customers WHERE CustomerID = 4;", xp: 30, coins: 15, hints: ["La primera línea será SELECT *", "Tu tabla origen será FROM Sales_Customers", "Filtra el ID exacto: WHERE CustomerID = 4;"] },
+
+                    { id: "t1_e6", diff: "med", get data() { return window.createMissionHTML(
+                        "Finanzas está auditando los márgenes de ganancia anual y necesita focalizarse en el hardware premium del catálogo.", 
+                        "Selecciona el nombre del producto (<code>StockItemName</code>) y el precio (<code>UnitPrice</code>) de la tabla <code>Warehouse_StockItems</code>, solo de artículos cuyo precio sea MAYOR O IGUAL a 100 dólares.", 
+                        "El operador relacional 'mayor o igual' en SQL Server se escribe como >=.", 
+                        "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", 
+                        {title: "Inventario central.", cols: [{name: "StockItemName", desc: "Nombre."}, {name: "UnitPrice", desc: "Precio unitario (Hardware)."}]}
+                    ) }, expectedQuery: "SELECT StockItemName, UnitPrice FROM Warehouse_StockItems WHERE UnitPrice >= 100;", xp: 30, coins: 15, hints: ["Tu SELECT debe pedir StockItemName, UnitPrice.", "Usa: WHERE UnitPrice >= 100;"] },
+                    
+                    // --- NIVEL DIFÍCIL (7 - 9) ---
+                    { id: "t1_e7", diff: "hard", get data() { return window.createMissionHTML(
+                        "Auditoría interna solicita el registro del cliente con límite alto. Por políticas estrictas de la empresa, todo script oficial debe estar documentado.", 
+                        "Obtén todas las columnas de <code>Sales_Customers</code> donde el límite de crédito sea 5000. <b>OBLIGATORIO:</b> Agrega un comentario en la primera línea que diga <code>-- Auditoria</code>.", 
+                        "Usa dos guiones medios (--) para que el motor SQL lo lea como un comentario, luego da enter para hacer tu código.", 
+                        "Sales_Customers (CustomerID, CustomerName, CreditLimit)", 
+                        {title: "Tabla clientes corporativos.", cols: [{name: "*", desc: "Selección total."}]}
+                    ) }, expectedQuery: "-- Auditoria\nSELECT * FROM Sales_Customers WHERE CreditLimit = 5000;", xp: 60, coins: 30, hints: ["La línea 1 debe decir textualmente: -- Auditoria", "En la línea 2, escribe: SELECT * FROM Sales_Customers WHERE CreditLimit = 5000;"] },
+
+                    { id: "t1_e8", diff: "hard", get data() { return window.createMissionHTML(
+                        "Operaciones organizará una liquidación masiva del inventario sobrante y necesita extraer la data para las cajas del punto de venta.", 
+                        "Extrae el ID (<code>StockItemID</code>) y Nombre (<code>StockItemName</code>) de la tabla <code>Warehouse_StockItems</code> para productos con precio MENOR a 20. <b>OBLIGATORIO:</b> Documenta iniciando con <code>-- Liquidacion</code>.", 
+                        "Ten mucho cuidado con no mezclar el comentario en la misma línea de la consulta SELECT si no dominas el espaciado.", 
+                        "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", 
+                        {title: "Data TPV (Terminal Punto Venta).", cols: [{name: "StockItemID", desc: "Código interno de barras."}, {name: "StockItemName", desc: "Nombre del producto en ticket."}]}
+                    ) }, expectedQuery: "-- Liquidacion\nSELECT StockItemID, StockItemName FROM Warehouse_StockItems WHERE UnitPrice < 20;", xp: 60, coins: 30, hints: ["Inicia obligatoriamente con -- Liquidacion", "Tus columnas son: StockItemID, StockItemName", "Filtra usando: WHERE UnitPrice < 20;"] },
+
+                    { id: "t1_e9", diff: "hard", get data() { return window.createMissionHTML(
+                        "El CEO pidió de forma urgente y directa un informe de unidades en almacén específicamente para nuestro teclado insignia.", 
+                        "Selecciona nombre (<code>StockItemName</code>) y unidades (<code>Quantity</code>) de <code>Warehouse_StockItems</code> donde el nombre del producto sea EXACTAMENTE <code>'Teclado Mecanico'</code>. <b>OBLIGATORIO:</b> Comentario inicial <code>-- Informe CEO</code>.", 
+                        "¡Alerta hacker! Las cadenas de texto en SQL van envueltas entre comillas simples ('texto'). Respeta espacios y mayúsculas.", 
+                        "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", 
+                        {title: "Reportes Directivos.", cols: [{name: "StockItemName", desc: "Debe coincidir en texto exacto."}, {name: "Quantity", desc: "Unidades físicas."}]}
+                    ) }, expectedQuery: "-- Informe CEO\nSELECT StockItemName, Quantity FROM Warehouse_StockItems WHERE StockItemName = 'Teclado Mecanico';", xp: 60, coins: 30, hints: ["Línea 1: -- Informe CEO", "En la línea 2 usa comillas simples para la condición textual: WHERE StockItemName = 'Teclado Mecanico'"] }
+                ]
+            }
+        ];
+
         async function initApp() {
-            sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
-                mode: "text/x-sql", theme: "dracula", lineNumbers: true, lineWrapping: true
-            });
+            // Cargar temas custom guardados localmente
+            let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
+            customTopics.forEach(d => TOPICS.push(createTopicFromJSON(d)));
 
-            document.getElementById('run-btn').addEventListener('click', window.executeUserQuery);
-            document.getElementById('next-btn').addEventListener('click', () => { window.loadExercise(currentTopicIdx, currentExerciseIdx + 1); });
-            document.getElementById('reset-btn').addEventListener('click', window.resetConsole);
+            // Recuperar API Key
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (savedKey) document.getElementById('ai-api-key').value = savedKey;
 
-            const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
-            db = new SQL.Database();
-            
-            db.run(`
-                CREATE TABLE Sales_Customers (CustomerID INT, CustomerName VARCHAR, CreditLimit DECIMAL);
-                INSERT INTO Sales_Customers VALUES (1, 'Tailwind Toys', 1500.00), (2, 'Wingtip Toys', 3000.00), (3, 'A Datum', 3000.00), (4, 'Contoso', 5000.00);
-                CREATE TABLE Warehouse_StockItems (StockItemID INT, StockItemName VARCHAR, UnitPrice DECIMAL, Quantity INT);
-                INSERT INTO Warehouse_StockItems VALUES (101, 'USB Drive', 15.00, 200), (102, 'Teclado', 85.50, 45), (103, 'Monitor', 150.00, 15), (104, 'Raton', 55.00, 80);
-            `);
-            
-            // Auto-fill API key si existe
-            const savedKey = localStorage.getItem('sqlMastery_apiKey');
-            if(savedKey) document.getElementById('ai-api-key').value = savedKey;
+            try {
+                sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
+                    mode: "text/x-sql",
+                    theme: "dracula",
+                    lineNumbers: true,
+                    lineWrapping: true
+                });
 
-            window.renderTopicsSidebar();
-            window.loadExercise(0, 0);
+                document.getElementById('run-btn').addEventListener('click', window.executeUserQuery);
+                document.getElementById('next-btn').addEventListener('click', () => { window.loadExercise(currentTopicIdx, currentExerciseIdx + 1); });
+                document.getElementById('reset-btn').addEventListener('click', window.resetConsole);
+
+                const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
+                db = new SQL.Database();
+                
+                db.run(`
+                    CREATE TABLE Sales_Customers (CustomerID INT, CustomerName VARCHAR, CreditLimit DECIMAL);
+                    INSERT INTO Sales_Customers VALUES (1, 'Tailwind Toys', 1500.00);
+                    INSERT INTO Sales_Customers VALUES (2, 'Wingtip Toys', 3000.00);
+                    INSERT INTO Sales_Customers VALUES (3, 'A Datum Corporation', 3000.00);
+                    INSERT INTO Sales_Customers VALUES (4, 'Contoso Retail', 5000.00);
+                    CREATE TABLE Warehouse_StockItems (StockItemID INT, StockItemName VARCHAR, UnitPrice DECIMAL, Quantity INT);
+                    INSERT INTO Warehouse_StockItems VALUES (101, 'USB Drive 8GB', 15.00, 200);
+                    INSERT INTO Warehouse_StockItems VALUES (102, 'Teclado Mecanico', 85.50, 45);
+                    INSERT INTO Warehouse_StockItems VALUES (103, 'Monitor 24 pulgadas', 150.00, 15);
+                    INSERT INTO Warehouse_StockItems VALUES (104, 'Raton Inalambrico', 55.00, 80);
+                    INSERT INTO Warehouse_StockItems VALUES (105, 'Silla Ergonomica', 120.00, 10);
+                    INSERT INTO Warehouse_StockItems VALUES (106, 'Cable HDMI', 12.00, 50);
+                    INSERT INTO Warehouse_StockItems VALUES (107, 'Webcam HD', 60.00, 30);
+                `);
+                
+                window.renderTopicsSidebar();
+                window.loadExercise(0, 0);
+
+            } catch (err) {
+                console.error("Error crítico:", err);
+            }
         }
 
-        window.toggleSidebar = function() { document.getElementById('sidebar').classList.toggle('collapsed'); };
+        window.toggleSidebar = function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        };
 
         window.renderTopicsSidebar = function() {
             const container = document.getElementById('topics-container');
             container.innerHTML = '';
             TOPICS.forEach((topic, idx) => {
                 const btn = document.createElement('button');
-                btn.className = `w-full text-left p-2.5 rounded-xl mb-2 transition-all font-bold text-xs truncate ${idx === currentTopicIdx ? 'bg-cyan-900/40 text-cyan-300 border border-cyan-500/50' : 'bg-slate-800/40 text-slate-400 hover:bg-slate-700/50 border border-transparent'}`;
+                btn.className = `w-full text-left p-3 rounded-xl mb-2 transition-all font-bold text-sm ${idx === currentTopicIdx ? 'bg-cyan-900/40 text-cyan-300 border border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.15)]' : 'bg-slate-800/40 text-slate-400 border border-transparent hover:bg-slate-700/50'}`;
                 btn.innerHTML = topic.title;
                 btn.onclick = () => window.loadExercise(idx, 0);
                 container.appendChild(btn);
@@ -548,42 +939,83 @@
             document.getElementById('ex-coin-badge').textContent = `+${exercise.coins} 🪙`;
             
             window.renderExercisePills();
+            document.getElementById('run-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
             window.resetConsole();
             window.renderTopicsSidebar();
         };
 
-        window.renderExercisePills = function() {
-            const nav = document.getElementById('exercise-navigator');
-            nav.innerHTML = '';
-            TOPICS[currentTopicIdx].exercises.forEach((ex, idx) => {
-                const isActive = idx === currentExerciseIdx;
-                const btn = document.createElement('div');
-                btn.className = `ex-pill ${(ex.diff==="easy")?"pill-easy":(ex.diff==="med")?"pill-med":"pill-hard"} ${isActive?"active":""}`;
-                btn.textContent = idx + 1;
-                btn.onclick = () => window.loadExercise(currentTopicIdx, idx);
-                nav.appendChild(btn);
-            });
+        window.revealHint = function() {
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            if (revealedHintsCount < exercise.hints.length) {
+                const hintsList = document.getElementById('hints-list');
+                const newHint = document.createElement('div');
+                newHint.className = 'bg-blue-950/30 border border-blue-800/50 p-4 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.1)] relative overflow-hidden group min-w-0';
+                newHint.style.animation = 'slideIn 0.3s ease-out forwards';
+                newHint.innerHTML = `
+                    <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-blue-400 to-cyan-500"></div>
+                    <div class="text-blue-400 font-black text-xs uppercase tracking-widest mb-1.5 flex items-center gap-2">
+                        <span>🔍</span> Pista ${revealedHintsCount + 1}
+                    </div>
+                    <div class="text-slate-300 text-sm font-medium leading-relaxed pl-1 break-words">${exercise.hints[revealedHintsCount]}</div>
+                `;
+                hintsList.prepend(newHint); // LIFO: Agrega al principio
+                revealedHintsCount++;
+                window.updateHintsUI();
+            }
         };
 
-        window.resetConsole = function() {
-            sqlEditor.setValue("");
-            document.getElementById('results-container').innerHTML = `
-                <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                    <div class="w-16 h-16 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center text-2xl mb-4 shadow-inner">📡</div>
-                    <span class="text-slate-200 font-black uppercase tracking-widest text-sm mb-2">ESPERANDO CONSULTA...</span>
-                    <span class="text-slate-500 text-xs max-w-[80%] font-medium">Escribe tu código SQL y presiona Ejecutar.</span>
-                </div>`;
-            document.getElementById('row-count').textContent = '0 FILAS';
-            document.getElementById('error-container').classList.add('hidden');
-            document.getElementById('hints-container').classList.add('hidden');
-            document.getElementById('hints-list').innerHTML = '';
-            document.getElementById('run-btn').classList.remove('hidden');
-            document.getElementById('next-btn').classList.add('hidden');
+        window.revealSolution = function() {
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            const hintsList = document.getElementById('hints-list');
+            const solDiv = document.createElement('div');
+            solDiv.className = 'bg-emerald-950/30 border border-emerald-800/50 p-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.15)] relative overflow-hidden mb-2 min-w-0';
+            solDiv.style.animation = 'slideIn 0.3s ease-out forwards';
+            solDiv.innerHTML = `
+                <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-green-500"></div>
+                <div class="text-emerald-400 font-black text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
+                    <span>🗝️</span> Solución Oficial
+                </div>
+                <div class="bg-black/60 p-3 rounded-lg border border-emerald-900/50 shadow-inner">
+                    <pre class="font-mono text-xs text-emerald-100 overflow-x-auto whitespace-pre-wrap leading-relaxed">${exercise.expectedQuery}</pre>
+                </div>
+            `;
+            hintsList.prepend(solDiv); // LIFO: Agrega al principio, coronando la lista
+            document.getElementById('btn-show-solution').classList.add('hidden');
         };
+
+        window.updateHintsUI = function() {
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            const btnNext = document.getElementById('btn-next-hint');
+            const noMoreMsg = document.getElementById('no-more-hints');
+            const btnShowSol = document.getElementById('btn-show-solution');
+            const remaining = exercise.hints.length - revealedHintsCount;
+            
+            if (remaining > 0) {
+                btnNext.classList.remove('hidden');
+                document.getElementById('hints-left').textContent = remaining;
+                noMoreMsg.classList.add('hidden');
+                btnShowSol.classList.add('hidden');
+            } else {
+                btnNext.classList.add('hidden');
+                noMoreMsg.classList.remove('hidden');
+                btnShowSol.classList.remove('hidden');
+            }
+        };
+
+        function showToast(title, msg, type="success") {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-msg').textContent = msg;
+            document.getElementById('toast-icon').textContent = type === "success" ? "✅" : (type === "error" ? "❌" : "💡");
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
 
         window.executeUserQuery = function() {
             const query = sqlEditor.getValue().trim();
             if (!query) return;
+
             const resContainer = document.getElementById('results-container');
             const rowCountEl = document.getElementById('row-count');
             const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
@@ -593,46 +1025,155 @@
                 const userResult = db.exec(query);
                 
                 if (userResult.length > 0) {
-                    rowCountEl.textContent = `${userResult[0].values.length} FILAS`;
-                    let html = '<table class="sql-table"><thead><tr>';
-                    userResult[0].columns.forEach(col => html += `<th>${col}</th>`);
-                    html += '</tr></thead><tbody>';
-                    userResult[0].values.forEach(row => {
-                        html += '<tr>'; row.forEach(val => html += `<td>${val !== null ? val : '<i>NULL</i>'}</td>`); html += '</tr>';
+                    const columns = userResult[0].columns;
+                    const values = userResult[0].values;
+                    rowCountEl.textContent = `${values.length} FILAS`;
+                    let tableHTML = '<table class="sql-table"><thead><tr>';
+                    columns.forEach(col => tableHTML += `<th>${col}</th>`);
+                    tableHTML += '</tr></thead><tbody>';
+                    values.forEach(row => {
+                        tableHTML += '<tr>';
+                        row.forEach(val => tableHTML += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`);
+                        tableHTML += '</tr>';
                     });
-                    html += '</tbody></table>';
-                    resContainer.innerHTML = html;
+                    tableHTML += '</tbody></table>';
+                    resContainer.innerHTML = tableHTML;
                 } else {
                     rowCountEl.textContent = '0 FILAS';
                     resContainer.innerHTML = `
-                        <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                            <div class="w-16 h-16 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center text-2xl mb-4 shadow-inner">👻</div>
-                            <span class="text-amber-400 font-black uppercase tracking-widest text-sm mb-2">TABLA VACÍA</span>
-                            <span class="text-slate-500 text-xs max-w-[80%] font-medium">Sintaxis correcta, pero los filtros excluyeron todas las filas.</span>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center"> 
+                            <div class="w-16 h-16 rounded-full bg-amber-900/30 border border-amber-500/30 flex items-center justify-center mb-3 shadow-[0_0_15px_rgba(251,191,36,0.2)]">
+                                <span class="text-3xl drop-shadow-[0_0_10px_rgba(251,191,36,0.4)]">👻</span> 
+                            </div>
+                            <span class="text-amber-400 font-black uppercase tracking-widest text-sm mb-1 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]">Tabla Vacía</span> 
+                            <span class="text-amber-200/60 text-xs max-w-[80%] font-medium">La sintaxis es correcta, pero 0 registros cumplieron las condiciones de tu filtro (WHERE).</span> 
                         </div>`;
                 }
 
                 let isCorrect = false;
+                let expectedResult;
                 try {
-                    let expectedResult = db.exec(exercise.expectedQuery);
-                    if (JSON.stringify(userResult) === JSON.stringify(expectedResult)) isCorrect = true;
+                    let hasCommentIfRequired = exercise.expectedQuery.includes("--") ? query.includes("--") : true;
+                    const cleanExpected = exercise.expectedQuery.replace(/--.*?\n/g, "");
+                    const cleanUser = query.replace(/--.*?\n/g, "");
+                    expectedResult = db.exec(cleanExpected);
+                    
+                    if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && hasCommentIfRequired) {
+                        isCorrect = true;
+                    } else if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && !hasCommentIfRequired) {
+                         window.showErrorBox("Falta Documentación Corporativa", "- Los datos extraídos son correctos, pero olvidaste poner el comentario requerido (usando --).\n- Un script no documentado será rechazado en el trabajo real.");
+                         return;
+                    }
                 } catch(e) {}
 
                 if (isCorrect) {
-                    showToast("¡Objetivo Completado!", `Nivel superado.`, "success");
-                    fireConfetti();
-                    if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) {
-                        document.getElementById('run-btn').classList.add('hidden');
-                        document.getElementById('next-btn').classList.remove('hidden');
+                    if (!playerState.completedExercises.includes(exercise.id)) {
+                        playerState.completedExercises.push(exercise.id);
+                        window.grantRewards(exercise.xp, exercise.coins);
+                        window.renderExercisePills();
+                        showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success");
+                        fireConfetti();
+                        
+                        if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) {
+                            document.getElementById('run-btn').classList.add('hidden');
+                            document.getElementById('next-btn').classList.remove('hidden');
+                        } else {
+                            setTimeout(() => showToast("🏆 Módulo Dominado", "Has completado todos los ejercicios de este tema.", "success"), 1000);
+                        }
+                    } else {
+                        showToast("Consulta Válida", "Código correcto (Recompensa ya cobrada).", "hint");
+                        if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) {
+                            document.getElementById('run-btn').classList.add('hidden');
+                            document.getElementById('next-btn').classList.remove('hidden');
+                        }
                     }
                 } else {
-                    window.showErrorBox("LOS DATOS EXTRAÍDOS NO COINCIDEN", "Análisis en vivo:\nRevisa tu código, el dataset arrojado difiere del requerido en la misión. Valida las columnas del SELECT y tus condiciones WHERE.");
+                    let diag = "";
+                    let expectedCount = expectedResult && expectedResult.length > 0 ? expectedResult[0].values.length : 0;
+                    let userCount = userResult.length > 0 ? userResult[0].values.length : 0;
+                    
+                    if(userCount === 0 && expectedCount > 0) {
+                         diag = "- Tu código devolvió una tabla vacía (0 registros), pero el negocio espera ver datos.\n- No tienes datos en la 'Salida de Datos' para comparar porque tus filtros matemáticos (WHERE) son tan estrictos (o están invertidos) que excluyeron absolutamente todas las filas.";
+                    } else if (userCount > 0 && expectedCount === 0) {
+                         diag = "- Tu código devolvió datos, pero el negocio esperaba que la consulta no retornara nada bajo esas condiciones.\n- Revisa tu filtrado y tus operadores lógicos.";
+                    } else {
+                         diag = "- Tu código arrojó un resultado diferente al esperado.\n- Revisa el panel 'Salida de Datos' y compáralo con el Requerimiento de la Misión.\n- Asegúrate de invocar exactamente las columnas pedidas en el SELECT.";
+                    }
+                    window.showErrorBox("LOS DATOS EXTRAÍDOS NO COINCIDEN", diag);
                 }
+
             } catch (err) {
                 rowCountEl.textContent = 'ERROR';
                 resContainer.innerHTML = '';
-                window.showErrorBox("Fallo de Compilación", "Detalle Técnico:\n" + err.message);
+                let errorMsg = err.message;
+                let titleMsg = "FALLO DE COMPILACIÓN";
+                let liveDiagnosis = "";
+                if (errorMsg.includes("near") && !query.includes(",")) liveDiagnosis = "\n\n⚠️ ¡Posible falta de coma! En SQL Server, cuando seleccionas múltiples columnas en el SELECT, debes separarlas obligatoriamente con una coma (,).";
+                if (errorMsg.includes("no such table")) titleMsg = "TABLA NO ENCONTRADA EN BASE DE DATOS";
+                else if (errorMsg.includes("no such column")) titleMsg = "COLUMNA NO ENCONTRADA EN ESQUEMA";
+                else if (errorMsg.includes("syntax error")) titleMsg = "ERROR DE SINTAXIS FATAL";
+                
+                window.showErrorBox(titleMsg, "Detalle Técnico del Servidor (SQLite):\n" + errorMsg + liveDiagnosis);
             }
+        };
+
+        window.openDatabaseModal = function() {
+            const backdrop = document.getElementById('db-modal-backdrop');
+            const card = document.getElementById('db-modal-card');
+            const content = document.getElementById('db-modal-content');
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            const schemaText = exercise.data.schemaLine || "";
+            
+            let tablesToQuery = [];
+            if (schemaText.includes("Sales_Customers")) tablesToQuery.push("Sales_Customers");
+            if (schemaText.includes("Warehouse_StockItems")) tablesToQuery.push("Warehouse_StockItems");
+            
+            let html = '';
+            tablesToQuery.forEach(tableName => {
+                const res = db.exec("SELECT * FROM " + tableName);
+                if (res.length > 0) {
+                    html += `<div class="mb-8 relative group">`;
+                    html += `<div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div>
+                                <h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span></h3>
+                             </div>`;
+                    html += `<div class="bg-[#05060a] rounded-xl border border-cyan-900/50 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all group-hover:border-cyan-700/80"><div class="overflow-x-auto"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
+                    res[0].columns.forEach(col => html += `<th>${col}</th>`);
+                    html += `</tr></thead><tbody>`;
+                    res[0].values.forEach(row => {
+                        html += `<tr>`;
+                        row.forEach(val => html += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`);
+                        html += `</tr>`;
+                    });
+                    html += `</tbody></table></div></div></div>`;
+                }
+            });
+            content.innerHTML = html === '' ? "<div class='text-slate-400 text-center font-bold'>Sin datos asociados al esquema actual.</div>" : html;
+            backdrop.classList.remove('hidden');
+            requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); });
+        };
+
+        window.closeDatabaseModal = function() {
+            const backdrop = document.getElementById('db-modal-backdrop');
+            const card = document.getElementById('db-modal-card');
+            backdrop.classList.add('opacity-0');
+            card.classList.add('scale-95');
+            setTimeout(() => { backdrop.classList.add('hidden'); }, 300);
+        };
+
+        window.openAIModal = function() {
+            const backdrop = document.getElementById('ai-modal-backdrop');
+            const card = document.getElementById('ai-modal-card');
+            backdrop.classList.remove('hidden');
+            requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); });
+        };
+
+        window.closeAIModal = function() {
+            const backdrop = document.getElementById('ai-modal-backdrop');
+            const card = document.getElementById('ai-modal-card');
+            backdrop.classList.add('opacity-0');
+            card.classList.add('scale-95');
+            setTimeout(() => { backdrop.classList.add('hidden'); }, 300);
         };
 
         window.showErrorBox = function(titleMsg, techErrorMsg) {
@@ -649,167 +1190,175 @@
         window.toggleTechDetail = function() {
             const content = document.getElementById('tech-detail-content');
             const icon = document.getElementById('tech-detail-icon');
-            if (content.classList.contains('hidden')) { content.classList.remove('hidden'); icon.style.transform = "rotate(90deg)"; } 
-            else { content.classList.add('hidden'); icon.style.transform = "rotate(0deg)"; }
-        };
-
-        window.revealHint = function() {
-            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
-            if (revealedHintsCount < exercise.hints.length) {
-                const div = document.createElement('div');
-                div.className = 'bg-blue-950/30 border border-blue-800/50 p-3 rounded-lg shadow-inner relative overflow-hidden mb-2';
-                div.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-blue-500"></div><div class="text-blue-400 font-black text-[10px] uppercase mb-1">Pista ${revealedHintsCount + 1}</div><div class="text-slate-300 text-xs">${exercise.hints[revealedHintsCount]}</div>`;
-                document.getElementById('hints-list').prepend(div);
-                revealedHintsCount++;
-                window.updateHintsUI();
-            }
-        };
-
-        window.updateHintsUI = function() {
-            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
-            const remaining = exercise.hints.length - revealedHintsCount;
-            if (remaining > 0) {
-                document.getElementById('btn-next-hint').classList.remove('hidden');
-                document.getElementById('hints-left').textContent = remaining;
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden'); icon.style.transform = "rotate(90deg)";
             } else {
-                document.getElementById('btn-next-hint').classList.add('hidden');
-                document.getElementById('btn-show-solution').classList.remove('hidden');
+                content.classList.add('hidden'); icon.style.transform = "rotate(0deg)";
             }
         };
 
-        window.revealSolution = function() {
-            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
-            const div = document.createElement('div');
-            div.className = 'bg-emerald-950/30 border border-emerald-800/50 p-3 rounded-lg shadow-inner relative overflow-hidden mt-2';
-            div.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-emerald-500"></div><div class="text-emerald-400 font-black text-[10px] uppercase mb-1">Solución Oficial</div><pre class="font-mono text-[10px] text-emerald-100 whitespace-pre-wrap">${exercise.expectedQuery}</pre>`;
-            document.getElementById('hints-list').prepend(div);
-            document.getElementById('btn-show-solution').classList.add('hidden');
+        window.resetConsole = function() {
+            sqlEditor.setValue("");
+            document.getElementById('results-container').innerHTML = `
+                <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                    <div class="w-16 h-16 rounded-full bg-slate-800/30 border border-slate-700/50 flex items-center justify-center mb-3 shadow-inner">
+                        <span class="text-3xl drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">📡</span>
+                    </div>
+                    <span class="text-slate-300 font-black uppercase tracking-widest text-sm mb-1">Esperando Consulta...</span>
+                    <span class="text-slate-500 text-xs max-w-[80%] font-medium">Escribe tu código SQL y presiona Ejecutar para visualizar el dataset.</span>
+                </div>`;
+            document.getElementById('row-count').textContent = '0 FILAS';
+            document.getElementById('error-container').classList.add('hidden');
+            document.getElementById('hints-container').classList.add('hidden');
+            document.getElementById('hints-list').innerHTML = '';
+            document.getElementById('run-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
         };
 
-        // UI Modals
-        window.openDatabaseModal = function() { 
-            const backdrop = document.getElementById('db-modal-backdrop');
-            const card = document.getElementById('db-modal-card');
-            const content = document.getElementById('db-modal-content');
-            
-            let html = '';
-            ['Sales_Customers', 'Warehouse_StockItems'].forEach(tableName => {
-                const res = db.exec("SELECT * FROM " + tableName);
-                if (res.length > 0) {
-                    html += `<h3 class="text-cyan-400 font-bold mb-2 uppercase tracking-wide text-sm flex items-center gap-2"><span>🗄️</span> Tabla: ${tableName}</h3>`;
-                    html += `<div class="bg-[#0f111a] rounded-xl border border-cyan-900/50 overflow-x-auto mb-8 shadow-inner"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
-                    res[0].columns.forEach(col => html += `<th>${col}</th>`);
-                    html += `</tr></thead><tbody>`;
-                    res[0].values.forEach(row => {
-                        html += `<tr>`; row.forEach(val => html += `<td>${val !== null ? val : '<i>NULL</i>'}</td>`); html += `</tr>`;
-                    });
-                    html += `</tbody></table></div>`;
-                }
-            });
-            content.innerHTML = html;
-            backdrop.classList.remove('hidden'); requestAnimationFrame(()=>{backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95');}); 
-        };
-        window.closeDatabaseModal = function() { document.getElementById('db-modal-backdrop').classList.add('opacity-0'); document.getElementById('db-modal-card').classList.add('scale-95'); setTimeout(()=>document.getElementById('db-modal-backdrop').classList.add('hidden'), 300); };
-        
-        window.openAIModal = function() { document.getElementById('ai-modal').classList.remove('hidden'); requestAnimationFrame(()=>{document.getElementById('ai-modal').classList.remove('opacity-0'); document.getElementById('ai-modal-card').classList.remove('scale-95');}); };
-        window.closeAIModal = function() { document.getElementById('ai-modal').classList.add('opacity-0'); document.getElementById('ai-modal-card').classList.add('scale-95'); setTimeout(()=>document.getElementById('ai-modal').classList.add('hidden'), 300); };
-        
-        function showToast(t, m) { alert(t + "\n" + m); } 
-        function fireConfetti() { confetti({ particleCount: 50, spread: 60 }); }
-
         // ==========================================
-        // MOTOR IA - SOLUCIÓN UNIVERSAL (gemini-pro)
+        // LA MAGIA: EL MOTOR DE INTELIGENCIA ARTIFICIAL
         // ==========================================
-        window.generateTopic = async function() {
+        window.generateAITopic = async function() {
             const apiKey = document.getElementById('ai-api-key').value.trim();
-            const topicName = document.getElementById('ai-topic').value.trim();
+            const userTopic = document.getElementById('ai-topic-input').value.trim();
             
-            if(!apiKey || !topicName) { alert("Completa la API Key y el Tema."); return; }
-            localStorage.setItem('sqlMastery_apiKey', apiKey);
+            if (!apiKey || !userTopic) return showToast("Faltan datos", "Ingresa tu API Key y el tema.", "error");
 
-            document.getElementById('ai-buttons').classList.add('hidden');
-            document.getElementById('ai-loading').classList.remove('hidden');
-            document.getElementById('ai-loading').classList.add('flex');
+            localStorage.setItem('gemini_api_key', apiKey);
 
-            const systemPrompt = `
-                Eres un generador de contenido JSON para una plataforma de aprendizaje SQL de estilo Cyberpunk/Premium.
-                El usuario te pide el tema: "${topicName}".
-                Devuelve ÚNICAMENTE un objeto JSON puro, sin bloques de código Markdown (sin \`\`\`json), con esta estructura exacta:
-                {
-                    "title": "Nombre del Tema",
-                    "intro": "Párrafo introductorio.",
-                    "dict": [{"cmd": "COMANDO", "desc": "Descripción"}],
-                    "badPractice": {"badCode": "SELECT...", "goodCode": "SELECT...", "desc": "Explicación"},
-                    "exercises": [
-                        { "diff": "easy", "scenario": "...", "req": "...", "tip": "...", "expectedQuery": "SELECT...", "hints": ["Pista 1", "Pista 2", "Pista 3"], "schema": "Sales_Customers (...)" }
-                    ]
-                }
-                Genera exactamente 9 ejercicios (3 easy, 3 med, 3 hard).
-                Usa tablas: Sales_Customers (CustomerID, CustomerName, CreditLimit) y Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity).
-            `;
+            const btn = document.getElementById('ai-generate-btn');
+            btn.innerHTML = '<span class="spinner text-lg">⏳</span> GENERANDO...';
+            btn.disabled = true;
+
+            const systemPrompt = `Eres un experto arquitecto de bases de datos SQL.
+            Genera un JSON EXACTO para el Módulo: "${userTopic}".
+            Usa exclusivamente estas tablas en los ejercicios:
+            1. Sales_Customers (CustomerID, CustomerName, CreditLimit)
+            2. Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)
+
+            Estructura JSON EXACTA REQUERIDA (OBLIGATORIO):
+            {
+                "topicName": "Título (Ej: 3. JOINs y Relaciones)",
+                "introTitle": "Subtítulo motivador",
+                "introText": "Explicación del concepto",
+                "commands": [ {"name": "COMANDO", "desc": "Descripción"} ],
+                "bestPracticeText": "Tip de rendimiento corporativo",
+                "errorTitle": "UN ERROR HABITUAL [SINTAXIS FATAL]",
+                "errorIntro": "Explicación del error",
+                "errorBadCode": "SELECT...",
+                "errorImpact": "Impacto en negocio...",
+                "errorGoodCode": "SELECT...",
+                "exampleContext": "Contexto empresarial",
+                "exampleCode": "SELECT...",
+                "quizzes": [
+                    { "question": "Pregunta?", "options": [ {"text": "Opción correcta", "isCorrect": true, "feedback": "¡Correcto!..."}, {"text": "Opción incorrecta", "isCorrect": false, "feedback": "Incorrecto..."} ] }
+                ],
+                "exercises": [
+                    {
+                        "diff": "easy",
+                        "escenario": "Historia...",
+                        "requerimiento": "Petición técnica...",
+                        "tip": "Tip principal...",
+                        "schemaLine": "NombreTabla (Col1, Col2...)",
+                        "schemaTitle": "Descripción tabla",
+                        "schemaCols": [ {"name": "Col1", "desc": "Definición..."} ],
+                        "expectedQuery": "SELECT...",
+                        "hints": ["Pista conceptual", "Pista técnica", "Solución guiada"]
+                    }
+                ]
+            }
+            Asegúrate de generar 9 ejercicios (3 diff="easy", 3 diff="med", 3 diff="hard") y 3 quizzes. El JSON debe ser válido.`;
 
             try {
-                // LLAMADA ACTUALIZADA AL ALIAS UNIVERSAL (gemini-pro) QUE FUNCIONA EN TODAS LAS CUENTAS
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }]}] })
+                // LA SOLUCIÓN UNIVERSAL: Llamada al modelo 'gemini-pro'
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ role: "user", parts: [{ text: systemPrompt }] }]
+                    })
                 });
-
-                const data = await res.json();
+                
+                const data = await response.json();
                 if(data.error) throw new Error(data.error.message);
 
-                // Extraemos el texto y limpiamos cualquier posible bloque de Markdown
-                let rawText = data.candidates[0].content.parts[0].text;
-                rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                let jsonText = data.candidates[0].content.parts[0].text;
                 
-                const generated = JSON.parse(rawText);
-                
-                // Construir HTML de Teoría
-                let theoryHtml = `
-                    <div class="bg-slate-900/80 border border-purple-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(168,85,247,0.1)] mb-6 relative overflow-hidden group">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-purple-400 to-pink-600"></div>
-                        <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2"><span>🧠</span> Concepto Central</h4>
-                        <p class="text-sm text-slate-300 leading-relaxed">${generated.intro}</p>
-                    </div>
-                    <div class="mb-6"><h4 class="text-cyan-400 font-bold mb-3 uppercase tracking-wide text-xs">Diccionario</h4><div class="grid gap-2">
-                `;
-                generated.dict.forEach(d => {
-                    theoryHtml += `<div class="bg-slate-900/60 border border-slate-700/50 rounded-lg p-3"><code class="text-emerald-400 font-bold">${d.cmd}</code><p class="text-xs text-slate-300 mt-1">${d.desc}</p></div>`;
-                });
-                theoryHtml += `</div></div>`;
+                // EL FILTRO MÁGICO: Limpia las comillas de Markdown que a veces manda Gemini
+                jsonText = jsonText.replace(/^\x60\x60\x60json\n?/, '').replace(/\n?\x60\x60\x60$/, '').trim();
 
-                // Construir Ejercicios
-                const newExercises = generated.exercises.map((ex, i) => {
-                    return {
-                        id: `t${TOPICS.length + 1}_e${i}`, diff: ex.diff,
-                        rawData: ex,
-                        get data() { return window.createMissionHTML(ex.scenario, ex.req, ex.tip, ex.schema, {title:"Esquema", cols:[]}); },
-                        expectedQuery: ex.expectedQuery, xp: 50, coins: 20, hints: ex.hints
-                    };
-                });
+                const parsedData = JSON.parse(jsonText);
 
-                const newTopic = { id: `t${TOPICS.length + 1}`, title: `${TOPICS.length + 1}. ${generated.title}`, theory: theoryHtml, exercises: newExercises };
+                const newTopic = createTopicFromJSON(parsedData);
                 TOPICS.push(newTopic);
-                
-                // Guardar
-                const topicsToSave = TOPICS.map(t => ({
-                    id: t.id, title: t.title, theory: t.theory, 
-                    exercises: t.exercises.map(e => ({ id: e.id, diff: e.diff, expectedQuery: e.expectedQuery, xp: e.xp, coins: e.coins, hints: e.hints, rawData: e.rawData }))
-                }));
-                localStorage.setItem('sqlMastery_topics', JSON.stringify(topicsToSave));
 
-                window.renderTopicsSidebar();
+                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
+                customTopics.push(parsedData);
+                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+
                 window.closeAIModal();
-                window.loadExercise(TOPICS.length - 1, 0);
+                window.renderTopicsSidebar();
+                document.getElementById('ai-topic-input').value = '';
+                showToast("¡Tema Generado!", `Módulo "${parsedData.topicName}" añadido con éxito.`, "success");
+                
+                // Dispara el confeti en exito
+                if (window.confetti) window.confetti();
 
-            } catch (err) {
-                alert("Error crítico de generación.\nDetalle: " + err.message);
+            } catch (e) {
+                console.error(e);
+                alert("Error crítico de generación. Verifica que tu API Key sea correcta.\nDetalle: " + e.message);
             } finally {
-                document.getElementById('ai-buttons').classList.remove('hidden');
-                document.getElementById('ai-loading').classList.add('hidden');
-                document.getElementById('ai-loading').classList.remove('flex');
+                btn.innerHTML = 'GENERAR MÓDULO';
+                btn.disabled = false;
             }
         };
+
+        window.renderExercisePills = function() {
+            const nav = document.getElementById('exercise-navigator');
+            nav.innerHTML = '';
+            const exercises = TOPICS[currentTopicIdx].exercises;
+
+            exercises.forEach((ex, idx) => {
+                const isCompleted = playerState.completedExercises.includes(ex.id);
+                const isActive = idx === currentExerciseIdx;
+                let baseClass = (ex.diff === "easy") ? "pill-easy" : (ex.diff === "med") ? "pill-med" : "pill-hard";
+                let stateClass = isActive ? "active" : (isCompleted ? "completed" : "");
+
+                const btn = document.createElement('div');
+                btn.className = `ex-pill ${baseClass} ${stateClass}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => window.loadExercise(currentTopicIdx, idx);
+                
+                if (isCompleted && !isActive) {
+                    btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                }
+                nav.appendChild(btn);
+            });
+        };
+
+        window.grantRewards = function(xp, coins) {
+            playerState.xp += xp;
+            playerState.coins += coins;
+            let xpNext = playerState.level * 1000;
+            if (playerState.xp >= xpNext) {
+                playerState.xp -= xpNext;
+                playerState.level++;
+                xpNext = playerState.level * 1000;
+                showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success");
+            }
+            const xpPct = (playerState.xp / xpNext) * 100;
+            document.getElementById('ui-level').textContent = playerState.level;
+            document.getElementById('ui-xp-bar').style.width = `${xpPct}%`;
+            document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`;
+            document.getElementById('ui-coins').textContent = playerState.coins;
+        };
+        
+        // Helper to fire confetti safely
+        function fireConfetti() {
+            if(window.confetti) {
+               window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00e5ff', '#a855f7', '#fbbf24'] }); 
+            }
+        }
 
         window.addEventListener('DOMContentLoaded', initApp);
     </script>
