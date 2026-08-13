@@ -462,6 +462,23 @@
         let currentExerciseIdx = 0;
         let revealedHintsCount = 0;
 
+        // Helper para mostrar Toasts
+        window.showToast = function(title, msg, type = "success") {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-msg').textContent = msg;
+            document.getElementById('toast-icon').textContent = type === "success" ? "✅" : (type === "error" ? "❌" : "💡");
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        };
+
+        // Helper to fire confetti safely
+        window.fireConfetti = function() {
+            if(window.confetti) {
+               window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00e5ff', '#a855f7', '#fbbf24'] }); 
+            }
+        };
+
         // FÁBRICA DE TEMAS: Convierte JSON a HTML Premium
         function createTopicFromJSON(d) {
             let topicId = "t" + (TOPICS.length + 1);
@@ -513,7 +530,6 @@
                     <p class="text-sm text-slate-300 mb-3">${d.bestPracticeText}</p>
                 </div>
                 
-                <!-- Error Premium Dinámico -->
                 <div class="mb-6 error-panel">
                     <div class="flex items-start gap-5 relative z-10 min-w-0">
                         <div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative">
@@ -565,7 +581,7 @@
                     expectedQuery: ex.expectedQuery,
                     xp: ex.diff === "easy" ? 15 : (ex.diff === "med" ? 30 : 60),
                     coins: ex.diff === "easy" ? 5 : (ex.diff === "med" ? 15 : 30),
-                    hints: ex.hints || ["Piensa en qué columnas requieres", "Revisa tu cláusula WHERE", "Asegúrate de escribir la sintaxis correcta."]
+                    hints: ex.hints || ["Revisa la sintaxis general", "Identifica las columnas correctas", "Aplica filtros si es necesario"]
                 };
             });
 
@@ -583,7 +599,7 @@
                 btn.classList.add('correct');
                 feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
                 feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
-                fireConfetti();
+                window.fireConfetti();
                 window.grantRewards(5, 1);
             } else {
                 btn.classList.add('incorrect', 'shake-animation');
@@ -632,7 +648,6 @@
                 id: "t1",
                 title: "1. Fundamentos y Análisis Lógico",
                 theory: `
-                    <!-- Introducción Glassmorphism -->
                     <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6">
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div>
                         <h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-md">
@@ -656,7 +671,6 @@
                         </div>
                     </div>
 
-                    <!-- Diccionario de Comandos -->
                     <div class="mb-6">
                         <h4 class="text-cyan-400 font-bold mb-4 uppercase tracking-wide text-xs flex items-center gap-2"><span>📖</span> Diccionario de Comandos Base</h4>
                         <div class="grid gap-3">
@@ -684,7 +698,6 @@
                         </div>
                     </div>
 
-                    <!-- Buenas Prácticas -->
                     <div class="mb-6 bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(99,102,241,0.1)] relative overflow-hidden group hover:border-indigo-400/50 transition-all duration-300">
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-purple-500"></div>
                         <h4 class="text-indigo-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span>🛡️</span> Buenas Prácticas Corporativas</h4>
@@ -700,7 +713,6 @@
                         </div>
                     </div>
                     
-                    <!-- Error Habitual -->
                     <div class="mb-6 error-panel">
                         <div class="flex items-start gap-5 relative z-10 min-w-0">
                             <div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative">
@@ -729,7 +741,6 @@
                         </div>
                     </div>
 
-                    <!-- Ejemplo Práctico -->
                     <div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300">
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div>
                         <h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]">
@@ -751,7 +762,6 @@
                         </div>
                     </div>
 
-                    <!-- Quizzes -->
                     <div class="mt-8 space-y-6">
                         <div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container">
                             <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div>
@@ -800,7 +810,6 @@
                     </div>
                 `,
                 exercises: [
-                    // --- NIVEL FÁCIL (1 - 3) ---
                     { id: "t1_e1", diff: "easy", get data() { return window.createMissionHTML(
                         "El departamento de cobranzas acaba de detectar facturas atrasadas. Necesitan que extraigas urgente una lista de la base de datos para comenzar a llamar a los clientes antes del cierre de mes.", 
                         "Escribe una consulta que devuelva el ID del cliente (<code>CustomerID</code>), el nombre (<code>CustomerName</code>) y su límite de riesgo (<code>CreditLimit</code>) de la tabla <code>Sales_Customers</code>. SOLO queremos a aquellos con un límite exactamente igual a <b>3000</b> dólares.", 
@@ -825,7 +834,6 @@
                         {title: "Registro oficial de empresas registradas.", cols: [{name: "CustomerName", desc: "Nombre de la empresa."}, {name: "CreditLimit", desc: "Límite habilitado en dólares."}]}
                     ) }, expectedQuery: "SELECT CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit > 3000;", xp: 15, coins: 5, hints: ["Tu SELECT debe pedir únicamente CustomerName, CreditLimit.", "Aplica el filtro: WHERE CreditLimit > 3000;"] },
                     
-                    // --- NIVEL MEDIO (4 - 6) ---
                     { id: "t1_e4", diff: "med", get data() { return window.createMissionHTML(
                         "Alerta roja en los almacenes. Hay escasez de componentes y logística necesita enviar pedidos de reposición urgentemente.", 
                         "Lista el nombre del producto (<code>StockItemName</code>) y cantidad (<code>Quantity</code>) de la tabla <code>Warehouse_StockItems</code>, solo para aquellos artículos cuya cantidad disponible sea MENOR a 50 unidades.", 
@@ -850,7 +858,6 @@
                         {title: "Inventario central.", cols: [{name: "StockItemName", desc: "Nombre."}, {name: "UnitPrice", desc: "Precio unitario (Hardware)."}]}
                     ) }, expectedQuery: "SELECT StockItemName, UnitPrice FROM Warehouse_StockItems WHERE UnitPrice >= 100;", xp: 30, coins: 15, hints: ["Tu SELECT debe pedir StockItemName, UnitPrice.", "Usa: WHERE UnitPrice >= 100;"] },
                     
-                    // --- NIVEL DIFÍCIL (7 - 9) ---
                     { id: "t1_e7", diff: "hard", get data() { return window.createMissionHTML(
                         "Auditoría interna solicita el registro del cliente con límite alto. Por políticas estrictas de la empresa, todo script oficial debe estar documentado.", 
                         "Obtén todas las columnas de <code>Sales_Customers</code> donde el límite de crédito sea 5000. <b>OBLIGATORIO:</b> Agrega un comentario en la primera línea que diga <code>-- Auditoria</code>.", 
@@ -888,6 +895,7 @@
             if (savedKey) document.getElementById('ai-api-key').value = savedKey;
 
             try {
+                // Iniciar CodeMirror
                 sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
                     mode: "text/x-sql",
                     theme: "dracula",
@@ -899,6 +907,7 @@
                 document.getElementById('next-btn').addEventListener('click', () => { window.loadExercise(currentTopicIdx, currentExerciseIdx + 1); });
                 document.getElementById('reset-btn').addEventListener('click', window.resetConsole);
 
+                // Inicializar base de datos
                 const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
                 db = new SQL.Database();
                 
@@ -922,7 +931,7 @@
                 window.loadExercise(0, 0);
 
             } catch (err) {
-                console.error("Error crítico:", err);
+                console.error("Error crítico de inicialización:", err);
             }
         }
 
@@ -1002,7 +1011,7 @@
                     <pre class="font-mono text-xs text-emerald-100 overflow-x-auto whitespace-pre-wrap leading-relaxed">${exercise.expectedQuery}</pre>
                 </div>
             `;
-            hintsList.prepend(solDiv); // LIFO: Agrega al principio, coronando la lista
+            hintsList.prepend(solDiv);
             document.getElementById('btn-show-solution').classList.add('hidden');
         };
 
@@ -1024,15 +1033,6 @@
                 btnShowSol.classList.remove('hidden');
             }
         };
-
-        function showToast(title, msg, type="success") {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-title').textContent = title;
-            document.getElementById('toast-msg').textContent = msg;
-            document.getElementById('toast-icon').textContent = type === "success" ? "✅" : (type === "error" ? "❌" : "💡");
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
 
         window.executeUserQuery = function() {
             const query = sqlEditor.getValue().trim();
@@ -1094,7 +1094,7 @@
                         window.grantRewards(exercise.xp, exercise.coins);
                         window.renderExercisePills();
                         showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success");
-                        fireConfetti();
+                        window.fireConfetti();
                         
                         if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) {
                             document.getElementById('run-btn').classList.add('hidden');
@@ -1237,14 +1237,12 @@
             document.getElementById('next-btn').classList.add('hidden');
         };
 
-        // ==========================================
-        // LA MAGIA: EL MOTOR DE INTELIGENCIA ARTIFICIAL
-        // ==========================================
+        // LÓGICA DE GENERACIÓN DE INTELIGENCIA ARTIFICIAL (GEMINI 1.5 FLASH)
         window.generateAITopic = async function() {
             const apiKey = document.getElementById('ai-api-key').value.trim();
             const userTopic = document.getElementById('ai-topic-input').value.trim();
             
-            if (!apiKey || !userTopic) return showToast("Faltan datos", "Ingresa tu API Key y el tema.", "error");
+            if (!apiKey || !userTopic) return window.showToast("Faltan datos", "Ingresa tu API Key y el tema.", "error");
 
             localStorage.setItem('gemini_api_key', apiKey);
 
@@ -1289,11 +1287,11 @@
                     }
                 ]
             }
-            Asegúrate de generar 9 ejercicios (3 diff="easy", 3 diff="med", 3 diff="hard") y 3 quizzes. El JSON debe ser válido.`;
+            Asegúrate de generar 9 ejercicios (3 diff="easy", 3 diff="med", 3 diff="hard") y 3 quizzes. El JSON debe ser válido sin marcas de markdown.`;
 
             try {
-                // LA SOLUCIÓN UNIVERSAL: Llamada al modelo 'gemini-pro'
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+                // LLamada al modelo corregido 'gemini-1.5-flash'
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1306,11 +1304,10 @@
 
                 let jsonText = data.candidates[0].content.parts[0].text;
                 
-                // EL FILTRO MÁGICO: Limpia las comillas de Markdown que a veces manda Gemini
-                jsonText = jsonText.replace(/^\x60\x60\x60json\n?/, '').replace(/\n?\x60\x60\x60$/, '').trim();
+                // Limpiar JSON
+                jsonText = jsonText.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
 
                 const parsedData = JSON.parse(jsonText);
-
                 const newTopic = createTopicFromJSON(parsedData);
                 TOPICS.push(newTopic);
 
@@ -1321,10 +1318,8 @@
                 window.closeAIModal();
                 window.renderTopicsSidebar();
                 document.getElementById('ai-topic-input').value = '';
-                showToast("¡Tema Generado!", `Módulo "${parsedData.topicName}" añadido con éxito.`, "success");
-                
-                // Dispara el confeti en exito
-                if (window.confetti) window.confetti();
+                window.showToast("¡Tema Generado!", `Módulo "${parsedData.topicName}" añadido con éxito.`, "success");
+                window.fireConfetti();
 
             } catch (e) {
                 console.error(e);
@@ -1366,7 +1361,7 @@
                 playerState.xp -= xpNext;
                 playerState.level++;
                 xpNext = playerState.level * 1000;
-                showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success");
+                window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success");
             }
             const xpPct = (playerState.xp / xpNext) * 100;
             document.getElementById('ui-level').textContent = playerState.level;
@@ -1374,13 +1369,6 @@
             document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`;
             document.getElementById('ui-coins').textContent = playerState.coins;
         };
-        
-        // Helper to fire confetti safely
-        function fireConfetti() {
-            if(window.confetti) {
-               window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00e5ff', '#a855f7', '#fbbf24'] }); 
-            }
-        }
 
         window.addEventListener('DOMContentLoaded', initApp);
     </script>
