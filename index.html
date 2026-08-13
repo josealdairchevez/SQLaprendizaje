@@ -436,6 +436,29 @@
         let currentExerciseIdx = 0;
         let revealedHintsCount = 0;
 
+        // NUEVAS FUNCIONES VISUALES AÑADIDAS
+        window.showToast = function(title, msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-msg').textContent = msg;
+            
+            if(type === 'success') icon.textContent = '✅';
+            else if(type === 'error') icon.textContent = '❌';
+            else if(type === 'hint') icon.textContent = '💡';
+            else icon.textContent = '✨';
+            
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        };
+
+        window.fireConfetti = function() {
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+        };
+
         function createTopicFromJSON(d) {
             let topicId = "t" + (TOPICS.length + 1);
             
@@ -555,7 +578,7 @@
                 btn.classList.add('correct');
                 feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
                 feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
-                fireConfetti();
+                window.fireConfetti();
                 window.grantRewards(5, 1);
             } else {
                 btn.classList.add('incorrect', 'shake-animation');
@@ -975,17 +998,17 @@
                         playerState.completedExercises.push(exercise.id);
                         window.grantRewards(exercise.xp, exercise.coins);
                         window.renderExercisePills();
-                        showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success");
-                        fireConfetti();
+                        window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success");
+                        window.fireConfetti();
                         
                         if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) {
                             document.getElementById('run-btn').classList.add('hidden');
                             document.getElementById('next-btn').classList.remove('hidden');
                         } else {
-                            setTimeout(() => showToast("🏆 Módulo Dominado", "Has completado todos los ejercicios de este tema.", "success"), 1000);
+                            setTimeout(() => window.showToast("🏆 Módulo Dominado", "Has completado todos los ejercicios de este tema.", "success"), 1000);
                         }
                     } else {
-                        showToast("Consulta Válida", "Código correcto (Recompensa ya cobrada).", "hint");
+                        window.showToast("Consulta Válida", "Código correcto (Recompensa ya cobrada).", "hint");
                         if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) {
                             document.getElementById('run-btn').classList.add('hidden');
                             document.getElementById('next-btn').classList.remove('hidden');
@@ -1119,7 +1142,7 @@
             document.getElementById('next-btn').classList.add('hidden');
         };
 
-        // NUEVA FUNCIÓN: Importa directamente el JSON generado por cualquier IA sin llamadas HTTP frágiles
+        // Importa directamente el JSON generado por IA
         window.importJSONTopic = function() {
             const rawJson = document.getElementById('ai-json-input').value.trim();
             if (!rawJson) return alert("Por favor pega el código JSON.");
@@ -1138,8 +1161,10 @@
                 window.closeAIModal();
                 window.renderTopicsSidebar();
                 document.getElementById('ai-json-input').value = '';
-                showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success");
-                fireConfetti();
+                
+                // Ahora showToast y fireConfetti están definidos y no darán error
+                window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success");
+                window.fireConfetti();
             } catch (e) {
                 alert("Error al parsear el JSON. Asegúrate de copiar todo el objeto correctamente.\nDetalle: " + e.message);
             }
@@ -1176,7 +1201,7 @@
                 playerState.xp -= xpNext;
                 playerState.level++;
                 xpNext = playerState.level * 1000;
-                showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success");
+                window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success");
             }
             const xpPct = (playerState.xp / xpNext) * 100;
             document.getElementById('ui-level').textContent = playerState.level;
