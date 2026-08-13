@@ -1,0 +1,26 @@
+{
+  "name": "SQL JPRO - Entrenamiento Avanzado",
+  "short_name": "SQL JPRO",
+  "description": "Plataforma avanzada de entrenamiento en SQL con IA, retos interactivos y gamificación.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
