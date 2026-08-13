@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL JCPRO - Entrenamiento Avanzado</title>
+    <title>SQL Mastery - Entrenamiento Avanzado</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,6 +17,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/display/placeholder.min.js"></script>
+    
+    <!-- CodeMirror Autocompletado (IntelliSense) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/sql-hint.min.js"></script>
     
     <!-- SQL.js y Confeti -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
@@ -87,6 +92,21 @@
         .cm-s-dracula span.cm-variable, .cm-s-dracula span.cm-variable-2, .cm-s-dracula span.cm-variable-3, .cm-s-dracula span.cm-def { color: #ffffff !important; }
         .cm-s-dracula.CodeMirror { color: #ffffff !important; }
         .cm-s-dracula span.cm-comment { color: #608b4e !important; font-style: italic; }
+
+        /* Estilos Premium para la caja de Autocompletado (IntelliSense) */
+        .CodeMirror-hints {
+            background-color: #0f111a;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            padding: 4px 0;
+            z-index: 100;
+        }
+        .CodeMirror-hint { padding: 4px 12px; }
+        .CodeMirror-hint-active { background-color: rgba(0, 229, 255, 0.2); color: #00e5ff; font-weight: bold; }
 
         .output-panel {
             background-color: #090b14;
@@ -215,11 +235,16 @@
     <main class="flex-1 flex flex-col md:flex-row gap-4 px-4 pb-4 overflow-hidden z-10 min-h-0">
         
         <!-- SIDEBAR -->
-        <aside id="sidebar" class="glass-panel w-full md:w-72 flex flex-col shrink-0 overflow-hidden min-h-0">
+        <aside id="sidebar" class="glass-panel w-full md:w-72 flex flex-col shrink-0 overflow-hidden min-h-0 relative">
             <div class="p-4 border-b border-slate-700/50 bg-slate-800/30 flex justify-between items-center cursor-pointer hover:bg-slate-700/60 transition-colors" onclick="window.toggleSidebar()" title="Ocultar/Mostrar Temario">
                 <h2 class="text-lg text-white font-bold flex items-center gap-2"><span>🗺️</span> <span class="temario-text">Temario</span></h2>
                 <span id="sidebar-chevron" class="text-slate-400 font-black text-xl leading-none">◀</span>
             </div>
+            
+            <div class="text-[10px] text-center text-slate-500 font-bold uppercase tracking-widest pt-2 pb-1 border-b border-slate-800 bg-black/20 temario-text">
+                Arrastra para ordenar ↕
+            </div>
+
             <div id="topics-container" class="flex-1 overflow-y-auto p-3 space-y-2 transition-opacity duration-300 min-h-0"></div>
             
             <div id="ai-btn-container" class="p-3 border-t border-slate-700/50 bg-slate-900/60 shrink-0">
@@ -287,6 +312,7 @@
                 <div class="p-3 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30 shrink-0">
                     <h2 class="text-sm text-white font-bold tracking-wide flex items-center gap-2">
                         <span class="text-cyan-400">⚡</span> CONSOLA SQL
+                        <span class="text-[9px] font-medium text-slate-500 ml-2 hidden md:inline tracking-normal lowercase">(Autocompletado con TAB)</span>
                     </h2>
                     <button onclick="window.openDatabaseModal()" class="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 hover:from-cyan-800/60 hover:to-blue-800/60 border border-cyan-500/30 hover:border-cyan-400/60 text-cyan-300 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(0,229,255,0.15)] hover:shadow-[0_0_25px_rgba(0,229,255,0.3)] hover:-translate-y-0.5 flex items-center gap-2">
                         <span class="text-sm">👁️</span> VER TABLAS
@@ -441,11 +467,10 @@
         let currentExerciseIdx = 0;
         let revealedHintsCount = 0;
 
-        // NUEVAS FUNCIONES VISUALES AÑADIDAS
+        // NUEVAS FUNCIONES VISUALES
         window.showToast = function(title, msg, type = 'success') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toast-icon');
-            
             document.getElementById('toast-title').textContent = title;
             document.getElementById('toast-msg').textContent = msg;
             
@@ -459,12 +484,9 @@
         };
 
         window.fireConfetti = function() {
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            }
+            if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         };
 
-        // FUNCION PARA COPIAR EL PROMPT MAESTRO EXACTO Y DETALLADO
         window.copyPrompt = function() {
             const prompt = `Actúa como un Arquitecto de Bases de Datos SQL Senior, Diseñador Instruccional y experto en SQL Server. 
 Tu tarea es transformar el siguiente material de estudio que te proporcionaré (apuntes, transcripción de YouTube o fragmento de libro) en un Módulo de Aprendizaje Interactivo (LMS) estructurado en formato JSON.
@@ -528,7 +550,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         };
 
         function createTopicFromJSON(d) {
-            let topicId = "t" + (TOPICS.length + 1);
+            let topicId = d.id || ("t" + Math.random().toString(36).substr(2, 9));
             
             let commandsHTML = d.commands.map(cmd => `
                 <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-pink-500/40 hover:shadow-[0_0_20px_rgba(244,114,182,0.15)] transition-all">
@@ -692,7 +714,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
         const TOPICS = [
             {
-                id: "t1",
+                id: "t1_base",
                 title: "1. Fundamentos y Análisis Lógico",
                 theory: `
                     <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6">
@@ -992,15 +1014,48 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         ];
 
         async function initApp() {
+            // Lógica para ordenar temas arrastrables
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
-            customTopics.forEach(d => TOPICS.push(createTopicFromJSON(d)));
+            customTopics.forEach(d => {
+                if (!d.id) d.id = "t" + Math.random().toString(36).substr(2, 9);
+                TOPICS.push(createTopicFromJSON(d));
+            });
+
+            // Reordenar basado en localStorage
+            let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "null");
+            if (savedOrder) {
+                TOPICS.sort((a, b) => {
+                    let indexA = savedOrder.indexOf(a.id);
+                    let indexB = savedOrder.indexOf(b.id);
+                    if (indexA === -1) indexA = 9999;
+                    if (indexB === -1) indexB = 9999;
+                    return indexA - indexB;
+                });
+            }
 
             try {
+                // Instanciar CodeMirror con IntelliSense activado
                 sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
                     mode: "text/x-sql",
                     theme: "dracula",
                     lineNumbers: true,
-                    lineWrapping: true
+                    lineWrapping: true,
+                    extraKeys: {"Ctrl-Space": "autocomplete"},
+                    hintOptions: {
+                        tables: {
+                            "Sales_Customers": ["CustomerID", "CustomerName", "CreditLimit"],
+                            "Warehouse_StockItems": ["StockItemID", "StockItemName", "UnitPrice", "Quantity"]
+                        }
+                    }
+                });
+
+                // Auto-disparar IntelliSense al escribir
+                sqlEditor.on("inputRead", function(instance, changeObj) {
+                    if (/^[a-zA-Z_]+$/.test(changeObj.text[0])) {
+                        if (!instance.state.completionActive) {
+                            CodeMirror.commands.autocomplete(instance, null, { completeSingle: false });
+                        }
+                    }
                 });
 
                 document.getElementById('run-btn').addEventListener('click', window.executeUserQuery);
@@ -1038,14 +1093,67 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             document.getElementById('sidebar').classList.toggle('collapsed');
         };
 
+        // DRAG AND DROP - RENDER SIDEBAR
         window.renderTopicsSidebar = function() {
             const container = document.getElementById('topics-container');
             container.innerHTML = '';
+            let draggedTopicIndex = null;
+
             TOPICS.forEach((topic, idx) => {
-                const btn = document.createElement('button');
-                btn.className = `w-full text-left p-3 rounded-xl mb-2 transition-all font-bold text-sm ${idx === currentTopicIdx ? 'bg-cyan-900/40 text-cyan-300 border border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.15)]' : 'bg-slate-800/40 text-slate-400 border border-transparent hover:bg-slate-700/50'}`;
-                btn.innerHTML = topic.title;
+                const btn = document.createElement('div');
+                const isActive = idx === currentTopicIdx;
+                
+                btn.className = `w-full text-left p-3 rounded-xl mb-2 transition-all font-bold text-sm flex justify-between items-center cursor-grab active:cursor-grabbing border ${isActive ? 'bg-cyan-900/40 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.15)]' : 'bg-slate-800/40 text-slate-400 border-transparent hover:bg-slate-700/50'}`;
+                
+                btn.innerHTML = `<span class="truncate pr-2 pointer-events-none">${topic.title}</span><span class="opacity-50 pointer-events-none text-lg leading-none mb-1">⋮</span>`;
+                
+                btn.draggable = true;
+                
                 btn.onclick = () => window.loadExercise(idx, 0);
+                
+                // Eventos Drag and Drop
+                btn.addEventListener('dragstart', (e) => {
+                    draggedTopicIndex = idx;
+                    e.dataTransfer.effectAllowed = 'move';
+                    setTimeout(() => { btn.classList.add('opacity-30', 'border-dashed', 'border-slate-500'); }, 0);
+                });
+                
+                btn.addEventListener('dragend', (e) => {
+                    btn.classList.remove('opacity-30', 'border-dashed', 'border-slate-500');
+                    draggedTopicIndex = null;
+                    window.renderTopicsSidebar(); 
+                });
+                
+                btn.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    if (draggedTopicIndex !== null && draggedTopicIndex !== idx) {
+                        btn.classList.add('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20');
+                    }
+                });
+                
+                btn.addEventListener('dragleave', (e) => {
+                    btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20');
+                });
+                
+                btn.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20');
+                    
+                    if (draggedTopicIndex !== null && draggedTopicIndex !== idx) {
+                        let activeId = TOPICS[currentTopicIdx].id;
+                        
+                        const item = TOPICS.splice(draggedTopicIndex, 1)[0];
+                        TOPICS.splice(idx, 0, item);
+                        
+                        const newOrder = TOPICS.map(t => t.id);
+                        localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
+                        
+                        currentTopicIdx = TOPICS.findIndex(t => t.id === activeId);
+                        window.renderTopicsSidebar();
+                    }
+                });
+
                 container.appendChild(btn);
             });
         };
@@ -1347,9 +1455,14 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 const newTopic = createTopicFromJSON(parsedData);
                 TOPICS.push(newTopic);
 
+                // Guardar custom topics
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
                 customTopics.push(parsedData);
                 localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+
+                // Actualizar orden
+                const newOrder = TOPICS.map(t => t.id);
+                localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
 
                 window.closeAIModal();
                 window.renderTopicsSidebar();
