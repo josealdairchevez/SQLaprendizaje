@@ -852,15 +852,141 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     </div>
                 `,
                 exercises: [
-                    { id: "t1_e1", diff: "easy", get data() { return window.createMissionHTML("El departamento de cobranzas necesita extraer un listado rápido de la base de datos.", "Escribe una consulta que devuelva todas las columnas de la tabla Sales_Customers.", "Usa el asterisco (*).", "Sales_Customers (CustomerID, CustomerName, CreditLimit)", {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}) }, expectedQuery: "SELECT * FROM Sales_Customers;", xp: 15, coins: 5, hints: ["Usa SELECT *", "Indica la tabla con FROM Sales_Customers;"] },
-                    { id: "t1_e2", diff: "easy", get data() { return window.createMissionHTML("Finanzas solicita ver solo los nombres de los clientes registrados.", "Selecciona únicamente la columna CustomerName de la tabla Sales_Customers.", "Indica la columna específica en el SELECT.", "Sales_Customers (CustomerID, CustomerName, CreditLimit)", {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}) }, expectedQuery: "SELECT CustomerName FROM Sales_Customers;", xp: 15, coins: 5, hints: ["Usa SELECT CustomerName", "FROM Sales_Customers;"] },
-                    { id: "t1_e3", diff: "easy", get data() { return window.createMissionHTML("Control de inventario requiere verificar el nombre de los ítems en almacén.", "Extrae la columna StockItemName de la tabla Warehouse_StockItems.", "Usa SELECT y el nombre de la tabla de inventario.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Inventario de productos.", cols: [{name: "StockItemID", desc: "ID producto"}, {name: "StockItemName", desc: "Nombre producto"}, {name: "UnitPrice", desc: "Precio unitario"}, {name: "Quantity", desc: "Stock"}]}) }, expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems;", xp: 15, coins: 5, hints: ["SELECT StockItemName", "FROM Warehouse_StockItems;"] },
-                    { id: "t1_e4", diff: "med", get data() { return window.createMissionHTML("Auditoría exige verificar los límites de crédito de los clientes.", "Selecciona CustomerName y CreditLimit de la tabla Sales_Customers.", "Separa ambas columnas con una coma.", "Sales_Customers (CustomerID, CustomerName, CreditLimit)", {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}) }, expectedQuery: "SELECT CustomerName, CreditLimit FROM Sales_Customers;", xp: 30, coins: 15, hints: ["SELECT CustomerName, CreditLimit", "FROM Sales_Customers;"] },
-                    { id: "t1_e5", diff: "med", get data() { return window.createMissionHTML("Comercial busca clientes con un límite de crédito mayor a 3000.", "Obtén CustomerName y CreditLimit de Sales_Customers donde CreditLimit > 3000.", "Usa la cláusula WHERE.", "Sales_Customers (CustomerID, CustomerName, CreditLimit)", {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}) }, expectedQuery: "SELECT CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit > 3000;", xp: 30, coins: 15, hints: ["Agrega WHERE CreditLimit > 3000", "Revisa la separación de columnas con comas."] },
-                    { id: "t1_e6", diff: "med", get data() { return window.createMissionHTML("Logística necesita conocer el stock de productos con más de 50 unidades.", "Selecciona StockItemName y Quantity de Warehouse_StockItems donde Quantity > 50.", "Usa filtrado numérico con WHERE.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Inventario de productos.", cols: [{name: "StockItemID", desc: "ID producto"}, {name: "StockItemName", desc: "Nombre producto"}, {name: "UnitPrice", desc: "Precio unitario"}, {name: "Quantity", desc: "Stock"}]}) }, expectedQuery: "SELECT StockItemName, Quantity FROM Warehouse_StockItems WHERE Quantity > 50;", xp: 30, coins: 15, hints: ["SELECT StockItemName, Quantity", "FROM Warehouse_StockItems WHERE Quantity > 50;"] },
-                    { id: "t1_e7", diff: "hard", get data() { return window.createMissionHTML("Gerencia exige un reporte documentado de los clientes con crédito alto.", "Selecciona CustomerName y CreditLimit de Sales_Customers con límite > 4000. OBLIGATORIO: Añade un comentario corporativo al inicio que diga '-- Reporte Gerencial'.", "Los comentarios en SQL Server inician con --.", "Sales_Customers (CustomerID, CustomerName, CreditLimit)", {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}) }, expectedQuery: "-- Reporte Gerencial\nSELECT CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit > 4000;", xp: 60, coins: 30, hints: ["Escribe '-- Reporte Gerencial' en la primera línea.", "Haz el SELECT en la siguiente línea con el WHERE CreditLimit > 4000."] },
-                    { id: "t1_e8", diff: "hard", get data() { return window.createMissionHTML("Operaciones requiere auditar el inventario crítico de alto valor.", "Selecciona StockItemName y UnitPrice de Warehouse_StockItems donde UnitPrice >= 100. OBLIGATORIO: Añade un comentario '-- Auditoria Stock'.", "Usa operador de mayor o igual (>=) y documenta con comillas dobles de guion.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Inventario de productos.", cols: [{name: "StockItemID", desc: "ID producto"}, {name: "StockItemName", desc: "Nombre producto"}, {name: "UnitPrice", desc: "Precio unitario"}, {name: "Quantity", desc: "Stock"}]}) }, expectedQuery: "-- Auditoria Stock\nSELECT StockItemName, UnitPrice FROM Warehouse_StockItems WHERE UnitPrice >= 100;", xp: 60, coins: 30, hints: ["Empieza con '-- Auditoria Stock'", "Filtra con WHERE UnitPrice >= 100."] },
-                    { id: "t1_e9", diff: "hard", get data() { return window.createMissionHTML("Administración solicita el cierre final de inventario con trazabilidad estricta.", "Selecciona todas las columnas de Warehouse_StockItems donde Quantity < 50. OBLIGATORIO: Añade un comentario '-- Cierre Inventario'.", "Combina SELECT * con el comentario corporativo inicial.", "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", {title: "Inventario de productos.", cols: [{name: "StockItemID", desc: "ID producto"}, {name: "StockItemName", desc: "Nombre producto"}, {name: "UnitPrice", desc: "Precio unitario"}, {name: "Quantity", desc: "Stock"}]}) }, expectedQuery: "-- Cierre Inventario\nSELECT * FROM Warehouse_StockItems WHERE Quantity < 50;", xp: 60, coins: 30, hints: ["Inicia con '-- Cierre Inventario'", "Usa SELECT * FROM Warehouse_StockItems WHERE Quantity < 50;"] }
+                    { 
+                        id: "t1_e1", 
+                        diff: "easy", 
+                        get data() { 
+                            return window.createMissionHTML(
+                                "El equipo de auditoría financiera está realizando una conciliación trimestral sorpresa. Como primer paso del protocolo oficial, el auditor principal requiere tener visibilidad absoluta sobre el padrón completo de clientes corporativos registrados en el sistema para cruzarlo con los contratos físicos.", 
+                                "Extrae un reporte no filtrado que devuelva absolutamente todas las columnas de la tabla Sales_Customers. Esto permitirá al equipo de auditoría mapear cada ID, Nombre y Límite de Crédito sin perder ningún metadato en la validación inicial.", 
+                                "Utiliza el asterisco (*) para proyectar todas las columnas.", 
+                                "Sales_Customers (CustomerID, CustomerName, CreditLimit)", 
+                                {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}
+                            ) 
+                        }, 
+                        expectedQuery: "SELECT * FROM Sales_Customers;", 
+                        xp: 15, coins: 5, hints: ["Usa SELECT *", "Indica la tabla con FROM Sales_Customers;"] 
+                    },
+                    { 
+                        id: "t1_e2", 
+                        diff: "easy", 
+                        get data() { 
+                            return window.createMissionHTML(
+                                "El equipo de marketing está lanzando una nueva campaña de fidelización mediante correos directos. Para configurar la herramienta de mailing, el gestor de la campaña necesita aislar los nombres de las empresas sin contaminar la lista con datos financieros confidenciales.", 
+                                "Escribe una consulta que proyecte EXCLUSIVAMENTE la columna CustomerName desde la tabla Sales_Customers. Esto garantizará que marketing solo reciba los nombres de los clientes, cumpliendo estrictamente con las políticas de privacidad de datos.", 
+                                "Indica la columna específica en el SELECT en lugar del asterisco.", 
+                                "Sales_Customers (CustomerID, CustomerName, CreditLimit)", 
+                                {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}
+                            ) 
+                        }, 
+                        expectedQuery: "SELECT CustomerName FROM Sales_Customers;", 
+                        xp: 15, coins: 5, hints: ["Usa SELECT CustomerName", "FROM Sales_Customers;"] 
+                    },
+                    { 
+                        id: "t1_e3", 
+                        diff: "easy", 
+                        get data() { 
+                            return window.createMissionHTML(
+                                "El jefe de almacén está haciendo un inventario físico cíclico y ha notado discrepancias en las etiquetas de los estantes. Necesita una lista limpia con las descripciones oficiales de los productos tal como figuran en el sistema central para reimprimir las etiquetas masivamente.", 
+                                "Extrae únicamente la columna StockItemName de la tabla Warehouse_StockItems. Este reporte servirá como fuente de la verdad para el re-etiquetado del almacén.", 
+                                "Usa SELECT y el nombre exacto de la tabla de inventario.", 
+                                "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", 
+                                {title: "Inventario de productos.", cols: [{name: "StockItemID", desc: "ID producto"}, {name: "StockItemName", desc: "Nombre producto"}, {name: "UnitPrice", desc: "Precio unitario"}, {name: "Quantity", desc: "Stock"}]}
+                            ) 
+                        }, 
+                        expectedQuery: "SELECT StockItemName FROM Warehouse_StockItems;", 
+                        xp: 15, coins: 5, hints: ["SELECT StockItemName", "FROM Warehouse_StockItems;"] 
+                    },
+                    { 
+                        id: "t1_e4", 
+                        diff: "med", 
+                        get data() { 
+                            return window.createMissionHTML(
+                                "El departamento de riesgos está reevaluando las pólizas de seguro de la cartera de clientes. El analista de riesgos requiere mapear a cada cliente con su nivel de exposición financiera actual para determinar si se deben ajustar las primas anuales.", 
+                                "Selecciona las columnas CustomerName y CreditLimit de la tabla Sales_Customers. Esto proporcionará al analista la dupla exacta de datos necesaria para cruzar identidad corporativa contra riesgo financiero.", 
+                                "Separa ambas columnas con una coma en tu cláusula SELECT.", 
+                                "Sales_Customers (CustomerID, CustomerName, CreditLimit)", 
+                                {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}
+                            ) 
+                        }, 
+                        expectedQuery: "SELECT CustomerName, CreditLimit FROM Sales_Customers;", 
+                        xp: 30, coins: 15, hints: ["SELECT CustomerName, CreditLimit", "FROM Sales_Customers;"] 
+                    },
+                    { 
+                        id: "t1_e5", 
+                        diff: "med", 
+                        get data() { 
+                            return window.createMissionHTML(
+                                "Ante la inminente crisis de liquidez en el sector, la gerencia comercial ha ordenado una revisión inmediata de las cuentas clave. Se requiere identificar rápidamente a los clientes VIP para asignarles un ejecutivo de cuenta dedicado que asegure la cobranza.", 
+                                "Filtra y devuelve CustomerName y CreditLimit de Sales_Customers, pero SOLO para aquellos registros donde CreditLimit sea ESTRICTAMENTE MAYOR a 3000. Utiliza la cláusula WHERE para realizar este descarte analítico.", 
+                                "La sintaxis correcta del filtro es: WHERE columna > valor.", 
+                                "Sales_Customers (CustomerID, CustomerName, CreditLimit)", 
+                                {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}
+                            ) 
+                        }, 
+                        expectedQuery: "SELECT CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit > 3000;", 
+                        xp: 30, coins: 15, hints: ["Agrega WHERE CreditLimit > 3000 al final de tu instrucción.", "Revisa la separación de columnas con comas."] 
+                    },
+                    { 
+                        id: "t1_e6", 
+                        diff: "med", 
+                        get data() { 
+                            return window.createMissionHTML(
+                                "El equipo de logística está planificando el despacho masivo de la próxima semana. Necesitan identificar qué productos están ocupando un volumen excesivo en los palés del almacén principal para priorizar su salida en las primeras rutas de distribución matutina.", 
+                                "Selecciona StockItemName y Quantity de la tabla Warehouse_StockItems, aplicando un filtro matemático para mostrar exclusivamente los ítems que tengan una Quantity estrictamente mayor a 50 unidades.", 
+                                "Usa filtrado numérico con WHERE después de tu FROM.", 
+                                "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", 
+                                {title: "Inventario de productos.", cols: [{name: "StockItemID", desc: "ID producto"}, {name: "StockItemName", desc: "Nombre producto"}, {name: "UnitPrice", desc: "Precio unitario"}, {name: "Quantity", desc: "Stock"}]}
+                            ) 
+                        }, 
+                        expectedQuery: "SELECT StockItemName, Quantity FROM Warehouse_StockItems WHERE Quantity > 50;", 
+                        xp: 30, coins: 15, hints: ["SELECT StockItemName, Quantity", "FROM Warehouse_StockItems WHERE Quantity > 50;"] 
+                    },
+                    { 
+                        id: "t1_e7", 
+                        diff: "hard", 
+                        get data() { 
+                            return window.createMissionHTML(
+                                "La junta directiva (C-Level) ha convocado una reunión de emergencia para discutir la exposición crediticia de la empresa. Exigen un extracto formal y documentado de las entidades corporativas cuyo límite de crédito sea de alto riesgo (superior a $4,000). Al ser un script oficial para revisión gerencial, debe llevar firma de reporte.", 
+                                "Escribe una consulta que devuelva CustomerName y CreditLimit de Sales_Customers filtrando por límites mayores a 4000. OBLIGATORIO: La primera línea de tu script DEBE ser el comentario corporativo '-- Reporte Gerencial'.", 
+                                "Los comentarios en SQL Server inician con dos guiones medios seguidos de un espacio (-- ).", 
+                                "Sales_Customers (CustomerID, CustomerName, CreditLimit)", 
+                                {title: "Clientes corporativos oficiales.", cols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}, {name: "CreditLimit", desc: "Límite de crédito"}]}
+                            ) 
+                        }, 
+                        expectedQuery: "-- Reporte Gerencial\nSELECT CustomerName, CreditLimit FROM Sales_Customers WHERE CreditLimit > 4000;", 
+                        xp: 60, coins: 30, hints: ["Escribe '-- Reporte Gerencial' en la primera línea.", "Haz el SELECT en la siguiente línea con el filtro WHERE CreditLimit > 4000."] 
+                    },
+                    { 
+                        id: "t1_e8", 
+                        diff: "hard", 
+                        get data() { 
+                            return window.createMissionHTML(
+                                "El equipo de prevención de pérdidas sospecha de un fallo en los sistemas de seguridad de las zonas de alto valor del almacén. Para iniciar la investigación interna, el director de seguridad exige un listado técnico de todos los productos considerados 'Premium'.", 
+                                "Extrae StockItemName y UnitPrice de Warehouse_StockItems donde el UnitPrice sea estrictamente mayor o igual a 100. OBLIGATORIO: Documenta la consulta iniciando en la línea 1 con el comentario exacto '-- Auditoria Stock'.", 
+                                "Usa operador de mayor o igual (>=) y recuerda el comentario en la primera línea.", 
+                                "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", 
+                                {title: "Inventario de productos.", cols: [{name: "StockItemID", desc: "ID producto"}, {name: "StockItemName", desc: "Nombre producto"}, {name: "UnitPrice", desc: "Precio unitario"}, {name: "Quantity", desc: "Stock"}]}
+                            ) 
+                        }, 
+                        expectedQuery: "-- Auditoria Stock\nSELECT StockItemName, UnitPrice FROM Warehouse_StockItems WHERE UnitPrice >= 100;", 
+                        xp: 60, coins: 30, hints: ["Empieza con '-- Auditoria Stock'", "En la siguiente línea haz el SELECT y filtra con WHERE UnitPrice >= 100."] 
+                    },
+                    { 
+                        id: "t1_e9", 
+                        diff: "hard", 
+                        get data() { 
+                            return window.createMissionHTML(
+                                "Estamos a 24 horas del cierre fiscal del año operativo. El gerente de la cadena de suministro ha declarado un 'Código Rojo' por posibles quiebres de stock inmediatos. Ordena un volcado completo de datos de todos los ítems críticos para emitir órdenes de compra automáticas.", 
+                                "Selecciona absolutamente TODAS las columnas (*) de Warehouse_StockItems, aplicando un filtro estricto donde Quantity sea menor a 50 unidades. OBLIGATORIO: Certifica este script agregando en la primera línea el comentario corporativo '-- Cierre Inventario'.", 
+                                "Combina SELECT * con el filtro < 50 y el comentario corporativo inicial.", 
+                                "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", 
+                                {title: "Inventario de productos.", cols: [{name: "StockItemID", desc: "ID producto"}, {name: "StockItemName", desc: "Nombre producto"}, {name: "UnitPrice", desc: "Precio unitario"}, {name: "Quantity", desc: "Stock"}]}
+                            ) 
+                        }, 
+                        expectedQuery: "-- Cierre Inventario\nSELECT * FROM Warehouse_StockItems WHERE Quantity < 50;", 
+                        xp: 60, coins: 30, hints: ["Inicia con '-- Cierre Inventario'", "En la siguiente línea usa SELECT * FROM Warehouse_StockItems WHERE Quantity < 50;"] 
+                    }
                 ]
             }
         ];
@@ -1210,7 +1336,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             document.getElementById('next-btn').classList.add('hidden');
         };
 
-        // Importa directamente el JSON generado por IA
         window.importJSONTopic = function() {
             const rawJson = document.getElementById('ai-json-input').value.trim();
             if (!rawJson) return alert("Por favor pega el código JSON.");
@@ -1230,7 +1355,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 window.renderTopicsSidebar();
                 document.getElementById('ai-json-input').value = '';
                 
-                // Ahora showToast y fireConfetti están definidos y no darán error
                 window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success");
                 window.fireConfetti();
             } catch (e) {
