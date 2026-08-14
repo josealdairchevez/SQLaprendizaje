@@ -403,7 +403,7 @@
                 <div class="mt-2 flex justify-end gap-3">
                     <button onclick="window.closeAIModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors">Cancelar</button>
                     <button onclick="window.importJSONTopic()" class="bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-white px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center justify-center min-w-[160px]">
-                        IMPORTAR MÓDULO
+                        IMPORTAR MÓDULOS
                     </button>
                 </div>
             </div>
@@ -418,8 +418,18 @@
         
         let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [] };
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
+        let syncUserId = "jose_admin_01"; // ID único para tu sincronización personal
 
-        const firebaseConfig = {};
+        // 🌟 1. CONFIGURACIÓN REAL DE FIREBASE INYECTADA
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQdgFXt1YYG_uzkP6l8T2udyKV0hxAfOE",
+            authDomain: "sql-mastery-b106b.firebaseapp.com",
+            projectId: "sql-mastery-b106b",
+            storageBucket: "sql-mastery-b106b.firebasestorage.app",
+            messagingSenderId: "346869904430",
+            appId: "1:346869904430:web:9627d272758c902a425bbf",
+            measurementId: "G-BS1GWW12XR"
+        };
 
         if (firebaseConfig.apiKey) {
             firebase.initializeApp(firebaseConfig); dbFirestore = firebase.firestore();
@@ -460,6 +470,40 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 }`;
             navigator.clipboard.writeText(prompt); window.showToast("¡Prompt Copiado!", "Pégalo en la IA junto con tu tema a estudiar.", "success");
         };
+
+        // 🌟 FUNCIONES NÚCLEO DE SINCRONIZACIÓN EN LA NUBE
+        async function syncToCloud() {
+            if (!dbFirestore) return;
+            try {
+                await dbFirestore.collection("usuarios").doc(syncUserId).set({
+                    playerState: playerState,
+                    customTopics: JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"),
+                    topicOrder: JSON.parse(localStorage.getItem('sql_topic_order') || "null"),
+                    lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (e) { console.error("Error al sincronizar con Firestore:", e); }
+        }
+
+        async function loadFromCloud() {
+            if (!dbFirestore) return false;
+            try {
+                const doc = await dbFirestore.collection("usuarios").doc(syncUserId).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [] };
+                    if (data.customTopics) localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
+                    if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
+                    
+                    const xpNext = playerState.level * 1000;
+                    document.getElementById('ui-level').textContent = playerState.level;
+                    document.getElementById('ui-xp-bar').style.width = `${(playerState.xp / xpNext) * 100}%`;
+                    document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`;
+                    document.getElementById('ui-coins').textContent = playerState.coins;
+                    return true;
+                }
+            } catch (e) { console.error("Error al descargar de Firestore:", e); }
+            return false;
+        }
 
         function createTopicFromJSON(d) {
             let topicId = d.id || ("t" + Math.random().toString(36).substr(2, 9));
@@ -544,6 +588,9 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         ];
 
         async function initApp() {
+            // 🌟 OBTENER DATOS DE LA NUBE AL INICIAR
+            await loadFromCloud();
+
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
             customTopics.forEach(d => { if (!d.id) d.id = "t" + Math.random().toString(36).substr(2, 9); TOPICS.push(createTopicFromJSON(d)); });
 
@@ -656,6 +703,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                         let activeId = TOPICS[currentTopicIdx].id; const item = TOPICS.splice(draggedTopicIndex, 1)[0]; TOPICS.splice(idx, 0, item);
                         const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
                         currentTopicIdx = TOPICS.findIndex(t => t.id === activeId); window.renderTopicsSidebar();
+                        syncToCloud(); // ☁️ SINCRONIZAR ORDEN DE TEMAS
                     }
                 });
                 container.appendChild(btn);
@@ -780,6 +828,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); customTopics.push(parsedData); localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
                 const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
                 window.closeAIModal(); window.renderTopicsSidebar(); document.getElementById('ai-json-input').value = ''; window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success"); window.fireConfetti();
+                syncToCloud(); // ☁️ SINCRONIZAR NUEVO TEMA
             } catch (e) { alert("Error al parsear el JSON. Asegúrate de copiar todo el objeto correctamente.\nDetalle: " + e.message); }
         };
 
@@ -798,6 +847,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             playerState.xp += xp; playerState.coins += coins; let xpNext = playerState.level * 1000;
             if (playerState.xp >= xpNext) { playerState.xp -= xpNext; playerState.level++; xpNext = playerState.level * 1000; window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success"); }
             const xpPct = (playerState.xp / xpNext) * 100; document.getElementById('ui-level').textContent = playerState.level; document.getElementById('ui-xp-bar').style.width = `${xpPct}%`; document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`; document.getElementById('ui-coins').textContent = playerState.coins;
+            syncToCloud(); // ☁️ SINCRONIZAR PROGRESO AL GANAR RECOMPENSAS
         };
 
         window.addEventListener('DOMContentLoaded', initApp);
