@@ -1,1 +1,9 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.josechevez.sqlmastery",
+        "sha256_cert_fingerprints": ["29:54:9A:4D:27:5C:1E:8F:EE:AA:62:B4:49:6B:F8:43:50:EE:C3:82:83:3F:D0:05:9F:3A:18:78:B1:32:FF:1E"]
+      }
+    }]
 
