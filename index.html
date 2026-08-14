@@ -71,13 +71,11 @@
         .cm-s-dracula.CodeMirror { color: #ffffff !important; }
         .cm-s-dracula span.cm-comment { color: #608b4e !important; font-style: italic; }
 
-        /* 🌟 AUTOCOMPLETADO OPTIMIZADO PARA MÓVILES (Z-Index corregido) */
         .CodeMirror-hints {
             background-color: #0f111a; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 0.5rem;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8); font-family: 'Fira Code', monospace; 
             font-size: 1rem; color: #cbd5e1; padding: 8px 0; max-height: 250px; overflow-y: auto;
-            z-index: 99999 !important; /* 🌟 FORZA AL FRENTE DE TODO */
-            touch-action: auto; /* 🌟 PERMITE TOQUE MÓVIL CORRECTO */
+            z-index: 99999 !important; touch-action: auto;
         }
         .CodeMirror-hint { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .CodeMirror-hint-active { background-color: rgba(0, 229, 255, 0.2); color: #00e5ff; font-weight: bold; }
@@ -104,10 +102,7 @@
         .toast { position: fixed; bottom: 20px; right: 20px; padding: 1rem 1.5rem; border-radius: 1rem; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: white; font-weight: bold; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 50; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         .toast.show { transform: translateX(0); }
 
-        /* --- 🌟 ARQUITECTURA SIDEBAR REPARADA --- */
         #sidebar { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        
-        /* 📱 LÓGICA MÓVIL AISLADA */
         @media (max-width: 767px) {
             #sidebar {
                 position: fixed; top: 0; left: 0; height: 100vh; z-index: 60;
@@ -115,8 +110,7 @@
                 transform: translateX(-100%);
                 border-right: 1px solid rgba(0, 229, 255, 0.3);
                 border-radius: 0 1.25rem 1.25rem 0;
-                background: #0b0f19; /* Fondo sólido oscuro */
-                box-shadow: none;
+                background: #0b0f19; box-shadow: none;
             }
             #sidebar.mobile-open { transform: translateX(0); box-shadow: 15px 0 50px rgba(0,0,0,0.9); }
             #sidebar #topics-container, #sidebar .temario-text, #sidebar #ai-btn-container { display: flex !important; opacity: 1 !important; }
@@ -124,8 +118,6 @@
             #sidebar-backdrop { display: none; }
             #sidebar-backdrop.show { display: block !important; }
         }
-
-        /* 💻 LÓGICA PC AISLADA */
         @media (min-width: 768px) {
             #sidebar.collapsed { width: 4.2rem !important; }
             #sidebar.collapsed #sidebar-chevron { transform: rotate(180deg); }
@@ -156,7 +148,6 @@
 
     <header class="glass-panel m-4 p-4 flex flex-col md:flex-row justify-between items-center z-10 shrink-0">
         <div class="flex items-center gap-4 mb-4 md:mb-0">
-            <!-- BOTÓN MENÚ MÓVIL -->
             <button onclick="window.toggleSidebar()" class="md:hidden text-cyan-400 text-3xl leading-none font-bold mr-2" style="text-shadow: 0 0 10px rgba(0,229,255,0.5);">≡</button>
             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">👩‍💻</div>
             <div>
@@ -183,11 +174,8 @@
     </header>
 
     <main class="flex-1 flex flex-col md:flex-row gap-4 px-4 pb-4 md:overflow-hidden z-10 relative">
-        
-        <!-- 🌟 SOLUCIÓN: BACKDROP DENTRO DEL MAIN PARA ARREGLAR LAS CAPAS DE MÓVIL -->
         <div id="sidebar-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 md:hidden hidden" onclick="window.toggleSidebar()"></div>
 
-        <!-- SIDEBAR -->
         <aside id="sidebar" class="glass-panel w-72 flex flex-col shrink-0 overflow-hidden min-h-0 relative" style="z-index: 60;">
             <div class="p-4 border-b border-slate-700/50 bg-slate-800/30 flex justify-between items-center cursor-pointer hover:bg-slate-700/60 transition-colors" onclick="window.toggleSidebar()" title="Ocultar/Mostrar Temario">
                 <h2 class="text-lg text-white font-bold flex items-center gap-2"><span>🗺️</span> <span class="temario-text">Temario</span></h2>
@@ -198,7 +186,6 @@
                 Arrastra para ordenar ↕
             </div>
 
-            <!-- Inyección de temas dinámicos -->
             <div id="topics-container" class="flex-1 overflow-y-auto p-3 space-y-2 transition-opacity duration-300 min-h-0"></div>
             
             <div id="ai-btn-container" class="p-3 border-t border-slate-700/50 bg-slate-900/60 shrink-0">
@@ -208,11 +195,8 @@
             </div>
         </aside>
 
-        <!-- SECCIÓN PRINCIPAL DE CONTENIDO -->
         <section id="main-content" class="flex-1 flex flex-col gap-4 w-full md:overflow-hidden">
-            
             <div class="glass-panel shrink-0 flex flex-col md:flex-row md:overflow-hidden md:max-h-[40vh]">
-                
                 <div class="flex-1 p-5 border-b md:border-b-0 md:border-r border-slate-700/50 md:overflow-y-auto relative" id="theory-scroll-container">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
                     <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
@@ -262,16 +246,13 @@
                 </div>
             </div>
 
-            <!-- BLOQUE INFERIOR -->
             <div class="flex-1 glass-panel flex flex-col md:overflow-hidden relative min-h-[600px] md:min-h-0">
-                
                 <div class="p-3 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30 shrink-0">
                     <h2 class="text-sm text-white font-bold tracking-wide flex items-center gap-2">
                         <span class="text-cyan-400">⚡</span> CONSOLA SQL
                         <span class="text-[9px] font-medium text-slate-500 ml-2 hidden md:inline tracking-normal lowercase">(Tab para Autocompletar)</span>
                     </h2>
                     <div class="flex items-center gap-2">
-                        <!-- 🌟 SOLUCIÓN: BOTÓN EXPLÍCITO DE AUTOCOMPLETADO PARA MÓVILES -->
                         <button onclick="window.triggerAutocomplete()" class="md:hidden bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-500/30 text-purple-300 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(168,85,247,0.2)] flex items-center gap-1">
                             <span class="text-sm">💡</span> AUTO
                         </button>
@@ -282,7 +263,6 @@
                 </div>
                 
                 <div class="flex-1 flex flex-col md:flex-row md:overflow-hidden min-h-0">
-                    
                     <div class="m-3 flex-1 flex flex-col gap-3 md:overflow-y-auto pr-2 relative min-h-0 pb-2">
                         <div class="console-wrapper shrink-0">
                             <textarea id="sql-editor"></textarea>
@@ -410,7 +390,26 @@
         </div>
     </div>
 
-    <!-- 🌟 LOGICA PRINCIPAL DE LA APP -->
+    <!-- 🌟 NUEVO MODAL: GESTIÓN DE MÓDULOS (EDITAR/ELIMINAR) -->
+    <div id="topic-action-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-[#0f111a] border border-cyan-500/30 rounded-2xl w-10/12 max-w-sm flex flex-col shadow-[0_0_50px_rgba(0,229,255,0.15)] transform scale-95 transition-transform duration-300 p-5 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500"></div>
+            <h3 class="text-white font-black uppercase tracking-widest text-sm mb-4 border-b border-slate-700/50 pb-2 flex items-center gap-2"><span>⚙️</span> Gestionar Módulo</h3>
+            <p id="action-topic-name" class="text-cyan-300 text-sm font-bold mb-5 truncate leading-relaxed"></p>
+            <div class="flex flex-col gap-3">
+                <button id="btn-edit-topic" class="bg-slate-800/80 hover:bg-slate-700 border border-slate-600/50 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-inner">
+                    ✏️ Renombrar Título
+                </button>
+                <button id="btn-delete-topic" class="bg-red-900/50 hover:bg-red-800 border border-red-500/50 text-red-100 font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-inner">
+                    🗑️ Eliminar Módulo
+                </button>
+                <button onclick="window.closeTopicActionModal()" class="text-slate-400 font-bold py-2 mt-2 hover:text-white transition-all uppercase text-xs tracking-wider">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let db;
         let sqlEditor;
@@ -418,9 +417,9 @@
         
         let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [] };
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
-        let syncUserId = "jose_admin_01"; // ID único para tu sincronización personal
+        let syncUserId = "jose_admin_01"; 
+        let selectedTopicIdForAction = null; // Variable para el módulo a editar/eliminar
 
-        // 🌟 1. CONFIGURACIÓN REAL DE FIREBASE INYECTADA
         const firebaseConfig = {
             apiKey: "AIzaSyAQdgFXt1YYG_uzkP6l8T2udyKV0hxAfOE",
             authDomain: "sql-mastery-b106b.firebaseapp.com",
@@ -471,7 +470,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             navigator.clipboard.writeText(prompt); window.showToast("¡Prompt Copiado!", "Pégalo en la IA junto con tu tema a estudiar.", "success");
         };
 
-        // 🌟 FUNCIONES NÚCLEO DE SINCRONIZACIÓN EN LA NUBE
         async function syncToCloud() {
             if (!dbFirestore) return;
             try {
@@ -588,9 +586,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         ];
 
         async function initApp() {
-            // 🌟 OBTENER DATOS DE LA NUBE AL INICIAR
             await loadFromCloud();
-
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
             customTopics.forEach(d => { if (!d.id) d.id = "t" + Math.random().toString(36).substr(2, 9); TOPICS.push(createTopicFromJSON(d)); });
 
@@ -603,39 +599,21 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             }
 
             try {
-                // 🌟 CODE-MIRROR INTELLISENSE TÁCTIL Y DE TECLADO REPARADO AL 100%
                 sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
                     mode: "text/x-sql", theme: "dracula", lineNumbers: true, lineWrapping: true,
-                    extraKeys: {
-                        "Ctrl-Space": "autocomplete",
-                        "Tab": "autocomplete",
-                        "Enter": function(cm) {
-                            if (cm.state.completionActive) { cm.state.completionActive.pick(); } 
-                            else { return CodeMirror.Pass; }
-                        }
-                    },
-                    hintOptions: { 
-                        tables: { "Sales_Customers": ["CustomerID", "CustomerName", "CreditLimit"], "Warehouse_StockItems": ["StockItemID", "StockItemName", "UnitPrice", "Quantity"] },
-                        completeSingle: false // Evita que se autocomplete solo sin dejar que el usuario elija
-                    }
+                    extraKeys: { "Ctrl-Space": "autocomplete", "Tab": "autocomplete", "Enter": function(cm) { if (cm.state.completionActive) { cm.state.completionActive.pick(); } else { return CodeMirror.Pass; } } },
+                    hintOptions: { tables: { "Sales_Customers": ["CustomerID", "CustomerName", "CreditLimit"], "Warehouse_StockItems": ["StockItemID", "StockItemName", "UnitPrice", "Quantity"] }, completeSingle: false }
                 });
 
-                // 🌟 DETECTOR AGRESIVO DE TECLADO VIRTUAL DE MÓVILES (Despierta el autocompletado siempre)
                 sqlEditor.on("change", function(instance, changeObj) {
                     if (changeObj.origin === "+input" || changeObj.origin === "*compose") {
                         const lastChar = changeObj.text[0].slice(-1);
-                        if (/[a-zA-Z_]/.test(lastChar) && !instance.state.completionActive) {
-                            CodeMirror.commands.autocomplete(instance, null, { completeSingle: false });
-                        }
+                        if (/[a-zA-Z_]/.test(lastChar) && !instance.state.completionActive) { CodeMirror.commands.autocomplete(instance, null, { completeSingle: false }); }
                     }
                 });
 
-                // 🌟 BOTÓN "AUTO" PARA MÓVILES EXTREMADAMENTE BLOQUEADOS
                 window.triggerAutocomplete = function() {
-                    if (sqlEditor && !sqlEditor.state.completionActive) {
-                        CodeMirror.commands.autocomplete(sqlEditor, null, { completeSingle: false });
-                        sqlEditor.focus();
-                    }
+                    if (sqlEditor && !sqlEditor.state.completionActive) { CodeMirror.commands.autocomplete(sqlEditor, null, { completeSingle: false }); sqlEditor.focus(); }
                 };
 
                 document.getElementById('run-btn').addEventListener('click', window.executeUserQuery);
@@ -662,17 +640,10 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             } catch (err) { console.error("Error crítico:", err); }
         }
 
-        // 🌟 LÓGICA DEL MENÚ LATERAL MÓVIL REPARADA (SIN CAPAS NEGRAS FANTASMAS)
         window.toggleSidebar = function() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('sidebar-backdrop');
-            
-            if (window.innerWidth < 768) {
-                sidebar.classList.toggle('mobile-open');
-                backdrop.classList.toggle('show');
-            } else {
-                sidebar.classList.toggle('collapsed');
-            }
+            const sidebar = document.getElementById('sidebar'); const backdrop = document.getElementById('sidebar-backdrop');
+            if (window.innerWidth < 768) { sidebar.classList.toggle('mobile-open'); backdrop.classList.toggle('show'); } 
+            else { sidebar.classList.toggle('collapsed'); }
         };
 
         window.renderTopicsSidebar = function() {
@@ -682,15 +653,18 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             TOPICS.forEach((topic, idx) => {
                 const btn = document.createElement('div'); const isActive = idx === currentTopicIdx;
                 btn.className = `w-full text-left p-3 rounded-xl mb-2 transition-all font-bold text-sm flex justify-between items-center cursor-grab active:cursor-grabbing border ${isActive ? 'bg-cyan-900/40 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.15)]' : 'bg-slate-800/40 text-slate-400 border-transparent hover:bg-slate-700/50'}`;
-                btn.innerHTML = `<span class="truncate pr-2 pointer-events-none">${topic.title}</span><span class="opacity-50 pointer-events-none text-lg leading-none mb-1">⋮</span>`;
+                
+                // 🌟 NUEVO MENÚ FUNCIONAL EN LOS 3 PUNTITOS (Solo para módulos importados)
+                let optionsHtml = (topic.id === "t1_base") 
+                    ? `<span class="opacity-50 pointer-events-none text-lg leading-none mb-1">⋮</span>`
+                    : `<button class="opacity-50 hover:opacity-100 hover:text-cyan-400 px-2 py-1 text-xl leading-none transition-all z-20 relative" onclick="window.openTopicActionModal(event, '${topic.id}', '${topic.title.replace(/'/g, "\\'")}')">⋮</button>`;
+                
+                btn.innerHTML = `<span class="truncate pr-2 pointer-events-none">${topic.title}</span>${optionsHtml}`;
                 btn.draggable = true;
                 
                 btn.onclick = () => { 
                     window.loadExercise(idx, 0); 
-                    if(window.innerWidth < 768) {
-                        document.getElementById('sidebar').classList.remove('mobile-open');
-                        document.getElementById('sidebar-backdrop').classList.remove('show');
-                    }
+                    if(window.innerWidth < 768) { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('sidebar-backdrop').classList.remove('show'); }
                 };
                 
                 btn.addEventListener('dragstart', (e) => { draggedTopicIndex = idx; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => { btn.classList.add('opacity-30', 'border-dashed', 'border-slate-500'); }, 0); });
@@ -703,12 +677,68 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                         let activeId = TOPICS[currentTopicIdx].id; const item = TOPICS.splice(draggedTopicIndex, 1)[0]; TOPICS.splice(idx, 0, item);
                         const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
                         currentTopicIdx = TOPICS.findIndex(t => t.id === activeId); window.renderTopicsSidebar();
-                        syncToCloud(); // ☁️ SINCRONIZAR ORDEN DE TEMAS
+                        syncToCloud(); 
                     }
                 });
                 container.appendChild(btn);
             });
         };
+
+        // 🌟 LÓGICA DE GESTIÓN DE MÓDULOS
+        window.openTopicActionModal = function(e, topicId, title) {
+            e.stopPropagation(); // Evita que se abra el tema por accidente al tocar los puntos
+            selectedTopicIdForAction = topicId;
+            document.getElementById('action-topic-name').textContent = title;
+            const modal = document.getElementById('topic-action-modal');
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.firstElementChild.classList.remove('scale-95'); });
+        };
+
+        window.closeTopicActionModal = function() {
+            const modal = document.getElementById('topic-action-modal');
+            modal.classList.add('opacity-0'); modal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
+
+        document.getElementById('btn-edit-topic').addEventListener('click', () => {
+            const topic = TOPICS.find(t => t.id === selectedTopicIdForAction);
+            if(!topic) return;
+            const newTitle = prompt("✏️ Escribe el nuevo título para el módulo:", topic.title);
+            if(newTitle && newTitle.trim() !== "") {
+                topic.title = newTitle.trim();
+                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
+                let ct = customTopics.find(t => t.id === selectedTopicIdForAction);
+                if(ct) { ct.topicName = topic.title; localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); }
+                window.renderTopicsSidebar();
+                if(currentTopicIdx === TOPICS.findIndex(t => t.id === selectedTopicIdForAction)) { document.getElementById('topic-title').textContent = topic.title; }
+                window.showToast("Título Actualizado", "Nombre modificado con éxito.", "success");
+                syncToCloud();
+            }
+            window.closeTopicActionModal();
+        });
+
+        document.getElementById('btn-delete-topic').addEventListener('click', () => {
+            const confirmDelete = confirm("⚠️ ¿Estás absolutamente seguro de ELIMINAR este módulo?\nSe perderá su contenido y tendrás que importarlo de nuevo si lo necesitas.");
+            if(confirmDelete) {
+                const idx = TOPICS.findIndex(t => t.id === selectedTopicIdForAction);
+                if(idx > -1) TOPICS.splice(idx, 1);
+                
+                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
+                customTopics = customTopics.filter(t => t.id !== selectedTopicIdForAction);
+                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+                
+                let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "[]");
+                savedOrder = savedOrder.filter(id => id !== selectedTopicIdForAction);
+                localStorage.setItem('sql_topic_order', JSON.stringify(savedOrder));
+
+                window.renderTopicsSidebar();
+                
+                if(currentTopicIdx === idx || currentTopicIdx >= TOPICS.length) { window.loadExercise(0, 0); }
+                window.showToast("Módulo Eliminado", "El módulo fue borrado de tu cuenta.", "success");
+                syncToCloud();
+            }
+            window.closeTopicActionModal();
+        });
 
         window.loadExercise = function(topicIdx, exIdx) {
             currentTopicIdx = topicIdx; currentExerciseIdx = exIdx; revealedHintsCount = 0;
@@ -824,11 +854,19 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         window.importJSONTopic = function() {
             const rawJson = document.getElementById('ai-json-input').value.trim(); if (!rawJson) return alert("Por favor pega el código JSON.");
             try {
-                let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); const parsedData = JSON.parse(cleanJson); const newTopic = createTopicFromJSON(parsedData); TOPICS.push(newTopic);
-                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); customTopics.push(parsedData); localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+                let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); 
+                const parsedData = JSON.parse(cleanJson); 
+                const newTopic = createTopicFromJSON(parsedData); 
+                parsedData.id = newTopic.id; // 🌟 Se asegura de que el ID quede grabado
+                
+                TOPICS.push(newTopic);
+                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); 
+                customTopics.push(parsedData); 
+                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+                
                 const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
                 window.closeAIModal(); window.renderTopicsSidebar(); document.getElementById('ai-json-input').value = ''; window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success"); window.fireConfetti();
-                syncToCloud(); // ☁️ SINCRONIZAR NUEVO TEMA
+                syncToCloud(); 
             } catch (e) { alert("Error al parsear el JSON. Asegúrate de copiar todo el objeto correctamente.\nDetalle: " + e.message); }
         };
 
@@ -847,7 +885,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             playerState.xp += xp; playerState.coins += coins; let xpNext = playerState.level * 1000;
             if (playerState.xp >= xpNext) { playerState.xp -= xpNext; playerState.level++; xpNext = playerState.level * 1000; window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success"); }
             const xpPct = (playerState.xp / xpNext) * 100; document.getElementById('ui-level').textContent = playerState.level; document.getElementById('ui-xp-bar').style.width = `${xpPct}%`; document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`; document.getElementById('ui-coins').textContent = playerState.coins;
-            syncToCloud(); // ☁️ SINCRONIZAR PROGRESO AL GANAR RECOMPENSAS
+            syncToCloud(); 
         };
 
         window.addEventListener('DOMContentLoaded', initApp);
