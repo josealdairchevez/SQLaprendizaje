@@ -141,6 +141,10 @@
         .quiz-option.correct .quiz-circle { border-color: #10b981; background: #10b981; }
         .quiz-option.incorrect { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
         .quiz-option.incorrect .quiz-circle { border-color: #ef4444; background: #ef4444; }
+        
+        /* Animación para el Nivel */
+        @keyframes levelUpPulse { 0% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.15); filter: brightness(1.5); box-shadow: 0 0 30px rgba(0, 229, 255, 0.8); } 100% { transform: scale(1); filter: brightness(1); } }
+        .level-up-anim { animation: levelUpPulse 1s ease-out; }
     </style>
 </head>
 
@@ -152,23 +156,44 @@
             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">👩‍💻</div>
             <div>
                 <h1 class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">SQL MASTERY</h1>
-                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Módulo <span id="ui-level" class="text-cyan-400">1</span> · Iniciado <span id="sync-status" class="ml-2 text-[9px] text-amber-500">☁️ Local</span></p>
+                <!-- 🌟 CORRECCIÓN SEMÁNTICA: Se quita la palabra MÓDULO y se mejora el subtítulo -->
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold flex items-center gap-2">
+                    Entrenamiento SQL 
+                    <span id="sync-status" class="px-1.5 py-0.5 rounded-md bg-black/50 border border-slate-700/50 text-[9px] text-amber-500 shadow-inner">☁️ Local</span>
+                </p>
             </div>
         </div>
         
-        <div class="flex items-center gap-6">
+        <!-- 🌟 REDISEÑO COMPLETO DEL HUB DEL JUGADOR (Nivel, XP y Oro integrados) -->
+        <div class="flex items-center gap-3">
             <div class="flex flex-col items-end">
-                <div class="text-xs text-slate-400 font-bold mb-1 uppercase tracking-wide">Experiencia</div>
+                <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-widest">Experiencia</div>
                 <div class="flex items-center gap-2">
-                    <div class="w-32 md:w-48 h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
-                        <div id="ui-xp-bar" class="h-full bg-gradient-to-r from-purple-500 to-cyan-400 transition-all duration-500 w-0"></div>
+                    <div class="w-32 md:w-48 h-2.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700 shadow-inner">
+                        <div id="ui-xp-bar" class="h-full bg-gradient-to-r from-purple-500 to-cyan-400 transition-all duration-500 w-0 relative">
+                            <div class="absolute top-0 right-0 bottom-0 w-4 bg-white/20 blur-[2px]"></div>
+                        </div>
                     </div>
-                    <span id="ui-xp-text" class="text-sm font-bold text-cyan-300 w-12 text-right">0/1000</span>
+                    <span id="ui-xp-text" class="text-[11px] font-black text-cyan-300 w-14 text-right tracking-wider">0/1000</span>
                 </div>
             </div>
-            <div class="bg-slate-800/50 border border-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 shadow-inner">
-                <span class="text-xl drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]">🪙</span>
-                <span id="ui-coins" class="text-lg font-black text-amber-400">0</span>
+            
+            <!-- BADGE DE NIVEL DINÁMICO -->
+            <div class="relative group cursor-default" id="level-badge-container">
+                <div class="absolute inset-0 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-xl blur-[6px] opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative bg-slate-900 border border-slate-700/50 px-3 py-1.5 rounded-xl flex flex-col items-center justify-center shadow-xl">
+                    <span class="text-[8px] uppercase tracking-[0.2em] text-slate-400 font-black mb-[-2px]">Nivel</span>
+                    <span id="ui-level-badge" class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400 leading-none">1</span>
+                </div>
+            </div>
+
+            <!-- CONTADOR DE ORO -->
+            <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-xl flex flex-col items-center justify-center shadow-inner ml-1">
+                <span class="text-[8px] uppercase tracking-[0.2em] text-slate-400 font-black mb-[-2px]">Oro</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-sm drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] leading-none">🪙</span>
+                    <span id="ui-coins" class="text-base font-black text-amber-400 leading-none">0</span>
+                </div>
             </div>
         </div>
     </header>
@@ -198,6 +223,7 @@
         <section id="main-content" class="flex-1 flex flex-col gap-4 w-full md:overflow-hidden">
             <div class="glass-panel shrink-0 flex flex-col md:flex-row md:overflow-hidden md:max-h-[40vh]">
                 
+                <!-- 🌟 CONTENEDOR DE TEORÍA CON BARRA SUPERIOR DINÁMICA -->
                 <div class="flex-1 p-5 border-b md:border-b-0 md:border-r border-slate-700/50 md:overflow-y-auto relative" id="theory-scroll-container">
                     <div id="theory-top-bar" class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
                     <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
@@ -416,7 +442,7 @@
         let sqlEditor;
         let dbFirestore = null; 
         
-        // 🌟 CORRECCIÓN CRÍTICA: Se inyecta 'quizStates: {}' desde el inicio para evitar amnesia
+        // 🌟 SE MANTIENE EL QUIZSTATES
         let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {} };
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
         let syncUserId = "jose_admin_01"; 
@@ -539,7 +565,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             document.getElementById('run-btn').classList.remove('hidden'); 
             document.getElementById('next-btn').classList.add('hidden'); 
         };
-        // 🌟 FIN REINSERCIÓN 🌟
 
         async function syncToCloud() {
             if (!dbFirestore) return;
@@ -559,7 +584,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 const doc = await dbFirestore.collection("usuarios").doc(syncUserId).get();
                 if (doc.exists) {
                     const data = doc.data();
-                    // 🌟 PREVENCIÓN DE FALLO: Si 'quizStates' no existía en Firebase, se autoincrementa
                     playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {} };
                     if (!playerState.quizStates) playerState.quizStates = {}; 
 
@@ -567,7 +591,8 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
                     
                     const xpNext = playerState.level * 1000;
-                    document.getElementById('ui-level').textContent = playerState.level;
+                    // 🌟 CORRECCIÓN: Apuntamos al nuevo ID del Badge de Nivel
+                    document.getElementById('ui-level-badge').textContent = playerState.level;
                     document.getElementById('ui-xp-bar').style.width = `${(playerState.xp / xpNext) * 100}%`;
                     document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`;
                     document.getElementById('ui-coins').textContent = playerState.coins;
@@ -631,7 +656,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             return { id: topicId, title: d.topicName || d.title || "Tema Sin Nombre", baseTheory: baseTheoryHTML, exercises: mappedExercises };
         }
 
-        // 🌟 CORRECCIÓN CRÍTICA DE ALMACENAMIENTO DE QUIZZES (Recibe los index exactos)
         window.checkQuiz = function(btn, isCorrect, feedbackMsg, quizIdx, optIdx) {
             const container = btn.closest('.quiz-container'); 
             const buttons = container.querySelectorAll('.quiz-option'); 
@@ -648,11 +672,9 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
                 feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
                 
-                // Evita sumar XP de nuevo si la página se recargó mágicamente
                 if (!playerState.quizStates[exercise.id][quizIdx]) {
                     window.fireConfetti(); 
                     window.grantRewards(5, 1);
-                    // Guarda el index exacto seleccionado
                     playerState.quizStates[exercise.id][quizIdx] = { selectedOpt: optIdx, correct: true };
                     syncToCloud();
                 }
@@ -1212,8 +1234,20 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
         window.grantRewards = function(xp, coins) {
             playerState.xp += xp; playerState.coins += coins; let xpNext = playerState.level * 1000;
-            if (playerState.xp >= xpNext) { playerState.xp -= xpNext; playerState.level++; xpNext = playerState.level * 1000; window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success"); }
-            const xpPct = (playerState.xp / xpNext) * 100; document.getElementById('ui-level').textContent = playerState.level; document.getElementById('ui-xp-bar').style.width = `${xpPct}%`; document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`; document.getElementById('ui-coins').textContent = playerState.coins;
+            if (playerState.xp >= xpNext) { 
+                playerState.xp -= xpNext; playerState.level++; xpNext = playerState.level * 1000; 
+                window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success"); 
+                
+                // Animación visual extra al subir de nivel
+                const badgeContainer = document.getElementById('level-badge-container');
+                badgeContainer.classList.add('level-up-anim');
+                setTimeout(() => badgeContainer.classList.remove('level-up-anim'), 1000);
+            }
+            const xpPct = (playerState.xp / xpNext) * 100; 
+            document.getElementById('ui-level-badge').textContent = playerState.level; 
+            document.getElementById('ui-xp-bar').style.width = `${xpPct}%`; 
+            document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`; 
+            document.getElementById('ui-coins').textContent = playerState.coins;
             syncToCloud(); 
         };
 
