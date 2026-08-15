@@ -417,6 +417,7 @@
         let sqlEditor;
         let dbFirestore = null; 
         
+        // 🌟 CORRECCIÓN CRÍTICA: Se inyecta 'quizStates: {}' desde el inicio para evitar amnesia
         let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {} };
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
         let syncUserId = "jose_admin_01"; 
@@ -523,7 +524,10 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 const doc = await dbFirestore.collection("usuarios").doc(syncUserId).get();
                 if (doc.exists) {
                     const data = doc.data();
+                    // 🌟 PREVENCIÓN DE FALLO: Si 'quizStates' no existía en Firebase, se autoincrementa
                     playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {} };
+                    if (!playerState.quizStates) playerState.quizStates = {}; 
+
                     if (data.customTopics) localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
                     if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
                     
@@ -592,6 +596,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             return { id: topicId, title: d.topicName || d.title || "Tema Sin Nombre", baseTheory: baseTheoryHTML, exercises: mappedExercises };
         }
 
+        // 🌟 CORRECCIÓN CRÍTICA DE ALMACENAMIENTO DE QUIZZES (Recibe los index exactos)
         window.checkQuiz = function(btn, isCorrect, feedbackMsg, quizIdx, optIdx) {
             const container = btn.closest('.quiz-container'); 
             const buttons = container.querySelectorAll('.quiz-option'); 
@@ -607,11 +612,15 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 btn.classList.add('correct'); 
                 feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
                 feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
-                window.fireConfetti(); 
-                window.grantRewards(5, 1);
-
-                playerState.quizStates[exercise.id][quizIdx] = { selectedOpt: optIdx, correct: true };
-                syncToCloud();
+                
+                // Evita sumar XP de nuevo si la página se recargó mágicamente
+                if (!playerState.quizStates[exercise.id][quizIdx]) {
+                    window.fireConfetti(); 
+                    window.grantRewards(5, 1);
+                    // Guarda el index exacto seleccionado
+                    playerState.quizStates[exercise.id][quizIdx] = { selectedOpt: optIdx, correct: true };
+                    syncToCloud();
+                }
             } else {
                 btn.classList.add('incorrect', 'shake-animation'); 
                 feedbackDiv.innerHTML = `<span class="text-red-400 text-lg">❌</span> <span class="text-red-300">${feedbackMsg}</span>`;
@@ -961,12 +970,10 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
             document.getElementById('topic-title').textContent = topic.title; 
             
-            // 🌟 CORRECCIÓN VISUAL DE DISEÑO: RE-RENDERIZAR LA BARRA SUPERIOR CON GRADIENTE DINÁMICO
             const topBar = document.getElementById('theory-top-bar');
             if (topicIdx === 0) {
                 topBar.className = "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400";
             } else {
-                // Generar gradientes dinámicos variados y profesionales según el índice del tema
                 const gradients = [
                     "from-cyan-400 to-blue-600",
                     "from-amber-400 to-purple-600",
@@ -987,6 +994,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 `;
             }
 
+            // 🌟 MOTOR LÓGICO DE RECUPERACIÓN DE ESTADO PARA LOS QUIZZES
             if (exercise.quizzes && exercise.quizzes.length > 0) {
                 theoryHTML += `<div class="mt-8 space-y-6">`;
                 const savedQuizState = (playerState.quizStates && playerState.quizStates[exercise.id]) || {};
@@ -1005,7 +1013,8 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     }).join('');
 
                     let feedbackClass = isAnsweredCorrectly ? "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2" : "quiz-feedback hidden";
-                    let feedbackText = isAnsweredCorrectly ? `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${qz.options[qState.selectedOpt].feedback}</span>` : "";
+                    let safeFeedbackMsg = isAnsweredCorrectly && qz.options[qState.selectedOpt] ? (qz.options[qState.selectedOpt].feedback || '').replace(/</g, "&lt;").replace(/>/g, "&gt;") : "";
+                    let feedbackText = isAnsweredCorrectly ? `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${safeFeedbackMsg}</span>` : "";
 
                     theoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz Práctico ${idx+1}/${exercise.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${qz.question}</pre><div class="space-y-2">${optionsHTML}</div><div class="${feedbackClass}">${feedbackText}</div></div>`;
                 });
@@ -1123,7 +1132,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); 
                 const parsedData = JSON.parse(cleanJson); 
                 
-                // 🌟 AUTOMATIZAR NUMERACIÓN CONSECUTIVA DEL TEMA
                 let nextNumber = TOPICS.length + 1;
                 let rawName = parsedData.topicName || parsedData.title || "Nuevo Módulo";
                 rawName = rawName.replace(/^\d+[\.\-]\s*/, '');
