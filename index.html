@@ -418,7 +418,7 @@
         let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [] };
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
         let syncUserId = "jose_admin_01"; 
-        let selectedTopicIdForAction = null; // Variable para el módulo a editar/eliminar
+        let selectedTopicIdForAction = null; 
 
         const firebaseConfig = {
             apiKey: "AIzaSyAQdgFXt1YYG_uzkP6l8T2udyKV0hxAfOE",
@@ -588,7 +588,22 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         async function initApp() {
             await loadFromCloud();
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
-            customTopics.forEach(d => { if (!d.id) d.id = "t" + Math.random().toString(36).substr(2, 9); TOPICS.push(createTopicFromJSON(d)); });
+            
+            // 🌟 PARCHE DE ARQUITECTURA: Fijar IDs permanentes a temas antiguos
+            let requiresSave = false;
+            customTopics.forEach(d => { 
+                if (!d.id) { 
+                    d.id = "t" + Math.random().toString(36).substr(2, 9); 
+                    requiresSave = true; // Detectamos un tema antiguo fantasma y lo actualizamos
+                } 
+                TOPICS.push(createTopicFromJSON(d)); 
+            });
+
+            // Si reparamos temas antiguos, los guardamos a la fuerza para que su ID sea permanente
+            if (requiresSave) {
+                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+                syncToCloud(); 
+            }
 
             let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "null");
             if (savedOrder) {
@@ -654,7 +669,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 const btn = document.createElement('div'); const isActive = idx === currentTopicIdx;
                 btn.className = `w-full text-left p-3 rounded-xl mb-2 transition-all font-bold text-sm flex justify-between items-center cursor-grab active:cursor-grabbing border ${isActive ? 'bg-cyan-900/40 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.15)]' : 'bg-slate-800/40 text-slate-400 border-transparent hover:bg-slate-700/50'}`;
                 
-                // 🌟 NUEVO MENÚ FUNCIONAL EN LOS 3 PUNTITOS (Solo para módulos importados)
                 let optionsHtml = (topic.id === "t1_base") 
                     ? `<span class="opacity-50 pointer-events-none text-lg leading-none mb-1">⋮</span>`
                     : `<button class="opacity-50 hover:opacity-100 hover:text-cyan-400 px-2 py-1 text-xl leading-none transition-all z-20 relative" onclick="window.openTopicActionModal(event, '${topic.id}', '${topic.title.replace(/'/g, "\\'")}')">⋮</button>`;
@@ -684,9 +698,8 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             });
         };
 
-        // 🌟 LÓGICA DE GESTIÓN DE MÓDULOS
         window.openTopicActionModal = function(e, topicId, title) {
-            e.stopPropagation(); // Evita que se abra el tema por accidente al tocar los puntos
+            e.stopPropagation(); 
             selectedTopicIdForAction = topicId;
             document.getElementById('action-topic-name').textContent = title;
             const modal = document.getElementById('topic-action-modal');
@@ -857,7 +870,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); 
                 const parsedData = JSON.parse(cleanJson); 
                 const newTopic = createTopicFromJSON(parsedData); 
-                parsedData.id = newTopic.id; // 🌟 Se asegura de que el ID quede grabado
+                parsedData.id = newTopic.id;
                 
                 TOPICS.push(newTopic);
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); 
