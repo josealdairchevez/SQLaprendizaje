@@ -198,8 +198,9 @@
         <section id="main-content" class="flex-1 flex flex-col gap-4 w-full md:overflow-hidden">
             <div class="glass-panel shrink-0 flex flex-col md:flex-row md:overflow-hidden md:max-h-[40vh]">
                 
+                <!-- 🌟 CONTENEDOR DE TEORÍA CON BARRA SUPERIOR DINÁMICA -->
                 <div class="flex-1 p-5 border-b md:border-b-0 md:border-r border-slate-700/50 md:overflow-y-auto relative" id="theory-scroll-container">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
+                    <div id="theory-top-bar" class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
                     <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
                     <div id="topic-theory" class="space-y-4 pb-4"></div>
                 </div>
@@ -758,18 +759,15 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             ]
         };
 
-        // 🌟 ARREGLO GLOBAL VACÍO QUE SE LLENARÁ EN INITAPP()
         let TOPICS = [];
 
         async function initApp() {
             await loadFromCloud();
-            
-            // 🌟 INYECTAR EL TEMA 1 PASÁNDOLO POR LA FÁBRICA
             TOPICS.push(createTopicFromJSON(RAW_TOPIC_1));
 
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
-            
             let requiresSave = false;
+            
             customTopics.forEach(d => { 
                 try {
                     if (!d.id) { 
@@ -799,7 +797,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
                     mode: "text/x-sql", theme: "dracula", lineNumbers: true, lineWrapping: true,
                     extraKeys: { "Ctrl-Space": "autocomplete", "Tab": "autocomplete", "Enter": function(cm) { if (cm.state.completionActive) { cm.state.completionActive.pick(); } else { return CodeMirror.Pass; } } },
-                    hintOptions: { tables: { "Sales_Customers": ["CustomerID", "CustomerName", "CreditLimit"], "Warehouse_StockItems": ["StockItemID", "StockItemName", "UnitPrice", "Quantity"] }, completeSingle: false }
+                    hintOptions: { tables: { "Sales_Customers": ["CustomerID", "CustomerName", "Country", "Score", "CreditLimit"], "Warehouse_StockItems": ["StockItemID", "StockItemName", "UnitPrice", "Quantity"] }, completeSingle: false }
                 });
 
                 sqlEditor.on("change", function(instance, changeObj) {
@@ -946,6 +944,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
             document.getElementById('topic-title').textContent = topic.title; 
             
+            // 🌟 RENDERIZADO DINÁMICO LIMPIO Y SIN ESTILOS FANTASMAS
             let theoryHTML = topic.baseTheory || "";
             if (exercise.theoryUpdate && exercise.theoryUpdate.bestPracticeTitle) {
                 let tu = exercise.theoryUpdate;
@@ -1075,6 +1074,14 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             try {
                 let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); 
                 const parsedData = JSON.parse(cleanJson); 
+                
+                // 🌟 AUTOMATIZAR NUMERACIÓN CONSECUTIVA DEL TEMA
+                let nextNumber = TOPICS.length + 1;
+                let rawName = parsedData.topicName || parsedData.title || "Nuevo Módulo";
+                // Limpiar si ya traía un número previo para evitar duplicados como "3. 4. Tema"
+                rawName = rawName.replace(/^\d+[\.\-]\s*/, '');
+                parsedData.topicName = `${nextNumber}. ${rawName}`;
+
                 const newTopic = createTopicFromJSON(parsedData); 
                 parsedData.id = newTopic.id;
                 
@@ -1087,7 +1094,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 
                 window.renderTopicsSidebar(); 
                 
-                // 🌟 NUEVA FUNCIÓN: AUTO-NAVEGAR AL TEMA RECIÉN IMPORTADO
+                // 🌟 AUTO-NAVEGAR AL TEMA RECIÉN IMPORTADO
                 let newTopicIndex = TOPICS.findIndex(t => t.id === newTopic.id);
                 window.loadExercise(newTopicIndex, 0);
 
@@ -1097,7 +1104,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 }
 
                 document.getElementById('ai-json-input').value = ''; 
-                window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName || parsedData.title}" añadido con éxito.`, "success"); 
+                window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success"); 
                 window.fireConfetti();
                 window.closeAIModal();
                 syncToCloud(); 
