@@ -198,7 +198,6 @@
         <section id="main-content" class="flex-1 flex flex-col gap-4 w-full md:overflow-hidden">
             <div class="glass-panel shrink-0 flex flex-col md:flex-row md:overflow-hidden md:max-h-[40vh]">
                 
-                <!-- 🌟 CONTENEDOR DE TEORÍA CON BARRA SUPERIOR DINÁMICA -->
                 <div class="flex-1 p-5 border-b md:border-b-0 md:border-r border-slate-700/50 md:overflow-y-auto relative" id="theory-scroll-container">
                     <div id="theory-top-bar" class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
                     <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
@@ -506,6 +505,42 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             navigator.clipboard.writeText(prompt); window.showToast("¡Prompt Copiado!", "Pégalo en la IA junto con tu tema a estudiar.", "success");
         };
 
+        // 🌟 REINSERCIÓN DE FUNCIONES VITALES QUE SE HABÍAN BORRADO 🌟
+        window.showErrorBox = function(titleMsg, techErrorMsg) { 
+            document.getElementById('error-container').classList.remove('hidden'); 
+            document.getElementById('error-title-msg').textContent = titleMsg; 
+            document.getElementById('tech-detail-content').textContent = techErrorMsg; 
+            document.getElementById('tech-detail-content').classList.add('hidden'); 
+            document.getElementById('tech-detail-icon').style.transform = "rotate(0deg)"; 
+            document.getElementById('hints-container').classList.remove('hidden'); 
+            document.getElementById('hints-container').classList.add('flex'); 
+            window.updateHintsUI(); 
+        };
+
+        window.toggleTechDetail = function() { 
+            const content = document.getElementById('tech-detail-content'); 
+            const icon = document.getElementById('tech-detail-icon'); 
+            if (content.classList.contains('hidden')) { 
+                content.classList.remove('hidden'); 
+                icon.style.transform = "rotate(90deg)"; 
+            } else { 
+                content.classList.add('hidden'); 
+                icon.style.transform = "rotate(0deg)"; 
+            } 
+        };
+
+        window.resetConsole = function() { 
+            sqlEditor.setValue(""); 
+            document.getElementById('results-container').innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center"><div class="w-16 h-16 rounded-full bg-slate-800/30 border border-slate-700/50 flex items-center justify-center mb-3 shadow-inner"><span class="text-3xl drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">📡</span></div><span class="text-slate-300 font-black uppercase tracking-widest text-sm mb-1">Esperando Consulta...</span><span class="text-slate-500 text-xs max-w-[80%] font-medium">Escribe tu código SQL y presiona Ejecutar para visualizar el dataset.</span></div>`; 
+            document.getElementById('row-count').textContent = '0 FILAS'; 
+            document.getElementById('error-container').classList.add('hidden'); 
+            document.getElementById('hints-container').classList.add('hidden'); 
+            document.getElementById('hints-list').innerHTML = ''; 
+            document.getElementById('run-btn').classList.remove('hidden'); 
+            document.getElementById('next-btn').classList.add('hidden'); 
+        };
+        // 🌟 FIN REINSERCIÓN 🌟
+
         async function syncToCloud() {
             if (!dbFirestore) return;
             try {
@@ -657,7 +692,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             ],
             levels: [
                 {
-                    diff: "easy", escenario: "El equipo de auditoría financiera está realizando una conciliación trimestral sorpresa. Requieren visibilidad absoluta sobre el padrón completo de clientes.", requerimiento: "Extrae un reporte no filtrado que devuelva absolutamente todas las columnas de la tabla Sales_Customers.", tip: "Utiliza el asterisco (*) para proyectar todas las columnas.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos oficiales.", schemaCols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}], expectedQuery: "SELECT\n  *\nFROM\n  Sales_Customers;", hints: ["Usa SELECT *", "Indica la tabla con FROM Sales_Customers;"],
+                    diff: "easy", escenario: "El equipo de auditoría financiera está realizando una conciliación trimestral sorpresa. Requieren visibilidad absoluta sobre el padrón completo de clientes.", requerimiento: "Extrae un reporte no filtrado que devuelva absolutamente todas las columnas de la tabla Sales_Customers.", tip: "Utiliza el asterisco (*) para proyectar todas las columnas.", schemaLine: "Sales_Customers (CustomerID, CustomerName, Country, Score, CreditLimit)", schemaTitle: "Clientes corporativos oficiales.", schemaCols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}], expectedQuery: "SELECT\n  *\nFROM\n  Sales_Customers;", hints: ["Usa SELECT *", "Indica la tabla con FROM Sales_Customers;"],
                     theoryUpdate: {
                         bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: EXPLORACIÓN INICIAL", bestPracticeText: "El uso de `SELECT *` es excelente para auditorías rápidas y explorar la base de datos por primera vez para entender su esquema de columnas ocultas.",
                         errorTitle: "⚠️ UN ERROR HABITUAL: OMITIR EL ORIGEN", errorIntro: "Asumir que el motor puede adivinar qué tabla quieres consultar si solo escribes la columna.",
@@ -671,7 +706,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     ]
                 },
                 {
-                    diff: "easy", escenario: "El gestor de la campaña necesita aislar los nombres de las empresas sin contaminar la lista con datos financieros confidenciales.", requerimiento: "Escribe una consulta que proyecte EXCLUSIVAMENTE la columna CustomerName desde la tabla Sales_Customers.", tip: "Escribe el nombre de la columna en vez de usar *.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName\nFROM\n  Sales_Customers;", hints: ["Reemplaza el * por CustomerName."],
+                    diff: "easy", escenario: "El gestor de la campaña necesita aislar los nombres de las empresas sin contaminar la lista con datos financieros confidenciales.", requerimiento: "Escribe una consulta que proyecte EXCLUSIVAMENTE la columna CustomerName desde la tabla Sales_Customers.", tip: "Escribe el nombre de la columna en vez de usar *.", schemaLine: "Sales_Customers (CustomerID, CustomerName, Country, Score, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName\nFROM\n  Sales_Customers;", hints: ["Reemplaza el * por CustomerName."],
                     theoryUpdate: {
                         bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: RENDIMIENTO DE RED", bestPracticeText: "Evita usar `SELECT *` en entornos de producción (software en vivo). Extraer columnas inútiles satura la red y la memoria del servidor. Extrae solo lo que necesitas.",
                         errorTitle: "⚠️ UN ERROR HABITUAL: TYPOS EN COLUMNAS", errorIntro: "Escribir mal el nombre de la columna que deseas extraer.",
@@ -685,7 +720,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     ]
                 },
                 {
-                    diff: "easy", escenario: "El departamento de riesgos requiere mapear a cada cliente con su ID interno de sistema para validar cuentas.", requerimiento: "Selecciona las columnas CustomerID y CustomerName de la tabla Sales_Customers.", tip: "Separa ambas columnas con una coma en tu cláusula SELECT.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerID,\n  CustomerName\nFROM\n  Sales_Customers;", hints: ["Pon una coma entre las columnas."],
+                    diff: "easy", escenario: "El departamento de riesgos requiere mapear a cada cliente con su ID interno de sistema para validar cuentas.", requerimiento: "Selecciona las columnas CustomerID y CustomerName de la tabla Sales_Customers.", tip: "Separa ambas columnas con una coma en tu cláusula SELECT.", schemaLine: "Sales_Customers (CustomerID, CustomerName, Country, Score, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerID,\n  CustomerName\nFROM\n  Sales_Customers;", hints: ["Pon una coma entre las columnas."],
                     theoryUpdate: {
                         bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: FORMATO MULTICOLUMNA", bestPracticeText: "Cuando pides múltiples columnas, colócalas en líneas separadas para mejorar la legibilidad del código durante las revisiones de tu equipo.",
                         errorTitle: "⚠️ UN ERROR HABITUAL: OLVIDAR LA COMA", errorIntro: "Listar las columnas con espacios en vez de comas.",
@@ -713,7 +748,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     ]
                 },
                 {
-                    diff: "med", escenario: "Se requiere identificar rápidamente a los clientes VIP para asignarles un ejecutivo de cuenta dedicado.", requerimiento: "Filtra y devuelve CustomerName y CreditLimit de Sales_Customers, SOLO para registros donde CreditLimit sea MAYOR a 3000.", tip: "Agrega WHERE CreditLimit > 3000.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes VIP.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 3000;", hints: ["El WHERE va después del FROM."],
+                    diff: "med", escenario: "Se requiere identificar rápidamente a los clientes VIP para asignarles un ejecutivo de cuenta dedicado.", requerimiento: "Filtra y devuelve CustomerName y CreditLimit de Sales_Customers, SOLO para registros donde CreditLimit sea MAYOR a 3000.", tip: "Agrega WHERE CreditLimit > 3000.", schemaLine: "Sales_Customers (CustomerID, CustomerName, Country, Score, CreditLimit)", schemaTitle: "Clientes VIP.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 3000;", hints: ["El WHERE va después del FROM."],
                     theoryUpdate: {
                         bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: FILTROS MATEMÁTICOS", bestPracticeText: "Aplica operadores como >, <, o = directamente a los números. Es la operación más rápida para el servidor.",
                         errorTitle: "⚠️ UN ERROR HABITUAL: COMILLAS EN NÚMEROS", errorIntro: "Colocar un valor numérico entre comillas simples.",
@@ -769,7 +804,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     ]
                 },
                 {
-                    diff: "hard", escenario: "La junta directiva exige un extracto formal y documentado de entidades cuyo límite de crédito sea de alto riesgo (superior a $4,000).", requerimiento: "Escribe una consulta que devuelva CustomerName y CreditLimit filtrando por > 4000. OBLIGATORIO: La primera línea debe ser el comentario corporativo '-- Reporte Gerencial'.", tip: "Los comentarios de línea inician con --", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Auditoría Directiva", schemaCols: [], expectedQuery: "-- Reporte Gerencial\nSELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 4000;", hints: ["Escribe '-- Reporte Gerencial' y da enter."],
+                    diff: "hard", escenario: "La junta directiva exige un extracto formal y documentado de entidades cuyo límite de crédito sea de alto riesgo (superior a $4,000).", requerimiento: "Escribe una consulta que devuelva CustomerName y CreditLimit filtrando por > 4000. OBLIGATORIO: La primera línea debe ser el comentario corporativo '-- Reporte Gerencial'.", tip: "Los comentarios de línea inician con --", schemaLine: "Sales_Customers (CustomerID, CustomerName, Country, Score, CreditLimit)", schemaTitle: "Auditoría Directiva", schemaCols: [], expectedQuery: "-- Reporte Gerencial\nSELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 4000;", hints: ["Escribe '-- Reporte Gerencial' y da enter."],
                     theoryUpdate: {
                         bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: DOCUMENTACIÓN ESTRICTA", bestPracticeText: "En los bancos y empresas TOP, si envías un script sin comentarios corporativos al inicio, es rechazado automáticamente por el equipo de QA (Control de Calidad).",
                         errorTitle: "⚠️ UN ERROR HABITUAL: COMENTARIOS ROTOS", errorIntro: "Dejar texto explicativo suelto sin los guiones correspondientes.",
@@ -994,7 +1029,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 `;
             }
 
-            // 🌟 MOTOR LÓGICO DE RECUPERACIÓN DE ESTADO PARA LOS QUIZZES
             if (exercise.quizzes && exercise.quizzes.length > 0) {
                 theoryHTML += `<div class="mt-8 space-y-6">`;
                 const savedQuizState = (playerState.quizStates && playerState.quizStates[exercise.id]) || {};
