@@ -455,7 +455,7 @@ REGLAS TÉCNICAS Y FORMATO OBLIGATORIAS:
 1. ESTRUCTURA DINÁMICA POR NIVEL: Cada ejercicio (nivel) debe contener su propia "teoría de apoyo" (buenas prácticas, errores comunes y ejemplos prácticos) y exactamente 3 "quizzes" relacionados exclusivamente a la dificultad de ese nivel.
 2. FORMATO DE CÓDIGO (CRÍTICO): PROHIBIDO escribir consultas SQL en una sola línea. Todo código SQL ("errorBadCode", "errorGoodCode", "exampleCode", "expectedQuery" y fragmentos en quizzes) DEBE utilizar saltos de línea (\\n) y espacios para indentación (Ejemplo: "SELECT\\n  columna1,\\n  columna2\\nFROM\\n  tabla\\nWHERE\\n  condicion;").
 3. ESTILO DE QUIZZES (TIPO SQLZoo/DataCamp): Los quizzes no deben ser puramente teóricos. Debes incluir escenarios de la vida real, predicción de resultados (Ej: "¿Cuál será la salida de este código?"), detección de errores de sintaxis y selección de la consulta correcta.
-4. BASES DE DATOS: Utiliza las tablas y el contexto que el usuario te proporcione en su material (por ejemplo, la tabla 'world' de SQLZoo o bases de datos corporativas).
+4. BASES DE DATOS: Utiliza las tablas y el contexto que el usuario te proporcionaré en su material (por ejemplo, la tabla 'world' de SQLZoo o bases de datos corporativas).
 5. FORMATO DE SALIDA: Debes devolver ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido, sin texto adicional antes ni después.
 
 ESTRUCTURA EXACTA DEL JSON REQUERIDO:
@@ -543,13 +543,34 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             let commandsHTML = (d.commands || []).map(cmd => `<div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-pink-500/40 hover:shadow-[0_0_20px_rgba(244,114,182,0.15)] transition-all"><div class="absolute top-0 left-0 w-1 h-full bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></div><div class="flex flex-col md:flex-row md:items-center gap-3"><code class="bg-black/50 border border-pink-500/50 text-pink-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">${cmd.name}</code><p class="text-sm text-slate-300">${cmd.desc}</p></div></div>`).join('');
             
             let baseTheoryHTML = `
-                <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div><h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-md"><span>🚀</span> ${d.introTitle || ''}</h4><p class="text-sm text-slate-300 mb-4 leading-relaxed whitespace-pre-wrap">${d.introText || ''}</p></div>
-                <div class="mb-6"><h4 class="text-cyan-400 font-bold mb-4 uppercase tracking-wide text-xs flex items-center gap-2"><span>📖</span> Comandos Clave</h4><div class="grid gap-3">${commandsHTML}</div></div>
+                <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div><h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-md"><span>🚀</span> ${d.introTitle || 'Introducción'}</h4><p class="text-sm text-slate-300 mb-4 leading-relaxed whitespace-pre-wrap">${d.introText || ''}</p></div>
             `;
+            if (commandsHTML) {
+                baseTheoryHTML += `<div class="mb-6"><h4 class="text-cyan-400 font-bold mb-4 uppercase tracking-wide text-xs flex items-center gap-2"><span>📖</span> Comandos Clave</h4><div class="grid gap-3">${commandsHTML}</div></div>`;
+            }
 
-            // 🌟 PARCHE ANTI-CONGELAMIENTO: Transforma tus temas antiguos de la Fase 1 al nuevo formato de la Fase 2
+            // 🌟 PARCHE ANTI-CONGELAMIENTO PARA TEMAS VIEJOS DE FASE 1
             let levelsArray = d.levels || [];
             if (levelsArray.length === 0 && d.exercises) {
+                // Pegamos la teoría antigua en la base para que no se pierda
+                if (d.bestPracticeText) {
+                    baseTheoryHTML += `<div class="mb-6 bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(99,102,241,0.1)] relative overflow-hidden group hover:border-indigo-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-purple-500"></div><h4 class="text-indigo-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span>🛡️</span> Buenas Prácticas Corporativas</h4><p class="text-sm text-slate-300 mb-3 whitespace-pre-wrap">${d.bestPracticeText}</p></div>`;
+                }
+                if (d.errorTitle) {
+                    baseTheoryHTML += `<div class="mb-6 error-panel"><div class="flex items-start gap-5 relative z-10 min-w-0"><div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative"><div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div><svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77-1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1 pt-1 min-w-0"><h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">${d.errorTitle}</h4><p class="text-sm text-slate-300 mb-4 font-medium">${d.errorIntro || ''}</p><div class="relative mb-4"><div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap">${d.errorBadCode || ''}</pre></div><div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4"><h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5><p class="text-sm text-slate-300 whitespace-pre-wrap">${d.errorImpact || ''}</p></div><div class="relative"><div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed">${d.errorGoodCode || ''}</pre></div></div></div></div>`;
+                }
+                if (d.exampleContext) {
+                    baseTheoryHTML += `<div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div><h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]"><span>💡</span> Ejemplo Práctico</h4><div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner mb-4"><p class="text-sm text-amber-100/80 italic flex items-start gap-2"><span class="text-lg not-italic mt-0.5">🏢</span> "${d.exampleContext}"</p></div><div class="relative mt-2"><div class="absolute -top-3 right-3 bg-blue-900/80 border border-blue-500/50 px-2 py-0.5 rounded text-[9px] text-blue-200 font-bold uppercase tracking-widest z-10 shadow-md">Solución SQL</div><pre class="code-glow overflow-x-auto pt-5 pb-4 px-4 rounded-xl text-sm font-mono whitespace-pre-wrap leading-relaxed">${d.exampleCode}</pre></div></div>`;
+                }
+                if (d.quizzes && d.quizzes.length > 0) {
+                    baseTheoryHTML += `<div class="mt-8 space-y-6">`;
+                    d.quizzes.forEach((qz, idx) => {
+                        let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span></button>`).join('');
+                        baseTheoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz ${idx+1}/${d.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${qz.question}</pre><div class="space-y-2">${optionsHTML}</div><div class="quiz-feedback hidden"></div></div>`;
+                    });
+                    baseTheoryHTML += `</div>`;
+                }
+
                 levelsArray = d.exercises.map(ex => ({
                     diff: ex.diff, escenario: ex.escenario, requerimiento: ex.requerimiento, tip: ex.tip,
                     schemaLine: ex.schemaLine, schemaTitle: ex.schemaTitle, schemaCols: ex.schemaCols,
@@ -568,6 +589,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     quizzes: lvl.quizzes || []
                 };
             });
+            
             return { id: topicId, title: d.topicName || d.title || "Tema Sin Nombre", baseTheory: baseTheoryHTML, exercises: mappedExercises };
         }
 
@@ -597,117 +619,122 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             return { taskHtml, schemaLine, descHtml };
         };
 
-        const TOPICS = [
-            {
-                id: "t1_base", 
-                topicName: "1. Fundamentos y Análisis Lógico",
-                introTitle: "Anatomía de una Consulta Maestra",
-                introText: "En SQL Server, cada consulta que escribes es una solicitud formal a la base de datos. Para que el motor entienda qué necesitas, debes estructurar tu pensamiento como un Arquitecto de Datos:\n\n1. ¿Qué información específica necesito ver? -> Define tu SELECT.\n2. ¿En qué tabla o contenedor está guardada? -> Define tu FROM.",
-                commands: [
-                    {"name": "SELECT", "desc": "Le dice al motor qué columnas exactas queremos proyectar en la pantalla."},
-                    {"name": "FROM", "desc": "Indica la tabla de origen de donde provienen los datos."},
-                    {"name": "WHERE", "desc": "Aplica un filtro condicional matemático o lógico a los resultados."}
-                ],
-                levels: [
-                    {
-                        diff: "easy", escenario: "El equipo de auditoría financiera está realizando una conciliación trimestral sorpresa. Requieren visibilidad absoluta sobre el padrón completo de clientes.", requerimiento: "Extrae un reporte no filtrado que devuelva absolutamente todas las columnas de la tabla Sales_Customers.", tip: "Utiliza el asterisco (*) para proyectar todas las columnas.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos oficiales.", schemaCols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}], expectedQuery: "SELECT\n  *\nFROM\n  Sales_Customers;", hints: ["Usa SELECT *", "Indica la tabla con FROM Sales_Customers;"],
-                        theoryUpdate: {
-                            bestPracticeTitle: "💡 Regla de Producción", bestPracticeText: "El uso de `SELECT *` es excelente para auditorías rápidas y explorar la base de datos por primera vez.",
-                            errorTitle: "⚠️ UN ERROR HABITUAL", errorIntro: "Asumir que el motor puede adivinar qué tabla quieres consultar si solo escribes la columna.",
-                            errorBadCode: "SELECT\n  *;", errorImpact: "Si omites el FROM, el servidor SQL rechazará compilar tu código de inmediato.", errorGoodCode: "SELECT\n  *\nFROM\n  Sales_Customers;",
-                            exampleContext: "Listar todas las facturas históricas.", exampleCode: "SELECT\n  *\nFROM\n  Historical_Invoices;"
-                        },
-                        quizzes: [
-                            {
-                                question: "Lee el siguiente código:\nSELECT\n  name\nFROM\n  world;\n\n¿Qué resultado producirá exactamente esta consulta basada en tus conocimientos?",
-                                options: [
-                                    {"text": "Mostrará todas las columnas de la tabla 'world'.", "isCorrect": false, "feedback": "Incorrecto. Para mostrar todas las columnas se usaría el asterisco (*)."},
-                                    {"text": "Mostrará únicamente la columna 'name' de todos los registros de la tabla 'world'.", "isCorrect": true, "feedback": "¡Excelente! El motor solo proyectará lo que le pidas explícitamente en el SELECT."}
-                                ]
-                            }
-                        ]
+        // 🌟 TEMA 1 MAESTRO REESCRITO AL FORMATO DINÁMICO
+        const RAW_TOPIC_1 = {
+            id: "t1_base", 
+            topicName: "1. Fundamentos y Análisis Lógico",
+            introTitle: "Anatomía de una Consulta Maestra",
+            introText: "En SQL Server, cada consulta que escribes es una solicitud formal a la base de datos. Para que el motor entienda qué necesitas, debes estructurar tu pensamiento como un Arquitecto de Datos:\n\n1. ¿Qué información específica necesito ver? -> Define tu SELECT.\n2. ¿En qué tabla o contenedor está guardada? -> Define tu FROM.",
+            commands: [
+                {"name": "SELECT", "desc": "Le dice al motor qué columnas exactas queremos proyectar en la pantalla."},
+                {"name": "FROM", "desc": "Indica la tabla de origen de donde provienen los datos."},
+                {"name": "WHERE", "desc": "Aplica un filtro condicional matemático o lógico a los resultados."}
+            ],
+            levels: [
+                {
+                    diff: "easy", escenario: "El equipo de auditoría financiera está realizando una conciliación trimestral sorpresa. Requieren visibilidad absoluta sobre el padrón completo de clientes.", requerimiento: "Extrae un reporte no filtrado que devuelva absolutamente todas las columnas de la tabla Sales_Customers.", tip: "Utiliza el asterisco (*) para proyectar todas las columnas.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos oficiales.", schemaCols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}], expectedQuery: "SELECT\n  *\nFROM\n  Sales_Customers;", hints: ["Usa SELECT *", "Indica la tabla con FROM Sales_Customers;"],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 Regla de Producción", bestPracticeText: "El uso de `SELECT *` es excelente para auditorías rápidas y explorar la base de datos por primera vez.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL", errorIntro: "Asumir que el motor puede adivinar qué tabla quieres consultar si solo escribes la columna.",
+                        errorBadCode: "SELECT\n  *;", errorImpact: "Si omites el FROM, el servidor SQL rechazará compilar tu código de inmediato.", errorGoodCode: "SELECT\n  *\nFROM\n  Sales_Customers;",
+                        exampleContext: "Listar todas las facturas históricas.", exampleCode: "SELECT\n  *\nFROM\n  Historical_Invoices;"
                     },
-                    {
-                        diff: "easy", escenario: "El gestor de la campaña necesita aislar los nombres de las empresas sin contaminar la lista con datos financieros confidenciales.", requerimiento: "Escribe una consulta que proyecte EXCLUSIVAMENTE la columna CustomerName desde la tabla Sales_Customers.", tip: "Escribe el nombre de la columna en vez de usar *.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName\nFROM\n  Sales_Customers;", hints: ["Reemplaza el * por CustomerName."],
-                        theoryUpdate: {
-                            bestPracticeTitle: "💡 Alerta de Rendimiento de Red", bestPracticeText: "Evita usar `SELECT *` en entornos de producción (software en vivo). Extraer columnas inútiles satura la red y la memoria del servidor. Extrae solo lo que necesitas.",
-                            errorTitle: "⚠️ TYPOS EN COLUMNAS", errorIntro: "Escribir mal el nombre de la columna que deseas extraer.",
-                            errorBadCode: "SELECT\n  Customer_Name\nFROM\n  Sales_Customers;", errorImpact: "El motor lanzará un error de 'Columna Inválida' ya que el esquema indica que se llama 'CustomerName' sin guion bajo.", errorGoodCode: "SELECT\n  CustomerName\nFROM\n  Sales_Customers;",
-                            exampleContext: "Extraer el precio de un catálogo.", exampleCode: "SELECT\n  UnitPrice\nFROM\n  Catalog;"
-                        },
-                        quizzes: [
-                            {
-                                question: "Si tu base de datos tiene millones de registros y solo necesitas ver los correos electrónicos, ¿qué instrucción es la más eficiente a nivel corporativo?",
-                                options: [
-                                    {"text": "SELECT * FROM Usuarios;", "isCorrect": false, "feedback": "¡Peligro! Traer millones de columnas innecesarias colapsaría el servidor."},
-                                    {"text": "SELECT email FROM Usuarios;", "isCorrect": true, "feedback": "¡Correcto! Esta es la forma óptima de operar como Arquitecto de Software."}
-                                ]
-                            }
-                        ]
+                    quizzes: [
+                        {
+                            question: "Lee el siguiente código:\nSELECT\n  name\nFROM\n  world;\n\n¿Qué resultado producirá exactamente esta consulta basada en tus conocimientos?",
+                            options: [
+                                {"text": "Mostrará todas las columnas de la tabla 'world'.", "isCorrect": false, "feedback": "Incorrecto. Para mostrar todas las columnas se usaría el asterisco (*)."},
+                                {"text": "Mostrará únicamente la columna 'name' de todos los registros de la tabla 'world'.", "isCorrect": true, "feedback": "¡Excelente! El motor solo proyectará lo que le pidas explícitamente en el SELECT."}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    diff: "easy", escenario: "El gestor de la campaña necesita aislar los nombres de las empresas sin contaminar la lista con datos financieros confidenciales.", requerimiento: "Escribe una consulta que proyecte EXCLUSIVAMENTE la columna CustomerName desde la tabla Sales_Customers.", tip: "Escribe el nombre de la columna en vez de usar *.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName\nFROM\n  Sales_Customers;", hints: ["Reemplaza el * por CustomerName."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 Alerta de Rendimiento de Red", bestPracticeText: "Evita usar `SELECT *` en entornos de producción (software en vivo). Extraer columnas inútiles satura la red y la memoria del servidor. Extrae solo lo que necesitas.",
+                        errorTitle: "⚠️ TYPOS EN COLUMNAS", errorIntro: "Escribir mal el nombre de la columna que deseas extraer.",
+                        errorBadCode: "SELECT\n  Customer_Name\nFROM\n  Sales_Customers;", errorImpact: "El motor lanzará un error de 'Columna Inválida' ya que el esquema indica que se llama 'CustomerName' sin guion bajo.", errorGoodCode: "SELECT\n  CustomerName\nFROM\n  Sales_Customers;",
+                        exampleContext: "Extraer el precio de un catálogo.", exampleCode: "SELECT\n  UnitPrice\nFROM\n  Catalog;"
                     },
-                    {
-                        diff: "med", escenario: "El departamento de riesgos requiere mapear a cada cliente con su nivel de exposición financiera actual para determinar primas.", requerimiento: "Selecciona las columnas CustomerName y CreditLimit de la tabla Sales_Customers.", tip: "Separa ambas columnas con una coma en tu cláusula SELECT.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers;", hints: ["Pon una coma entre las columnas."],
-                        theoryUpdate: {
-                            bestPracticeTitle: "💡 Formato Multicolumna", bestPracticeText: "Cuando pides múltiples columnas, colócalas en líneas separadas para mejorar la legibilidad del código durante las revisiones de tu equipo.",
-                            errorTitle: "⚠️ OLVIDAR LA COMA SINTÁCTICA", errorIntro: "Listar las columnas con espacios en vez de comas.",
-                            errorBadCode: "SELECT\n  CustomerName\n  CreditLimit\nFROM\n  Sales_Customers;", errorImpact: "SQL Server creerá que estás intentando crear un 'Alias' y el código fallará miserablemente.", errorGoodCode: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers;",
-                            exampleContext: "Nombre y Continente.", exampleCode: "SELECT\n  name,\n  continent\nFROM\n  world;"
-                        },
-                        quizzes: [
-                            {
-                                question: "Analiza este código:\nSELECT\n  name\n  population\nFROM\n  world;\n\n¿Qué ocurrirá al intentar ejecutarlo?",
-                                options: [
-                                    {"text": "Mostrará ambas columnas sin problema.", "isCorrect": false, "feedback": "Incorrecto. En SQL la separación mediante comas es estrictamente obligatoria."},
-                                    {"text": "Lanzará un error de sintaxis por la falta de una coma (,).", "isCorrect": true, "feedback": "¡Excelente detección de errores!"}
-                                ]
-                            }
-                        ]
+                    quizzes: [
+                        {
+                            question: "Si tu base de datos tiene millones de registros y solo necesitas ver los correos electrónicos, ¿qué instrucción es la más eficiente a nivel corporativo?",
+                            options: [
+                                {"text": "SELECT * FROM Usuarios;", "isCorrect": false, "feedback": "¡Peligro! Traer millones de columnas innecesarias colapsaría el servidor."},
+                                {"text": "SELECT email FROM Usuarios;", "isCorrect": true, "feedback": "¡Correcto! Esta es la forma óptima de operar como Arquitecto de Software."}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    diff: "med", escenario: "El departamento de riesgos requiere mapear a cada cliente con su nivel de exposición financiera actual para determinar primas.", requerimiento: "Selecciona las columnas CustomerName y CreditLimit de la tabla Sales_Customers.", tip: "Separa ambas columnas con una coma en tu cláusula SELECT.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers;", hints: ["Pon una coma entre las columnas."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 Formato Multicolumna", bestPracticeText: "Cuando pides múltiples columnas, colócalas en líneas separadas para mejorar la legibilidad del código durante las revisiones de tu equipo.",
+                        errorTitle: "⚠️ OLVIDAR LA COMA SINTÁCTICA", errorIntro: "Listar las columnas con espacios en vez de comas.",
+                        errorBadCode: "SELECT\n  CustomerName\n  CreditLimit\nFROM\n  Sales_Customers;", errorImpact: "SQL Server creerá que estás intentando crear un 'Alias' y el código fallará miserablemente.", errorGoodCode: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers;",
+                        exampleContext: "Nombre y Continente.", exampleCode: "SELECT\n  name,\n  continent\nFROM\n  world;"
                     },
-                    {
-                        diff: "med", escenario: "Se requiere identificar rápidamente a los clientes VIP para asignarles un ejecutivo de cuenta dedicado.", requerimiento: "Filtra y devuelve CustomerName y CreditLimit de Sales_Customers, SOLO para registros donde CreditLimit sea MAYOR a 3000.", tip: "Agrega WHERE CreditLimit > 3000.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes VIP.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 3000;", hints: ["El WHERE va después del FROM."],
-                        theoryUpdate: {
-                            bestPracticeTitle: "💡 El Poder del Condicional", bestPracticeText: "El WHERE es la compuerta de seguridad. Sin él, extraerías la base de datos entera.",
-                            errorTitle: "⚠️ ORDEN DE EJECUCIÓN", errorIntro: "Colocar la cláusula WHERE antes que el FROM.",
-                            errorBadCode: "SELECT\n  name\nWHERE\n  area > 1000\nFROM\n  world;", errorImpact: "El motor de SQL lee de arriba a abajo en fases. Si pones el WHERE primero, no sabrá a qué tabla aplicar la condición.", errorGoodCode: "SELECT\n  name\nFROM\n  world\nWHERE\n  area > 1000;",
-                            exampleContext: "Países inmensos.", exampleCode: "SELECT\n  name\nFROM\n  world\nWHERE\n  area > 5000000;"
-                        },
-                        quizzes: [
-                            {
-                                question: "Basado en la lógica del motor, ¿cuál es el orden estructural correcto que debes teclear?",
-                                options: [
-                                    {"text": "SELECT -> WHERE -> FROM", "isCorrect": false, "feedback": "Incorrecto. Debes decirle de dónde sacar los datos antes de filtrarlos."},
-                                    {"text": "SELECT -> FROM -> WHERE", "isCorrect": true, "feedback": "¡Correcto! Esa es la anatomía inquebrantable de una consulta."}
-                                ]
-                            }
-                        ]
+                    quizzes: [
+                        {
+                            question: "Analiza este código:\nSELECT\n  name\n  population\nFROM\n  world;\n\n¿Qué ocurrirá al intentar ejecutarlo?",
+                            options: [
+                                {"text": "Mostrará ambas columnas sin problema.", "isCorrect": false, "feedback": "Incorrecto. En SQL la separación mediante comas es estrictamente obligatoria."},
+                                {"text": "Lanzará un error de sintaxis por la falta de una coma (,).", "isCorrect": true, "feedback": "¡Excelente detección de errores!"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    diff: "med", escenario: "Se requiere identificar rápidamente a los clientes VIP para asignarles un ejecutivo de cuenta dedicado.", requerimiento: "Filtra y devuelve CustomerName y CreditLimit de Sales_Customers, SOLO para registros donde CreditLimit sea MAYOR a 3000.", tip: "Agrega WHERE CreditLimit > 3000.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes VIP.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 3000;", hints: ["El WHERE va después del FROM."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 El Poder del Condicional", bestPracticeText: "El WHERE es la compuerta de seguridad. Sin él, extraerías la base de datos entera.",
+                        errorTitle: "⚠️ ORDEN DE EJECUCIÓN", errorIntro: "Colocar la cláusula WHERE antes que el FROM.",
+                        errorBadCode: "SELECT\n  name\nWHERE\n  area > 1000\nFROM\n  world;", errorImpact: "El motor de SQL lee de arriba a abajo en fases. Si pones el WHERE primero, no sabrá a qué tabla aplicar la condición.", errorGoodCode: "SELECT\n  name\nFROM\n  world\nWHERE\n  area > 1000;",
+                        exampleContext: "Países inmensos.", exampleCode: "SELECT\n  name\nFROM\n  world\nWHERE\n  area > 5000000;"
                     },
-                    {
-                        diff: "hard", escenario: "La junta directiva exige un extracto formal y documentado de entidades cuyo límite de crédito sea de alto riesgo (superior a $4,000).", requerimiento: "Escribe una consulta que devuelva CustomerName y CreditLimit filtrando por > 4000. OBLIGATORIO: La primera línea debe ser el comentario corporativo '-- Reporte Gerencial'.", tip: "Los comentarios de línea inician con --", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Auditoría Directiva", schemaCols: [], expectedQuery: "-- Reporte Gerencial\nSELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 4000;", hints: ["Escribe '-- Reporte Gerencial' y da enter."],
-                        theoryUpdate: {
-                            bestPracticeTitle: "💡 Documentación Estricta", bestPracticeText: "En los bancos y empresas TOP, si envías un script sin comentarios, es rechazado automáticamente por el equipo de QA.",
-                            errorTitle: "⚠️ COMENTARIOS ROTOS", errorIntro: "Dejar texto explicativo suelto sin los guiones correspondientes.",
-                            errorBadCode: "Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;", errorImpact: "El servidor intentará ejecutar la palabra 'Reporte' como si fuera un comando de base de datos y fallará.", errorGoodCode: "-- Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;",
-                            exampleContext: "Comentar código.", exampleCode: "-- Extraer poblacion europea\nSELECT\n  name\nFROM\n  world;"
-                        },
-                        quizzes: [
-                            {
-                                question: "¿Qué sucede si colocas `--` delante de una línea de código SQL completamente funcional?",
-                                options: [
-                                    {"text": "El código se optimiza y corre más rápido.", "isCorrect": false, "feedback": "Falso. Los comentarios no alteran la velocidad."},
-                                    {"text": "El motor de base de datos ignorará por completo esa línea.", "isCorrect": true, "feedback": "¡Exacto! El código comentado se vuelve invisible para el ejecutor."}
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ];
+                    quizzes: [
+                        {
+                            question: "Basado en la lógica del motor, ¿cuál es el orden estructural correcto que debes teclear?",
+                            options: [
+                                {"text": "SELECT -> WHERE -> FROM", "isCorrect": false, "feedback": "Incorrecto. Debes decirle de dónde sacar los datos antes de filtrarlos."},
+                                {"text": "SELECT -> FROM -> WHERE", "isCorrect": true, "feedback": "¡Correcto! Esa es la anatomía inquebrantable de una consulta."}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    diff: "hard", escenario: "La junta directiva exige un extracto formal y documentado de entidades cuyo límite de crédito sea de alto riesgo (superior a $4,000).", requerimiento: "Escribe una consulta que devuelva CustomerName y CreditLimit filtrando por > 4000. OBLIGATORIO: La primera línea debe ser el comentario corporativo '-- Reporte Gerencial'.", tip: "Los comentarios de línea inician con --", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Auditoría Directiva", schemaCols: [], expectedQuery: "-- Reporte Gerencial\nSELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 4000;", hints: ["Escribe '-- Reporte Gerencial' y da enter."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 Documentación Estricta", bestPracticeText: "En los bancos y empresas TOP, si envías un script sin comentarios, es rechazado automáticamente por el equipo de QA.",
+                        errorTitle: "⚠️ COMENTARIOS ROTOS", errorIntro: "Dejar texto explicativo suelto sin los guiones correspondientes.",
+                        errorBadCode: "Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;", errorImpact: "El servidor intentará ejecutar la palabra 'Reporte' como si fuera un comando de base de datos y fallará.", errorGoodCode: "-- Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;",
+                        exampleContext: "Comentar código.", exampleCode: "-- Extraer poblacion europea\nSELECT\n  name\nFROM\n  world;"
+                    },
+                    quizzes: [
+                        {
+                            question: "¿Qué sucede si colocas `--` delante de una línea de código SQL completamente funcional?",
+                            options: [
+                                {"text": "El código se optimiza y corre más rápido.", "isCorrect": false, "feedback": "Falso. Los comentarios no alteran la velocidad."},
+                                {"text": "El motor de base de datos ignorará por completo esa línea.", "isCorrect": true, "feedback": "¡Exacto! El código comentado se vuelve invisible para el ejecutor."}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // 🌟 ARREGLO GLOBAL VACÍO QUE SE LLENARÁ EN INITAPP()
+        let TOPICS = [];
 
         async function initApp() {
             await loadFromCloud();
+            
+            // 🌟 INYECTAR EL TEMA 1 PASÁNDOLO POR LA FÁBRICA PARA EVITAR "UNDEFINED"
+            TOPICS.push(createTopicFromJSON(RAW_TOPIC_1));
+
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
             
-            // 🌟 PARCHE DE ARQUITECTURA: Adaptar temas viejos (Fase 1) al motor nuevo (Fase 2)
             let requiresSave = false;
             customTopics.forEach(d => { 
                 try {
@@ -893,7 +920,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             if (exercise.quizzes && exercise.quizzes.length > 0) {
                 theoryHTML += `<div class="mt-8 space-y-6">`;
                 exercise.quizzes.forEach((qz, idx) => {
-                    let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${opt.feedback.replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span></button>`).join('');
+                    let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span></button>`).join('');
                     theoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz Práctico ${idx+1}/${exercise.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${qz.question}</pre><div class="space-y-2">${optionsHTML}</div><div class="quiz-feedback hidden"></div></div>`;
                 });
                 theoryHTML += `</div>`;
@@ -1022,7 +1049,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
                 
                 const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
-                window.closeAIModal(); window.renderTopicsSidebar(); document.getElementById('ai-json-input').value = ''; window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success"); window.fireConfetti();
+                window.closeAIModal(); window.renderTopicsSidebar(); document.getElementById('ai-json-input').value = ''; window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName || parsedData.title}" añadido con éxito.`, "success"); window.fireConfetti();
                 syncToCloud(); 
             } catch (e) { alert("Error al parsear el JSON. Asegúrate de copiar todo el objeto correctamente.\nDetalle: " + e.message); }
         };
