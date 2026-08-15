@@ -417,7 +417,7 @@
         let sqlEditor;
         let dbFirestore = null; 
         
-        let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [] };
+        let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {} };
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
         let syncUserId = "jose_admin_01"; 
         let selectedTopicIdForAction = null; 
@@ -523,7 +523,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 const doc = await dbFirestore.collection("usuarios").doc(syncUserId).get();
                 if (doc.exists) {
                     const data = doc.data();
-                    playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [] };
+                    playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {} };
                     if (data.customTopics) localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
                     if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
                     
@@ -592,17 +592,35 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             return { id: topicId, title: d.topicName || d.title || "Tema Sin Nombre", baseTheory: baseTheoryHTML, exercises: mappedExercises };
         }
 
-        window.checkQuiz = function(btn, isCorrect, feedbackMsg) {
-            const container = btn.closest('.quiz-container'); const buttons = container.querySelectorAll('.quiz-option'); buttons.forEach(b => b.disabled = true);
-            const feedbackDiv = container.querySelector('.quiz-feedback'); feedbackDiv.classList.remove('hidden');
+        window.checkQuiz = function(btn, isCorrect, feedbackMsg, quizIdx, optIdx) {
+            const container = btn.closest('.quiz-container'); 
+            const buttons = container.querySelectorAll('.quiz-option'); 
+            buttons.forEach(b => b.disabled = true);
+            const feedbackDiv = container.querySelector('.quiz-feedback'); 
+            feedbackDiv.classList.remove('hidden');
+
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            playerState.quizStates = playerState.quizStates || {};
+            playerState.quizStates[exercise.id] = playerState.quizStates[exercise.id] || {};
+
             if (isCorrect) {
-                btn.classList.add('correct'); feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
+                btn.classList.add('correct'); 
+                feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
                 feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
-                window.fireConfetti(); window.grantRewards(5, 1);
+                window.fireConfetti(); 
+                window.grantRewards(5, 1);
+
+                playerState.quizStates[exercise.id][quizIdx] = { selectedOpt: optIdx, correct: true };
+                syncToCloud();
             } else {
-                btn.classList.add('incorrect', 'shake-animation'); feedbackDiv.innerHTML = `<span class="text-red-400 text-lg">❌</span> <span class="text-red-300">${feedbackMsg}</span>`;
+                btn.classList.add('incorrect', 'shake-animation'); 
+                feedbackDiv.innerHTML = `<span class="text-red-400 text-lg">❌</span> <span class="text-red-300">${feedbackMsg}</span>`;
                 feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-red-900/30 border border-red-500/50 flex items-start gap-2";
-                setTimeout(() => { btn.classList.remove('incorrect', 'shake-animation'); feedbackDiv.classList.add('hidden'); buttons.forEach(b => b.disabled = false); }, 2000);
+                setTimeout(() => { 
+                    btn.classList.remove('incorrect', 'shake-animation'); 
+                    feedbackDiv.classList.add('hidden'); 
+                    buttons.forEach(b => b.disabled = false); 
+                }, 2000);
             }
         };
 
@@ -618,7 +636,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             return { taskHtml, schemaLine, descHtml };
         };
 
-        // 🌟 TEMA 1 MAESTRO REPARADO AL 100% (9 NIVELES CON TÍTULOS DEDICADOS)
         const RAW_TOPIC_1 = {
             id: "t1_base", 
             topicName: "1. Fundamentos y Análisis Lógico",
@@ -737,7 +754,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                         exampleContext: "Buscar países con un PBI medio:", exampleCode: "SELECT\n  *\nFROM\n  world\nWHERE\n  gdp BETWEEN 100000 AND 500000;"
                     },
                     quizzes: [
-                        { "question": "¿El operador BETWEEN incluye a los límites declarados?", "options": [ {"text": "Sí, matemáticamente es `>=` y `<=`.", "isCorrect": true, "feedback": "¡Totalmente correcto!"}, {"text": "No, los límites quedan fuera del resultado.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "¿El operador BETWEEN incluye a los límites declarados?", "options": [ {"text": "Sí, matemáticamente equivale a `>=` y `<=`.", "isCorrect": true, "feedback": "¡Totalmente correcto!"}, {"text": "No, los límites quedan fuera del resultado.", "isCorrect": false, "feedback": "Falso."} ] },
                         { "question": "¿Puedes usar BETWEEN para fechas?", "options": [ {"text": "Es su uso principal a nivel corporativo.", "isCorrect": true, "feedback": "¡Exacto!"}, {"text": "No, solo para números enteros.", "isCorrect": false, "feedback": "Falso."} ] },
                         { "question": "¿A qué equivale internamente `UnitPrice BETWEEN 10 AND 20`?", "options": [ {"text": "UnitPrice >= 10 AND UnitPrice <= 20", "isCorrect": true, "feedback": "¡Brillante!"}, {"text": "UnitPrice = 10 OR UnitPrice = 20", "isCorrect": false, "feedback": "Incorrecto."} ] }
                     ]
@@ -944,7 +961,22 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
             document.getElementById('topic-title').textContent = topic.title; 
             
-            // 🌟 RENDERIZADO DINÁMICO LIMPIO Y SIN ESTILOS FANTASMAS
+            // 🌟 CORRECCIÓN VISUAL DE DISEÑO: RE-RENDERIZAR LA BARRA SUPERIOR CON GRADIENTE DINÁMICO
+            const topBar = document.getElementById('theory-top-bar');
+            if (topicIdx === 0) {
+                topBar.className = "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400";
+            } else {
+                // Generar gradientes dinámicos variados y profesionales según el índice del tema
+                const gradients = [
+                    "from-cyan-400 to-blue-600",
+                    "from-amber-400 to-purple-600",
+                    "from-emerald-400 to-cyan-500",
+                    "from-pink-500 to-violet-600"
+                ];
+                let chosenGrad = gradients[(topicIdx - 1) % gradients.length];
+                topBar.className = `absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${chosenGrad}`;
+            }
+
             let theoryHTML = topic.baseTheory || "";
             if (exercise.theoryUpdate && exercise.theoryUpdate.bestPracticeTitle) {
                 let tu = exercise.theoryUpdate;
@@ -957,9 +989,25 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
             if (exercise.quizzes && exercise.quizzes.length > 0) {
                 theoryHTML += `<div class="mt-8 space-y-6">`;
+                const savedQuizState = (playerState.quizStates && playerState.quizStates[exercise.id]) || {};
+                
                 exercise.quizzes.forEach((qz, idx) => {
-                    let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span></button>`).join('');
-                    theoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz Práctico ${idx+1}/${exercise.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${qz.question}</pre><div class="space-y-2">${optionsHTML}</div><div class="quiz-feedback hidden"></div></div>`;
+                    let qState = savedQuizState[idx];
+                    let isAnsweredCorrectly = qState && qState.correct;
+
+                    let optionsHTML = qz.options.map((opt, optIdx) => {
+                        let disabledAttr = isAnsweredCorrectly ? 'disabled' : '';
+                        let extraClass = '';
+                        if (isAnsweredCorrectly && optIdx === qState.selectedOpt) {
+                            extraClass = 'correct';
+                        }
+                        return `<button ${disabledAttr} onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}', ${idx}, ${optIdx})" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center ${extraClass}"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span></button>`;
+                    }).join('');
+
+                    let feedbackClass = isAnsweredCorrectly ? "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2" : "quiz-feedback hidden";
+                    let feedbackText = isAnsweredCorrectly ? `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${qz.options[qState.selectedOpt].feedback}</span>` : "";
+
+                    theoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz Práctico ${idx+1}/${exercise.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${qz.question}</pre><div class="space-y-2">${optionsHTML}</div><div class="${feedbackClass}">${feedbackText}</div></div>`;
                 });
                 theoryHTML += `</div>`;
             }
@@ -1078,7 +1126,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 // 🌟 AUTOMATIZAR NUMERACIÓN CONSECUTIVA DEL TEMA
                 let nextNumber = TOPICS.length + 1;
                 let rawName = parsedData.topicName || parsedData.title || "Nuevo Módulo";
-                // Limpiar si ya traía un número previo para evitar duplicados como "3. 4. Tema"
                 rawName = rawName.replace(/^\d+[\.\-]\s*/, '');
                 parsedData.topicName = `${nextNumber}. ${rawName}`;
 
@@ -1094,7 +1141,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 
                 window.renderTopicsSidebar(); 
                 
-                // 🌟 AUTO-NAVEGAR AL TEMA RECIÉN IMPORTADO
                 let newTopicIndex = TOPICS.findIndex(t => t.id === newTopic.id);
                 window.loadExercise(newTopicIndex, 0);
 
