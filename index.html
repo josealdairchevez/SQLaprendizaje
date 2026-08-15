@@ -455,8 +455,9 @@ REGLAS TÉCNICAS Y FORMATO OBLIGATORIAS:
 1. ESTRUCTURA DINÁMICA POR NIVEL: Cada ejercicio (nivel) debe contener su propia "teoría de apoyo" (buenas prácticas, errores comunes y ejemplos prácticos) y exactamente 3 "quizzes" relacionados exclusivamente a la dificultad de ese nivel.
 2. FORMATO DE CÓDIGO (CRÍTICO): PROHIBIDO escribir consultas SQL en una sola línea. Todo código SQL ("errorBadCode", "errorGoodCode", "exampleCode", "expectedQuery" y fragmentos en quizzes) DEBE utilizar saltos de línea (\\n) y espacios para indentación (Ejemplo: "SELECT\\n  columna1,\\n  columna2\\nFROM\\n  tabla\\nWHERE\\n  condicion;").
 3. ESTILO DE QUIZZES (TIPO SQLZoo/DataCamp): Los quizzes no deben ser puramente teóricos. Debes incluir escenarios de la vida real, predicción de resultados (Ej: "¿Cuál será la salida de este código?"), detección de errores de sintaxis y selección de la consulta correcta.
-4. BASES DE DATOS: Utiliza las tablas y el contexto que el usuario te proporcionaré en su material (por ejemplo, la tabla 'world' de SQLZoo o bases de datos corporativas).
+4. BASES DE DATOS: Utiliza las tablas y el contexto que el usuario te proporcionará en su material (por ejemplo, la tabla 'world' de SQLZoo o bases de datos corporativas).
 5. FORMATO DE SALIDA: Debes devolver ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido, sin texto adicional antes ni después.
+6. CANTIDAD DE NIVELES (CRÍTICO): El arreglo "levels" debe contener EXACTAMENTE 9 elementos (misiones): 3 objetos con "diff": "easy", seguidos de 3 objetos con "diff": "med", y finalmente 3 objetos con "diff": "hard".
 
 ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 {
@@ -478,9 +479,9 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
       "expectedQuery": "SELECT\\n  Col1\\nFROM\\n  Tabla;",
       "hints": ["Pista 1 detallada", "Pista 2", "Pista 3 reveladora"],
       "theoryUpdate": {
-        "bestPracticeTitle": "💡 BUENAS PRÁCTICAS CORPORATIVAS",
+        "bestPracticeTitle": "💡 BUENAS PRÁCTICAS CORPORATIVAS: [Escribe aquí el Concepto Específico]",
         "bestPracticeText": "Consejo avanzado aplicable a este nivel.",
-        "errorTitle": "⚠️ UN ERROR HABITUAL",
+        "errorTitle": "⚠️ UN ERROR HABITUAL: [Escribe aquí el Concepto Específico]",
         "errorIntro": "Explicación de un error común en este tipo de consulta.",
         "errorBadCode": "SELECT\\n  mal\\nFROM\\n  tabla;",
         "errorImpact": "Qué pasaría en la vida real si cometes este error.",
@@ -536,11 +537,10 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             return false;
         }
 
-        // 🌟 NUEVO MOTOR LÓGICO BLINDADO (REPARA EL ERROR "CARGANDO...")
         function createTopicFromJSON(d) {
             let topicId = d.id || ("t" + Math.random().toString(36).substr(2, 9));
             
-            let commandsHTML = (d.commands || []).map(cmd => `<div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-pink-500/40 hover:shadow-[0_0_20px_rgba(244,114,182,0.15)] transition-all"><div class="absolute top-0 left-0 w-1 h-full bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></div><div class="flex flex-col md:flex-row md:items-center gap-3"><code class="bg-black/50 border border-pink-500/50 text-pink-400 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">${cmd.name}</code><p class="text-sm text-slate-300">${cmd.desc}</p></div></div>`).join('');
+            let commandsHTML = (d.commands || []).map(cmd => `<div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(0,229,255,0.2)] transition-all"><div class="absolute top-0 left-0 w-1 h-full bg-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity"></div><div class="flex flex-col md:flex-row md:items-center gap-3"><code class="bg-black/50 border border-cyan-500/50 text-cyan-300 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">${cmd.name}</code><p class="text-sm text-slate-300">${cmd.desc}</p></div></div>`).join('');
             
             let baseTheoryHTML = `
                 <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div><h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-md"><span>🚀</span> ${d.introTitle || 'Introducción'}</h4><p class="text-sm text-slate-300 mb-4 leading-relaxed whitespace-pre-wrap">${d.introText || ''}</p></div>
@@ -549,7 +549,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 baseTheoryHTML += `<div class="mb-6"><h4 class="text-cyan-400 font-bold mb-4 uppercase tracking-wide text-xs flex items-center gap-2"><span>📖</span> Comandos Clave</h4><div class="grid gap-3">${commandsHTML}</div></div>`;
             }
 
-            // 🌟 PARCHE ANTI-CONGELAMIENTO PARA TEMAS VIEJOS DE FASE 1
             let levelsArray = d.levels || [];
             if (levelsArray.length === 0 && d.exercises) {
                 if (d.bestPracticeText) {
@@ -618,7 +617,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             return { taskHtml, schemaLine, descHtml };
         };
 
-        // 🌟 TEMA 1 MAESTRO REESCRITO (CON SUS 3 QUIZZES EXACTOS POR NIVEL)
+        // 🌟 TEMA 1 MAESTRO REPARADO AL 100% (9 NIVELES CON TÍTULOS DEDICADOS)
         const RAW_TOPIC_1 = {
             id: "t1_base", 
             topicName: "1. Fundamentos y Análisis Lógico",
@@ -633,161 +632,127 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 {
                     diff: "easy", escenario: "El equipo de auditoría financiera está realizando una conciliación trimestral sorpresa. Requieren visibilidad absoluta sobre el padrón completo de clientes.", requerimiento: "Extrae un reporte no filtrado que devuelva absolutamente todas las columnas de la tabla Sales_Customers.", tip: "Utiliza el asterisco (*) para proyectar todas las columnas.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos oficiales.", schemaCols: [{name: "CustomerID", desc: "ID único"}, {name: "CustomerName", desc: "Nombre empresa"}], expectedQuery: "SELECT\n  *\nFROM\n  Sales_Customers;", hints: ["Usa SELECT *", "Indica la tabla con FROM Sales_Customers;"],
                     theoryUpdate: {
-                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS", bestPracticeText: "El uso de `SELECT *` es excelente para auditorías rápidas y explorar la base de datos por primera vez para entender su esquema de columnas ocultas.",
-                        errorTitle: "⚠️ UN ERROR HABITUAL", errorIntro: "Asumir que el motor puede adivinar qué tabla quieres consultar si solo escribes la columna.",
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: EXPLORACIÓN INICIAL", bestPracticeText: "El uso de `SELECT *` es excelente para auditorías rápidas y explorar la base de datos por primera vez para entender su esquema de columnas ocultas.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: OMITIR EL ORIGEN", errorIntro: "Asumir que el motor puede adivinar qué tabla quieres consultar si solo escribes la columna.",
                         errorBadCode: "SELECT\n  *;", errorImpact: "Si omites el FROM, el servidor SQL rechazará compilar tu código de inmediato.", errorGoodCode: "SELECT\n  *\nFROM\n  Sales_Customers;",
                         exampleContext: "Listar todas las facturas históricas.", exampleCode: "SELECT\n  *\nFROM\n  Historical_Invoices;"
                     },
                     quizzes: [
-                        {
-                            question: "Lee el siguiente código:\nSELECT\n  name\nFROM\n  world;\n\n¿Qué resultado producirá exactamente esta consulta basada en tus conocimientos?",
-                            options: [
-                                {"text": "Mostrará todas las columnas de la tabla 'world'.", "isCorrect": false, "feedback": "Incorrecto. Para mostrar todas las columnas se usaría el asterisco (*)."},
-                                {"text": "Mostrará únicamente la columna 'name' de todos los registros de la tabla 'world'.", "isCorrect": true, "feedback": "¡Excelente! El motor solo proyectará lo que le pidas explícitamente en el SELECT."}
-                            ]
-                        },
-                        {
-                            question: "Si olvidas incluir la cláusula FROM en una consulta básica, ¿cuál será la reacción del motor de base de datos?",
-                            options: [
-                                {"text": "Rechazará compilar el código y arrojará un error de sintaxis.", "isCorrect": true, "feedback": "¡Correcto! El motor es estricto y no adivina tablas."},
-                                {"text": "Asumirá la primera tabla que creaste en la base de datos.", "isCorrect": false, "feedback": "Falso. Los motores SQL no asumen tablas por defecto."}
-                            ]
-                        },
-                        {
-                            question: "¿Para qué escenario real de un Data Analyst usarías un SELECT *?",
-                            options: [
-                                {"text": "Para insertarlo en el código fuente de una página web en producción.", "isCorrect": false, "feedback": "¡Peligro! Traer columnas de más en producción satura la red."},
-                                {"text": "Para realizar una auditoría rápida o exploración inicial de una tabla desconocida.", "isCorrect": true, "feedback": "¡Totalmente acertado! Es una herramienta de exploración."}
-                            ]
-                        }
+                        { "question": "Lee el siguiente código:\nSELECT\n  name\nFROM\n  world;\n\n¿Qué resultado producirá exactamente esta consulta basada en tus conocimientos?", "options": [ {"text": "Mostrará todas las columnas de la tabla 'world'.", "isCorrect": false, "feedback": "Incorrecto. Para mostrar todas las columnas se usaría el asterisco (*)."}, {"text": "Mostrará únicamente la columna 'name' de todos los registros de la tabla 'world'.", "isCorrect": true, "feedback": "¡Excelente! El motor solo proyectará lo que le pidas explícitamente en el SELECT."} ] },
+                        { "question": "Si olvidas incluir la cláusula FROM en una consulta básica, ¿cuál será la reacción del motor de base de datos?", "options": [ {"text": "Rechazará compilar el código y arrojará un error de sintaxis.", "isCorrect": true, "feedback": "¡Correcto! El motor es estricto y no adivina tablas."}, {"text": "Asumirá la primera tabla que creaste en la base de datos.", "isCorrect": false, "feedback": "Falso. Los motores SQL no asumen tablas por defecto."} ] },
+                        { "question": "¿Para qué escenario real de un Data Analyst usarías un SELECT *?", "options": [ {"text": "Para insertarlo en el código fuente de una página web en producción.", "isCorrect": false, "feedback": "¡Peligro! Traer columnas de más en producción satura la red."}, {"text": "Para realizar una auditoría rápida o exploración inicial de una tabla desconocida.", "isCorrect": true, "feedback": "¡Totalmente acertado! Es una herramienta de exploración."} ] }
                     ]
                 },
                 {
                     diff: "easy", escenario: "El gestor de la campaña necesita aislar los nombres de las empresas sin contaminar la lista con datos financieros confidenciales.", requerimiento: "Escribe una consulta que proyecte EXCLUSIVAMENTE la columna CustomerName desde la tabla Sales_Customers.", tip: "Escribe el nombre de la columna en vez de usar *.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName\nFROM\n  Sales_Customers;", hints: ["Reemplaza el * por CustomerName."],
                     theoryUpdate: {
-                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS", bestPracticeText: "Evita usar `SELECT *` en entornos de producción (software en vivo). Extraer columnas inútiles satura la red y la memoria del servidor. Extrae solo lo que necesitas.",
-                        errorTitle: "⚠️ TYPOS EN COLUMNAS", errorIntro: "Escribir mal el nombre de la columna que deseas extraer.",
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: RENDIMIENTO DE RED", bestPracticeText: "Evita usar `SELECT *` en entornos de producción (software en vivo). Extraer columnas inútiles satura la red y la memoria del servidor. Extrae solo lo que necesitas.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: TYPOS EN COLUMNAS", errorIntro: "Escribir mal el nombre de la columna que deseas extraer.",
                         errorBadCode: "SELECT\n  Customer_Name\nFROM\n  Sales_Customers;", errorImpact: "El motor lanzará un error de 'Columna Inválida' ya que el esquema indica que se llama 'CustomerName' sin guion bajo.", errorGoodCode: "SELECT\n  CustomerName\nFROM\n  Sales_Customers;",
                         exampleContext: "Extraer el precio de un catálogo.", exampleCode: "SELECT\n  UnitPrice\nFROM\n  Catalog;"
                     },
                     quizzes: [
-                        {
-                            question: "Si tu base de datos tiene millones de registros y solo necesitas ver los correos electrónicos, ¿qué instrucción es la más eficiente a nivel corporativo?",
-                            options: [
-                                {"text": "SELECT * FROM Usuarios;", "isCorrect": false, "feedback": "¡Peligro! Traer millones de columnas innecesarias colapsaría el servidor."},
-                                {"text": "SELECT email FROM Usuarios;", "isCorrect": true, "feedback": "¡Correcto! Esta es la forma óptima de operar como Arquitecto de Software."}
-                            ]
-                        },
-                        {
-                            question: "Al escribir el nombre de una columna en el SELECT, ¿qué sucede si cometes un 'typo' (error ortográfico)?",
-                            options: [
-                                {"text": "El motor auto-corrige el error y extrae la columna más parecida.", "isCorrect": false, "feedback": "El motor de SQL no tiene auto-corrector. Es estricto."},
-                                {"text": "Genera un error de 'Invalid Column Name' y detiene la ejecución.", "isCorrect": true, "feedback": "¡Exacto! El nombre de la columna debe ser idéntico al esquema."}
-                            ]
-                        },
-                        {
-                            question: "¿Cuál es el propósito principal de la cláusula SELECT?",
-                            options: [
-                                {"text": "Indicar explícitamente qué campos queremos proyectar en la pantalla.", "isCorrect": true, "feedback": "Esa es la definición técnica perfecta."},
-                                {"text": "Filtrar los resultados basados en un requerimiento numérico.", "isCorrect": false, "feedback": "Falso. Esa es la función exclusiva de la cláusula WHERE."}
-                            ]
-                        }
+                        { "question": "Si tu base de datos tiene millones de registros y solo necesitas ver los correos electrónicos, ¿qué instrucción es la más eficiente a nivel corporativo?", "options": [ {"text": "SELECT * FROM Usuarios;", "isCorrect": false, "feedback": "¡Peligro! Traer millones de columnas innecesarias colapsaría el servidor."}, {"text": "SELECT email FROM Usuarios;", "isCorrect": true, "feedback": "¡Correcto! Esta es la forma óptima de operar como Arquitecto de Software."} ] },
+                        { "question": "Al escribir el nombre de una columna en el SELECT, ¿qué sucede si cometes un 'typo' (error ortográfico)?", "options": [ {"text": "El motor auto-corrige el error y extrae la columna más parecida.", "isCorrect": false, "feedback": "El motor de SQL no tiene auto-corrector. Es estricto."}, {"text": "Genera un error de 'Invalid Column Name' y detiene la ejecución.", "isCorrect": true, "feedback": "¡Exacto! El nombre de la columna debe ser idéntico al esquema."} ] },
+                        { "question": "¿Cuál es el propósito principal de la cláusula SELECT?", "options": [ {"text": "Indicar explícitamente qué campos queremos proyectar en la pantalla.", "isCorrect": true, "feedback": "Esa es la definición técnica perfecta."}, {"text": "Filtrar los resultados basados en un requerimiento numérico.", "isCorrect": false, "feedback": "Falso. Esa es la función exclusiva de la cláusula WHERE."} ] }
                     ]
                 },
                 {
-                    diff: "med", escenario: "El departamento de riesgos requiere mapear a cada cliente con su nivel de exposición financiera actual para determinar primas.", requerimiento: "Selecciona las columnas CustomerName y CreditLimit de la tabla Sales_Customers.", tip: "Separa ambas columnas con una coma en tu cláusula SELECT.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers;", hints: ["Pon una coma entre las columnas."],
+                    diff: "easy", escenario: "El departamento de riesgos requiere mapear a cada cliente con su ID interno de sistema para validar cuentas.", requerimiento: "Selecciona las columnas CustomerID y CustomerName de la tabla Sales_Customers.", tip: "Separa ambas columnas con una coma en tu cláusula SELECT.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerID,\n  CustomerName\nFROM\n  Sales_Customers;", hints: ["Pon una coma entre las columnas."],
                     theoryUpdate: {
-                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS", bestPracticeText: "Cuando pides múltiples columnas, colócalas en líneas separadas para mejorar la legibilidad del código durante las revisiones de tu equipo.",
-                        errorTitle: "⚠️ OLVIDAR LA COMA SINTÁCTICA", errorIntro: "Listar las columnas con espacios en vez de comas.",
-                        errorBadCode: "SELECT\n  CustomerName\n  CreditLimit\nFROM\n  Sales_Customers;", errorImpact: "SQL Server creerá que estás intentando crear un 'Alias' y el código fallará miserablemente.", errorGoodCode: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers;",
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: FORMATO MULTICOLUMNA", bestPracticeText: "Cuando pides múltiples columnas, colócalas en líneas separadas para mejorar la legibilidad del código durante las revisiones de tu equipo.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: OLVIDAR LA COMA", errorIntro: "Listar las columnas con espacios en vez de comas.",
+                        errorBadCode: "SELECT\n  CustomerID\n  CustomerName\nFROM\n  Sales_Customers;", errorImpact: "SQL Server creerá que estás intentando crear un 'Alias' y el código fallará miserablemente.", errorGoodCode: "SELECT\n  CustomerID,\n  CustomerName\nFROM\n  Sales_Customers;",
                         exampleContext: "Nombre y Continente.", exampleCode: "SELECT\n  name,\n  continent\nFROM\n  world;"
                     },
                     quizzes: [
-                        {
-                            question: "Analiza este código:\nSELECT\n  name\n  population\nFROM\n  world;\n\n¿Qué ocurrirá al intentar ejecutarlo?",
-                            options: [
-                                {"text": "Mostrará ambas columnas sin problema.", "isCorrect": false, "feedback": "Incorrecto. En SQL la separación mediante comas es estrictamente obligatoria."},
-                                {"text": "Lanzará un error de sintaxis por la falta de una coma (,).", "isCorrect": true, "feedback": "¡Excelente detección de errores!"}
-                            ]
-                        },
-                        {
-                            question: "¿Por qué los arquitectos senior recomiendan colocar cada columna proyectada en una nueva línea?",
-                            options: [
-                                {"text": "Para facilitar la lectura del código y hacer el troubleshooting más eficiente.", "isCorrect": true, "feedback": "¡Correcto! El código legible salva horas de trabajo."},
-                                {"text": "Porque escribir todas las columnas en la misma línea consume más memoria RAM.", "isCorrect": false, "feedback": "Falso. Los espacios no afectan el rendimiento del servidor."}
-                            ]
-                        },
-                        {
-                            question: "Si seleccionas las columnas 'Precio', 'Stock' y 'Descuento', ¿cuántas comas necesitas en el código?",
-                            options: [
-                                {"text": "Tres comas, una después de cada columna.", "isCorrect": false, "feedback": "Error. La última columna de la lista JAMÁS lleva coma."},
-                                {"text": "Dos comas, para separar las tres columnas.", "isCorrect": true, "feedback": "¡Exacto! Las comas solo separan, no terminan la lista."}
-                            ]
-                        }
+                        { "question": "Analiza este código:\nSELECT\n  name\n  population\nFROM\n  world;\n\n¿Qué ocurrirá al intentar ejecutarlo?", "options": [ {"text": "Mostrará ambas columnas sin problema.", "isCorrect": false, "feedback": "Incorrecto. En SQL la separación mediante comas es estrictamente obligatoria."}, {"text": "Lanzará un error de sintaxis por la falta de una coma (,).", "isCorrect": true, "feedback": "¡Excelente detección de errores!"} ] },
+                        { "question": "¿Por qué los arquitectos senior recomiendan colocar cada columna proyectada en una nueva línea?", "options": [ {"text": "Para facilitar la lectura del código y hacer el troubleshooting más eficiente.", "isCorrect": true, "feedback": "¡Correcto! El código legible salva horas de trabajo."}, {"text": "Porque escribir todas las columnas en la misma línea consume más memoria RAM.", "isCorrect": false, "feedback": "Falso. Los espacios no afectan el rendimiento del servidor."} ] },
+                        { "question": "Si seleccionas las columnas 'Precio', 'Stock' y 'Descuento', ¿cuántas comas necesitas en el código?", "options": [ {"text": "Tres comas, una después de cada columna.", "isCorrect": false, "feedback": "Error. La última columna de la lista JAMÁS lleva coma."}, {"text": "Dos comas, para separar las tres columnas.", "isCorrect": true, "feedback": "¡Exacto! Las comas solo separan, no terminan la lista."} ] }
+                    ]
+                },
+                {
+                    diff: "med", escenario: "Necesitamos identificar si un producto específico sigue activo en nuestro catálogo. El nombre del producto es 'Webcam HD'.", requerimiento: "Selecciona TODAS las columnas de Warehouse_StockItems, pero filtra para que SOLO se muestre el producto cuyo StockItemName sea exactamente 'Webcam HD'.", tip: "Los textos van en comillas simples.", schemaLine: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", schemaTitle: "Inventario Central", schemaCols: [], expectedQuery: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  StockItemName = 'Webcam HD';", hints: ["Usa WHERE StockItemName = 'Webcam HD'"],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: EL PODER DEL CONDICIONAL", bestPracticeText: "El WHERE es la compuerta de seguridad. Aplica siempre tus filtros lógicos para no congestionar la base de datos enviando datos que el negocio no pidió.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: ORDEN DE EJECUCIÓN", errorIntro: "Colocar la cláusula WHERE antes que el FROM.",
+                        errorBadCode: "SELECT\n  name\nWHERE\n  area > 1000\nFROM\n  world;", errorImpact: "El motor de SQL lee de arriba a abajo en fases. Si pones el WHERE primero, no sabrá a qué tabla aplicar la condición.", errorGoodCode: "SELECT\n  name\nFROM\n  world\nWHERE\n  area > 1000;",
+                        exampleContext: "Buscar al cliente Tailwind:", exampleCode: "SELECT\n  *\nFROM\n  Sales_Customers\nWHERE\n  CustomerName = 'Tailwind Toys';"
+                    },
+                    quizzes: [
+                        { "question": "Basado en la lógica del motor, ¿cuál es el orden estructural correcto que debes teclear?", "options": [ {"text": "SELECT -> WHERE -> FROM", "isCorrect": false, "feedback": "Incorrecto. Debes decirle de dónde sacar los datos antes de filtrarlos."}, {"text": "SELECT -> FROM -> WHERE", "isCorrect": true, "feedback": "¡Correcto! Esa es la anatomía inquebrantable de una consulta."} ] },
+                        { "question": "Si quieres mostrar a la empresa llamada 'Contoso', ¿qué sintaxis es correcta?", "options": [ {"text": "WHERE CustomerName = 'Contoso'", "isCorrect": true, "feedback": "¡Perfecto! El texto siempre debe ir entre comillas simples."}, {"text": "WHERE CustomerName = Contoso", "isCorrect": false, "feedback": "Incorrecto. Sin comillas, SQL pensará que es una columna."} ] },
+                        { "question": "¿Dónde se coloca el WHERE si tuvieras múltiples tablas en el FROM?", "options": [ {"text": "Inmediatamente después de definir la(s) tabla(s) en la cláusula FROM.", "isCorrect": true, "feedback": "¡Acertaste! Siempre va después del origen de los datos."}, {"text": "Justo debajo de la cláusula SELECT.", "isCorrect": false, "feedback": "Falso. Rompería la compilación lógica."} ] }
                     ]
                 },
                 {
                     diff: "med", escenario: "Se requiere identificar rápidamente a los clientes VIP para asignarles un ejecutivo de cuenta dedicado.", requerimiento: "Filtra y devuelve CustomerName y CreditLimit de Sales_Customers, SOLO para registros donde CreditLimit sea MAYOR a 3000.", tip: "Agrega WHERE CreditLimit > 3000.", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Clientes VIP.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 3000;", hints: ["El WHERE va después del FROM."],
                     theoryUpdate: {
-                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS", bestPracticeText: "El WHERE es la compuerta de seguridad. Aplica siempre tus filtros lógicos para no congestionar la base de datos enviando datos que el negocio no pidió.",
-                        errorTitle: "⚠️ ORDEN DE EJECUCIÓN", errorIntro: "Colocar la cláusula WHERE antes que el FROM.",
-                        errorBadCode: "SELECT\n  name\nWHERE\n  area > 1000\nFROM\n  world;", errorImpact: "El motor de SQL lee de arriba a abajo en fases. Si pones el WHERE primero, no sabrá a qué tabla aplicar la condición.", errorGoodCode: "SELECT\n  name\nFROM\n  world\nWHERE\n  area > 1000;",
-                        exampleContext: "Países inmensos.", exampleCode: "SELECT\n  name\nFROM\n  world\nWHERE\n  area > 5000000;"
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: FILTROS MATEMÁTICOS", bestPracticeText: "Aplica operadores como >, <, o = directamente a los números. Es la operación más rápida para el servidor.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: COMILLAS EN NÚMEROS", errorIntro: "Colocar un valor numérico entre comillas simples.",
+                        errorBadCode: "SELECT\n  *\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > '3000';", errorImpact: "El motor se ve obligado a hacer una 'conversión implícita' de texto a número en cada fila, volviendo lenta la consulta.", errorGoodCode: "SELECT\n  *\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 3000;",
+                        exampleContext: "Extraer artículos caros:", exampleCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice > 100;"
                     },
                     quizzes: [
-                        {
-                            question: "Basado en la lógica del motor, ¿cuál es el orden estructural correcto que debes teclear?",
-                            options: [
-                                {"text": "SELECT -> WHERE -> FROM", "isCorrect": false, "feedback": "Incorrecto. Debes decirle de dónde sacar los datos antes de filtrarlos."},
-                                {"text": "SELECT -> FROM -> WHERE", "isCorrect": true, "feedback": "¡Correcto! Esa es la anatomía inquebrantable de una consulta."}
-                            ]
-                        },
-                        {
-                            question: "Si quieres mostrar a los empleados cuyo sueldo sea IGUAL a 5000, ¿qué operador usas en el WHERE?",
-                            options: [
-                                {"text": "WHERE sueldo = 5000", "isCorrect": true, "feedback": "¡Perfecto! En SQL, la igualdad estricta se marca con un solo símbolo '='."},
-                                {"text": "WHERE sueldo == 5000", "isCorrect": false, "feedback": "Incorrecto. A diferencia de JavaScript o Python, en SQL solo se usa '='."}
-                            ]
-                        },
-                        {
-                            question: "Lee el siguiente fragmento: WHERE age >= 18. ¿Qué registros filtra?",
-                            options: [
-                                {"text": "Extrae a todos los mayores de 18, pero excluye a los que tienen 18 exactos.", "isCorrect": false, "feedback": "Falso. Ese sería el operador '>'. El '>=' sí incluye el límite."},
-                                {"text": "Extrae a todos los que tienen 18 años cumplidos o más.", "isCorrect": true, "feedback": "¡Acertaste! Incluyes la cota base en la búsqueda."}
-                            ]
-                        }
+                        { "question": "Si escribes `WHERE Quantity < 50`, ¿se incluirá el artículo si tiene exactamente 50 unidades?", "options": [ {"text": "No, excluirá al artículo porque no incluye el límite.", "isCorrect": true, "feedback": "¡Excelente lógica matemática!"}, {"text": "Sí, lo incluye por defecto.", "isCorrect": false, "feedback": "Incorrecto. Deberías usar `<=` para incluir el 50."} ] },
+                        { "question": "¿Los números deben llevar comillas simples ('100') en el bloque WHERE?", "options": [ {"text": "No, los tipos de dato numérico no llevan comillas en SQL.", "isCorrect": true, "feedback": "¡Correcto! Solo los textos y fechas las necesitan."}, {"text": "Sí, es una regla universal para cualquier valor.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "Si necesitas obtener los productos cuyo precio sea de $15.00 exactos, ¿qué operador matemático usas?", "options": [ {"text": "El símbolo = (igual a).", "isCorrect": true, "feedback": "¡Perfecto! Ese es el operador de igualdad."}, {"text": "La palabra clave LIKE.", "isCorrect": false, "feedback": "Falso. LIKE es solo para patrones de texto."} ] }
+                    ]
+                },
+                {
+                    diff: "med", escenario: "El gerente de almacén necesita localizar repuestos baratos pero en grandes cantidades.", requerimiento: "Proyecta 'StockItemName' de la tabla Warehouse_StockItems, pero filtra para que el 'UnitPrice' sea MENOR a 20 Y a la vez el 'Quantity' sea MAYOR a 100.", tip: "Usa la compuerta AND.", schemaLine: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", schemaTitle: "Inventario Central", schemaCols: [], expectedQuery: "SELECT\n  StockItemName\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice < 20\n  AND Quantity > 100;", hints: ["Une con AND las dos condiciones."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: LÓGICA CONJUNTA", bestPracticeText: "Divide tus operadores lógicos AND en múltiples líneas para hacer el código mantenible a largo plazo.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: CONFUSIÓN DE COMPUERTAS", errorIntro: "Usar OR cuando el requerimiento exigía el cumplimiento estricto de ambas cosas.",
+                        errorBadCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice < 20\n  OR Quantity > 100;", errorImpact: "El reporte traerá productos carísimos solo porque hay muchas unidades, destruyendo el objetivo financiero.", errorGoodCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice < 20\n  AND Quantity > 100;",
+                        exampleContext: "Buscar países de Europa muy poblados:", exampleCode: "SELECT\n  *\nFROM\n  world\nWHERE\n  continent = 'Europe'\n  AND population > 50000000;"
+                    },
+                    quizzes: [
+                        { "question": "¿Qué hace el operador AND en el filtrado?", "options": [ {"text": "Obliga a que ambas condiciones sean ciertas para incluir la fila.", "isCorrect": true, "feedback": "¡Brillante!"}, {"text": "Suma los resultados de dos columnas.", "isCorrect": false, "feedback": "Falso. No es un operador aritmético."} ] },
+                        { "question": "Si una fila cumple la primera condición del AND pero falla la segunda, ¿aparece en pantalla?", "options": [ {"text": "Aparece, porque ya cumplió una.", "isCorrect": false, "feedback": "Error. Esa es la definición del operador OR."}, {"text": "No aparece, la fila es rechazada.", "isCorrect": true, "feedback": "¡Totalmente correcto!"} ] },
+                        { "question": "¿Puedes usar más de un AND en un solo WHERE?", "options": [ {"text": "Sí, puedes encadenar múltiples operadores lógicos.", "isCorrect": true, "feedback": "¡Así es! Las consultas complejas suelen tener varios AND."}, {"text": "No, el límite del motor SQL es de uno por tabla.", "isCorrect": false, "feedback": "Falso."} ] }
+                    ]
+                },
+                {
+                    diff: "hard", escenario: "Logística requiere encontrar dos productos específicos que se extraviaron en el envío. Saben que sus IDs son el 104 o el 107.", requerimiento: "Proyecta 'StockItemName' de Warehouse_StockItems usando explícitamente el operador IN para ubicar los IDs 104 y 107.", tip: "La sintaxis es IN (104, 107).", schemaLine: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", schemaTitle: "Inventario Central", schemaCols: [], expectedQuery: "SELECT\n  StockItemName\nFROM\n  Warehouse_StockItems\nWHERE\n  StockItemID IN (104, 107);", hints: ["Reemplaza los OR usando IN ()."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: OPTIMIZACIÓN DEL IN", bestPracticeText: "Utilizar el operador IN es la forma profesional y escalable de sustituir decenas de cláusulas OR repetitivas en el código de producción.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: MULTITUD DE OR's", errorIntro: "Escribir consultas cavernícolas gigantes llenas de OR.",
+                        errorBadCode: "SELECT\n  *\nFROM\n  world\nWHERE\n  name = 'France'\n  OR name = 'Italy'\n  OR name = 'Spain';", errorImpact: "El código es feo, difícil de mantener y propenso a errores tipográficos irreparables.", errorGoodCode: "SELECT\n  *\nFROM\n  world\nWHERE\n  name IN ('France', 'Italy', 'Spain');",
+                        exampleContext: "Encontrar tres clientes por ID:", exampleCode: "SELECT\n  *\nFROM\n  Sales_Customers\nWHERE\n  CustomerID IN (1, 2, 4);"
+                    },
+                    quizzes: [
+                        { "question": "¿A qué operador lógico sustituye la función IN()?", "options": [ {"text": "Al operador OR, validando múltiples valores en una misma columna.", "isCorrect": true, "feedback": "¡Excelente analogía!"}, {"text": "Al operador AND, forzando múltiples igualdades simultáneas.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "Si usas `NOT IN (104, 107)`, ¿qué pasará?", "options": [ {"text": "Traerá el catálogo entero, ocultando exclusivamente los productos 104 y 107.", "isCorrect": true, "feedback": "¡Correcto! El NOT invierte la validación de la lista."}, {"text": "Ocultará la tabla entera.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "¿El contenido de los paréntesis del IN() debe ir separado por comas?", "options": [ {"text": "Sí, es el separador de elementos estandarizado en SQL.", "isCorrect": true, "feedback": "¡Perfecto!"}, {"text": "No, se separan con punto y coma.", "isCorrect": false, "feedback": "Incorrecto."} ] }
+                    ]
+                },
+                {
+                    diff: "hard", escenario: "El área de contabilidad necesita revisar productos cuyos precios oscilan en un margen medio de facturación, ni muy baratos ni muy caros.", requerimiento: "Proyecta 'StockItemName' y 'UnitPrice' de Warehouse_StockItems, filtrando estrictamente los productos cuyo precio esté contenido entre 50 y 100 usando la cláusula BETWEEN.", tip: "Usa BETWEEN X AND Y.", schemaLine: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", schemaTitle: "Inventario Central", schemaCols: [], expectedQuery: "SELECT\n  StockItemName,\n  UnitPrice\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice BETWEEN 50 AND 100;", hints: ["Aplica BETWEEN 50 AND 100."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: RANGOS CERRADOS", bestPracticeText: "La función BETWEEN hace que las revisiones de código de rangos temporales o financieros sean mucho más ágiles de leer para los arquitectos humanos.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: INVERSIÓN DE RANGO", errorIntro: "Colocar el número mayor primero en la función BETWEEN.",
+                        errorBadCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice BETWEEN 100 AND 50;", errorImpact: "El motor devolverá CERO resultados, ya que evalúa linealmente de menor a mayor.", errorGoodCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice BETWEEN 50 AND 100;",
+                        exampleContext: "Buscar países con un PBI medio:", exampleCode: "SELECT\n  *\nFROM\n  world\nWHERE\n  gdp BETWEEN 100000 AND 500000;"
+                    },
+                    quizzes: [
+                        { "question": "¿El operador BETWEEN incluye a los límites declarados?", "options": [ {"text": "Sí, matemáticamente es `>=` y `<=`.", "isCorrect": true, "feedback": "¡Totalmente correcto!"}, {"text": "No, los límites quedan fuera del resultado.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "¿Puedes usar BETWEEN para fechas?", "options": [ {"text": "Es su uso principal a nivel corporativo.", "isCorrect": true, "feedback": "¡Exacto!"}, {"text": "No, solo para números enteros.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "¿A qué equivale internamente `UnitPrice BETWEEN 10 AND 20`?", "options": [ {"text": "UnitPrice >= 10 AND UnitPrice <= 20", "isCorrect": true, "feedback": "¡Brillante!"}, {"text": "UnitPrice = 10 OR UnitPrice = 20", "isCorrect": false, "feedback": "Incorrecto."} ] }
                     ]
                 },
                 {
                     diff: "hard", escenario: "La junta directiva exige un extracto formal y documentado de entidades cuyo límite de crédito sea de alto riesgo (superior a $4,000).", requerimiento: "Escribe una consulta que devuelva CustomerName y CreditLimit filtrando por > 4000. OBLIGATORIO: La primera línea debe ser el comentario corporativo '-- Reporte Gerencial'.", tip: "Los comentarios de línea inician con --", schemaLine: "Sales_Customers (CustomerID, CustomerName, CreditLimit)", schemaTitle: "Auditoría Directiva", schemaCols: [], expectedQuery: "-- Reporte Gerencial\nSELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 4000;", hints: ["Escribe '-- Reporte Gerencial' y da enter."],
                     theoryUpdate: {
-                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS", bestPracticeText: "En los bancos y empresas TOP, si envías un script sin comentarios corporativos al inicio, es rechazado automáticamente por el equipo de QA (Control de Calidad).",
-                        errorTitle: "⚠️ COMENTARIOS ROTOS", errorIntro: "Dejar texto explicativo suelto sin los guiones correspondientes.",
-                        errorBadCode: "Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;", errorImpact: "El servidor intentará ejecutar la palabra 'Reporte' como si fuera un comando de base de datos y detendrá todo el proceso con un error de compilación.", errorGoodCode: "-- Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;",
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: DOCUMENTACIÓN ESTRICTA", bestPracticeText: "En los bancos y empresas TOP, si envías un script sin comentarios corporativos al inicio, es rechazado automáticamente por el equipo de QA (Control de Calidad).",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: COMENTARIOS ROTOS", errorIntro: "Dejar texto explicativo suelto sin los guiones correspondientes.",
+                        errorBadCode: "Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;", errorImpact: "El servidor intentará ejecutar la palabra 'Reporte' como comando y detendrá el proceso.", errorGoodCode: "-- Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;",
                         exampleContext: "Comentar código para revisión.", exampleCode: "-- Extraer poblacion europea\nSELECT\n  name\nFROM\n  world;"
                     },
                     quizzes: [
-                        {
-                            question: "¿Qué sucede si colocas `--` delante de una línea de código SQL completamente funcional?",
-                            options: [
-                                {"text": "El código se optimiza y corre más rápido.", "isCorrect": false, "feedback": "Falso. Los comentarios no alteran la velocidad."},
-                                {"text": "El motor de base de datos ignorará por completo esa línea.", "isCorrect": true, "feedback": "¡Exacto! El código comentado se vuelve invisible para el ejecutor."}
-                            ]
-                        },
-                        {
-                            question: "¿Cuál de estos es el formato válido para realizar un comentario en SQL Server?",
-                            options: [
-                                {"text": "-- Esto es un comentario corporativo.", "isCorrect": true, "feedback": "¡Excelente! Los dos guiones medios indican un comentario de una sola línea."},
-                                {"text": "// Esto es un comentario corporativo.", "isCorrect": false, "feedback": "Error. Esa sintaxis es para C++, Java o JS, no para SQL Server."}
-                            ]
-                        },
-                        {
-                            question: "¿Por qué es vital documentar los scripts SQL en el ámbito profesional?",
-                            options: [
-                                {"text": "Para que otro programador o arquitecto sepa exactamente el propósito del bloque de código sin tener que descifrarlo matemáticamente.", "isCorrect": true, "feedback": "¡Totalmente cierto! La documentación salva miles de dólares en horas de lectura."},
-                                {"text": "Para que la consulta consuma menos memoria RAM en el backend.", "isCorrect": false, "feedback": "Falso. Los comentarios no mejoran el performance de las bases de datos."}
-                            ]
-                        }
+                        { "question": "¿Qué sucede si colocas `--` delante de una línea de código SQL completamente funcional?", "options": [ {"text": "El código se optimiza y corre más rápido.", "isCorrect": false, "feedback": "Falso. Los comentarios no alteran la velocidad."}, {"text": "El motor de base de datos ignorará por completo esa línea.", "isCorrect": true, "feedback": "¡Exacto! El código comentado se vuelve invisible para el ejecutor."} ] },
+                        { "question": "¿Cuál de estos es el formato válido para realizar un comentario de una línea en SQL Server?", "options": [ {"text": "-- Esto es un comentario corporativo.", "isCorrect": true, "feedback": "¡Excelente!"}, {"text": "// Esto es un comentario corporativo.", "isCorrect": false, "feedback": "Error. Sintaxis de Java/C++, no de SQL."} ] },
+                        { "question": "¿Por qué es vital documentar los scripts SQL en el ámbito profesional?", "options": [ {"text": "Para que otro programador sepa el propósito del código sin descifrarlo.", "isCorrect": true, "feedback": "¡Totalmente cierto!"}, {"text": "Para que consuma menos RAM.", "isCorrect": false, "feedback": "Falso."} ] }
                     ]
                 }
             ]
@@ -799,7 +764,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         async function initApp() {
             await loadFromCloud();
             
-            // 🌟 INYECTAR EL TEMA 1 PASÁNDOLO POR LA FÁBRICA PARA ACTIVAR SUS NIVELES
+            // 🌟 INYECTAR EL TEMA 1 PASÁNDOLO POR LA FÁBRICA
             TOPICS.push(createTopicFromJSON(RAW_TOPIC_1));
 
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
@@ -856,13 +821,18 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 db = new SQL.Database();
                 
                 db.run(`
-                    CREATE TABLE Sales_Customers (CustomerID INT, CustomerName VARCHAR, CreditLimit DECIMAL);
-                    INSERT INTO Sales_Customers VALUES (1, 'Tailwind Toys', 1500.00); INSERT INTO Sales_Customers VALUES (2, 'Wingtip Toys', 3000.00);
-                    INSERT INTO Sales_Customers VALUES (3, 'A Datum Corporation', 3000.00); INSERT INTO Sales_Customers VALUES (4, 'Contoso Retail', 5000.00);
+                    CREATE TABLE Sales_Customers (CustomerID INT, CustomerName VARCHAR, Country VARCHAR, Score INT, CreditLimit DECIMAL);
+                    INSERT INTO Sales_Customers VALUES (1, 'Tailwind Toys', 'USA', 900, 1500.00); 
+                    INSERT INTO Sales_Customers VALUES (2, 'Wingtip Toys', 'UK', 750, 3000.00);
+                    INSERT INTO Sales_Customers VALUES (3, 'A Datum Corporation', 'Germany', 350, 3000.00); 
+                    INSERT INTO Sales_Customers VALUES (4, 'Contoso Retail', 'USA', 0, 5000.00);
                     CREATE TABLE Warehouse_StockItems (StockItemID INT, StockItemName VARCHAR, UnitPrice DECIMAL, Quantity INT);
-                    INSERT INTO Warehouse_StockItems VALUES (101, 'USB Drive 8GB', 15.00, 200); INSERT INTO Warehouse_StockItems VALUES (102, 'Teclado Mecanico', 85.50, 45);
-                    INSERT INTO Warehouse_StockItems VALUES (103, 'Monitor 24 pulgadas', 150.00, 15); INSERT INTO Warehouse_StockItems VALUES (104, 'Raton Inalambrico', 55.00, 80);
-                    INSERT INTO Warehouse_StockItems VALUES (105, 'Silla Ergonomica', 120.00, 10); INSERT INTO Warehouse_StockItems VALUES (106, 'Cable HDMI', 12.00, 50);
+                    INSERT INTO Warehouse_StockItems VALUES (101, 'USB Drive 8GB', 15.00, 200); 
+                    INSERT INTO Warehouse_StockItems VALUES (102, 'Teclado Mecanico', 85.50, 45);
+                    INSERT INTO Warehouse_StockItems VALUES (103, 'Monitor 24 pulgadas', 150.00, 15); 
+                    INSERT INTO Warehouse_StockItems VALUES (104, 'Raton Inalambrico', 55.00, 80);
+                    INSERT INTO Warehouse_StockItems VALUES (105, 'Silla Ergonomica', 120.00, 10); 
+                    INSERT INTO Warehouse_StockItems VALUES (106, 'Cable HDMI', 12.00, 50);
                     INSERT INTO Warehouse_StockItems VALUES (107, 'Webcam HD', 60.00, 30);
                 `);
                 
@@ -1100,10 +1070,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         window.openAIModal = function() { const backdrop = document.getElementById('ai-modal-backdrop'); const card = document.getElementById('ai-modal-card'); backdrop.classList.remove('hidden'); requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); }); };
         window.closeAIModal = function() { const backdrop = document.getElementById('ai-modal-backdrop'); const card = document.getElementById('ai-modal-card'); backdrop.classList.add('opacity-0'); card.classList.add('scale-95'); setTimeout(() => { backdrop.classList.add('hidden'); }, 300); };
 
-        window.showErrorBox = function(titleMsg, techErrorMsg) { document.getElementById('error-container').classList.remove('hidden'); document.getElementById('error-title-msg').textContent = titleMsg; document.getElementById('tech-detail-content').textContent = techErrorMsg; document.getElementById('tech-detail-content').classList.add('hidden'); document.getElementById('tech-detail-icon').style.transform = "rotate(0deg)"; document.getElementById('hints-container').classList.remove('hidden'); document.getElementById('hints-container').classList.add('flex'); window.updateHintsUI(); };
-        window.toggleTechDetail = function() { const content = document.getElementById('tech-detail-content'); const icon = document.getElementById('tech-detail-icon'); if (content.classList.contains('hidden')) { content.classList.remove('hidden'); icon.style.transform = "rotate(90deg)"; } else { content.classList.add('hidden'); icon.style.transform = "rotate(0deg)"; } };
-        window.resetConsole = function() { sqlEditor.setValue(""); document.getElementById('results-container').innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center"><div class="w-16 h-16 rounded-full bg-slate-800/30 border border-slate-700/50 flex items-center justify-center mb-3 shadow-inner"><span class="text-3xl drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">📡</span></div><span class="text-slate-300 font-black uppercase tracking-widest text-sm mb-1">Esperando Consulta...</span><span class="text-slate-500 text-xs max-w-[80%] font-medium">Escribe tu código SQL y presiona Ejecutar para visualizar el dataset.</span></div>`; document.getElementById('row-count').textContent = '0 FILAS'; document.getElementById('error-container').classList.add('hidden'); document.getElementById('hints-container').classList.add('hidden'); document.getElementById('hints-list').innerHTML = ''; document.getElementById('run-btn').classList.remove('hidden'); document.getElementById('next-btn').classList.add('hidden'); };
-
         window.importJSONTopic = function() {
             const rawJson = document.getElementById('ai-json-input').value.trim(); if (!rawJson) return alert("Por favor pega el código JSON.");
             try {
@@ -1118,7 +1084,22 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
                 
                 const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
-                window.closeAIModal(); window.renderTopicsSidebar(); document.getElementById('ai-json-input').value = ''; window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName || parsedData.title}" añadido con éxito.`, "success"); window.fireConfetti();
+                
+                window.renderTopicsSidebar(); 
+                
+                // 🌟 NUEVA FUNCIÓN: AUTO-NAVEGAR AL TEMA RECIÉN IMPORTADO
+                let newTopicIndex = TOPICS.findIndex(t => t.id === newTopic.id);
+                window.loadExercise(newTopicIndex, 0);
+
+                if(window.innerWidth < 768) {
+                    document.getElementById('sidebar').classList.remove('mobile-open');
+                    document.getElementById('sidebar-backdrop').classList.remove('show');
+                }
+
+                document.getElementById('ai-json-input').value = ''; 
+                window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName || parsedData.title}" añadido con éxito.`, "success"); 
+                window.fireConfetti();
+                window.closeAIModal();
                 syncToCloud(); 
             } catch (e) { alert("Error al parsear el JSON. Asegúrate de copiar todo el objeto correctamente.\nDetalle: " + e.message); }
         };
