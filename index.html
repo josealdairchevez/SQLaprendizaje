@@ -72,13 +72,14 @@
         .cm-s-dracula span.cm-comment { color: #608b4e !important; font-style: italic; }
 
         .CodeMirror-hints {
-            background-color: #0f111a; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 0.5rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8); font-family: 'Fira Code', monospace; 
-            font-size: 1rem; color: #cbd5e1; padding: 8px 0; max-height: 250px; overflow-y: auto;
+            background-color: #0f111a !important; border: 1px solid rgba(0, 229, 255, 0.4) !important; border-radius: 0.75rem !important;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.9) !important; font-family: 'Fira Code', monospace !important; 
+            font-size: 0.95rem !important; padding: 8px 0 !important; max-height: 250px !important; overflow-y: auto !important;
             z-index: 99999 !important; touch-action: auto;
         }
-        .CodeMirror-hint { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .CodeMirror-hint-active { background-color: rgba(0, 229, 255, 0.2); color: #00e5ff; font-weight: bold; }
+        .CodeMirror-hint { padding: 10px 18px !important; border-bottom: 1px solid rgba(255,255,255,0.03) !important; color: #cbd5e1 !important; transition: all 0.2s ease !important; cursor: pointer !important; }
+        .CodeMirror-hint:hover { background-color: rgba(255,255,255,0.05) !important; }
+        .CodeMirror-hint-active { background-color: rgba(0, 229, 255, 0.15) !important; color: #00e5ff !important; font-weight: 900 !important; border-left: 3px solid #00e5ff !important; }
 
         .output-panel { background-color: #090b14; box-shadow: 0 0 20px rgba(0, 229, 255, 0.1), inset 0 0 15px rgba(0, 0, 0, 0.8); border: 1px solid rgba(0, 229, 255, 0.2); }
         .sql-table { width: 100%; border-collapse: separate; border-spacing: 0; font-family: 'Fira Code', monospace; font-size: 0.8rem; }
@@ -142,9 +143,18 @@
         .quiz-option.incorrect { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
         .quiz-option.incorrect .quiz-circle { border-color: #ef4444; background: #ef4444; }
         
-        /* Animación para el Nivel */
         @keyframes levelUpPulse { 0% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.15); filter: brightness(1.5); box-shadow: 0 0 30px rgba(0, 229, 255, 0.8); } 100% { transform: scale(1); filter: brightness(1); } }
         .level-up-anim { animation: levelUpPulse 1s ease-out; }
+
+        /* 🌟 FASE 4: NUEVAS ANIMACIONES DE UI */
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(8px); filter: blur(2px); } 
+            to { opacity: 1; transform: translateY(0); filter: blur(0); } 
+        }
+
+        .spin-anim { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 
@@ -156,15 +166,14 @@
             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">👩‍💻</div>
             <div>
                 <h1 class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">SQL MASTERY</h1>
-                <!-- 🌟 CORRECCIÓN SEMÁNTICA: Se quita la palabra MÓDULO y se mejora el subtítulo -->
                 <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold flex items-center gap-2">
-                    Entrenamiento SQL 
-                    <span id="sync-status" class="px-1.5 py-0.5 rounded-md bg-black/50 border border-slate-700/50 text-[9px] text-amber-500 shadow-inner">☁️ Local</span>
+                    <span id="user-id-display" class="text-cyan-400 font-black">Usuario</span> 
+                    <span class="opacity-50">|</span>
+                    <span id="sync-status" class="px-1.5 py-0.5 rounded-md bg-black/50 border border-slate-700/50 text-[9px] text-slate-400 shadow-inner transition-colors duration-300">☁️ Local</span>
                 </p>
             </div>
         </div>
         
-        <!-- 🌟 REDISEÑO COMPLETO DEL HUB DEL JUGADOR (Nivel, XP y Oro integrados) -->
         <div class="flex items-center gap-3">
             <div class="flex flex-col items-end">
                 <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-widest">Experiencia</div>
@@ -178,21 +187,25 @@
                 </div>
             </div>
             
-            <!-- BADGE DE NIVEL DINÁMICO -->
+            <!-- BADGE DE NIVEL DINÁMICO (Ultra Premium) -->
             <div class="relative group cursor-default" id="level-badge-container">
-                <div class="absolute inset-0 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-xl blur-[6px] opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div class="relative bg-slate-900 border border-slate-700/50 px-3 py-1.5 rounded-xl flex flex-col items-center justify-center shadow-xl">
-                    <span class="text-[8px] uppercase tracking-[0.2em] text-slate-400 font-black mb-[-2px]">Nivel</span>
-                    <span id="ui-level-badge" class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400 leading-none">1</span>
+                <!-- Resplandor dinámico animado -->
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400 rounded-xl blur opacity-60 group-hover:opacity-100 transition duration-500 group-hover:duration-200 animate-pulse"></div>
+                <!-- Contenedor central Glassmorphism -->
+                <div class="relative bg-gradient-to-b from-slate-900 to-black border-[0.5px] border-slate-700/50 group-hover:border-cyan-400/50 px-4 py-1.5 rounded-xl flex flex-col items-center justify-center shadow-[inset_0_1px_8px_rgba(0,229,255,0.2)] group-hover:shadow-[inset_0_1px_12px_rgba(168,85,247,0.4)] transition-all duration-300 transform group-hover:-translate-y-0.5">
+                    <span class="text-[8px] uppercase tracking-[0.2em] text-cyan-100/70 font-black mb-[-2px] transition-colors group-hover:text-cyan-100">Nivel</span>
+                    <span id="ui-level-badge" class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-400 leading-none filter drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">1</span>
                 </div>
             </div>
 
-            <!-- CONTADOR DE ORO -->
-            <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-xl flex flex-col items-center justify-center shadow-inner ml-1">
-                <span class="text-[8px] uppercase tracking-[0.2em] text-slate-400 font-black mb-[-2px]">Oro</span>
-                <div class="flex items-center gap-1.5">
-                    <span class="text-sm drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] leading-none">🪙</span>
-                    <span id="ui-coins" class="text-base font-black text-amber-400 leading-none">0</span>
+            <div class="relative group cursor-default ml-2">
+                <div class="absolute inset-0 bg-gradient-to-br from-amber-400 to-yellow-600 rounded-xl blur-[6px] opacity-40 group-hover:opacity-70 transition-opacity duration-300"></div>
+                <div class="relative bg-gradient-to-b from-slate-900 to-black border border-amber-500/40 px-3 py-1.5 rounded-xl flex flex-col items-center justify-center shadow-[inset_0_1px_4px_rgba(251,191,36,0.3)]">
+                    <span class="text-[8px] uppercase tracking-[0.2em] text-amber-200/60 font-black mb-[-2px]">Oro</span>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="text-sm drop-shadow-[0_0_12px_rgba(251,191,36,1)] leading-none animate-pulse">🪙</span>
+                        <span id="ui-coins" class="text-base font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-yellow-500 leading-none filter drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]">0</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -223,14 +236,13 @@
         <section id="main-content" class="flex-1 flex flex-col gap-4 w-full md:overflow-hidden">
             <div class="glass-panel shrink-0 flex flex-col md:flex-row md:overflow-hidden md:max-h-[40vh]">
                 
-                <!-- 🌟 CONTENEDOR DE TEORÍA CON BARRA SUPERIOR DINÁMICA -->
-                <div class="flex-1 p-5 border-b md:border-b-0 md:border-r border-slate-700/50 md:overflow-y-auto relative" id="theory-scroll-container">
+                <div class="flex-1 p-5 border-b md:border-b-0 md:border-r border-slate-700/50 md:overflow-y-auto relative transition-opacity duration-300" id="theory-scroll-container">
                     <div id="theory-top-bar" class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
-                    <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
+                    <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">&nbsp;</h2>
                     <div id="topic-theory" class="space-y-4 pb-4"></div>
                 </div>
 
-                <div class="w-full md:w-1/2 p-5 bg-slate-900/40 flex flex-col md:overflow-y-auto relative">
+                <div id="mission-container" class="w-full md:w-1/2 p-5 bg-slate-900/40 flex flex-col md:overflow-y-auto relative transition-opacity duration-300">
                     <div class="absolute right-0 top-0 w-1 h-full bg-gradient-to-b from-amber-400 to-purple-500 opacity-20"></div>
 
                     <div class="flex justify-between items-center mb-3 border-b border-slate-700/50 pb-2 shrink-0">
@@ -252,7 +264,7 @@
                             <div class="p-4 space-y-3">
                                 <div class="relative">
                                     <div class="absolute -top-2.5 left-2 bg-[#050505] border border-cyan-800 px-2 py-0.5 rounded text-[9px] text-cyan-400 font-bold uppercase tracking-widest z-10 shadow-md">⚙️ Estructura</div>
-                                    <div id="ex-schema" class="text-[11px] text-cyan-200 font-mono bg-[#050505] pt-3.5 pb-2 px-3 rounded-lg border border-slate-800 shadow-inner overflow-x-auto whitespace-nowrap">Cargando...</div>
+                                    <div id="ex-schema" class="text-[11px] text-cyan-200 font-mono bg-[#050505] pt-3.5 pb-2 px-3 rounded-lg border border-slate-800 shadow-inner overflow-x-auto whitespace-nowrap min-h-[38px]">&nbsp;</div>
                                 </div>
                                 <div id="ex-schema-desc" class="text-xs text-slate-400"></div>
                             </div>
@@ -292,11 +304,11 @@
                 <div class="flex-1 flex flex-col md:flex-row md:overflow-hidden min-h-0">
                     <div class="m-3 flex-1 flex flex-col gap-3 md:overflow-y-auto pr-2 relative min-h-0 pb-2">
                         <div class="console-wrapper shrink-0">
-                            <textarea id="sql-editor"></textarea>
+                            <textarea id="sql-editor" class="w-full h-[170px] bg-[#000000] border-none outline-none resize-none rounded-lg text-transparent placeholder-transparent"></textarea>
                         </div>
                         
                         <div class="flex flex-wrap items-center gap-2 shrink-0 mb-1">
-                            <button id="run-btn" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:-translate-y-0.5 flex items-center justify-center gap-1.5 shrink-0">
+                            <button id="run-btn" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:-translate-y-0.5 flex items-center justify-center gap-1.5 shrink-0 min-w-[120px]">
                                 <span class="text-sm">▶</span> EJECUTAR
                             </button>
                             <button id="next-btn" class="hidden bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:-translate-y-0.5 flex items-center justify-center gap-1.5 shrink-0">
@@ -317,7 +329,7 @@
                                     <h4 id="error-title-msg" class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">LOS DATOS EXTRAÍDOS NO COINCIDEN</h4>
                                     <div>
                                         <button onclick="window.toggleTechDetail()" class="tech-detail-pill shrink-0">
-                                            <span id="tech-detail-icon" class="transition-transform duration-200 text-[11px]">▶</span> VER ANÁLISIS DETALLADO
+                                            <span id="tech-detail-icon" class="transition-transform duration-200 text-[11px] inline-block">▶</span> VER ANÁLISIS DETALLADO
                                         </button>
                                         <div id="tech-detail-content" class="hidden mt-3 p-4 border border-red-900/50 text-white italic font-mono text-xs overflow-x-auto whitespace-pre-line bg-black/80 rounded-lg shadow-inner relative z-10"></div>
                                     </div>
@@ -405,11 +417,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-amber-400 uppercase tracking-wide mb-1">Código JSON del Módulo</label>
-                    <textarea id="ai-json-input" rows="8" placeholder='{"topicName": "2. GROUP BY...", "levels": [...] }' class="w-full bg-black/50 border border-slate-700 text-cyan-300 font-mono text-xs p-3 rounded-lg focus:outline-none focus:border-amber-500 focus:shadow-[0_0_15px_rgba(251,191,36,0.2)] transition-all resize-none"></textarea>
+                    <textarea id="ai-json-input" rows="8" placeholder='{"topicName": "2. GROUP BY...", "tables": [...], "levels": [...] }' class="w-full bg-black/50 border border-slate-700 text-cyan-300 font-mono text-xs p-3 rounded-lg focus:outline-none focus:border-amber-500 focus:shadow-[0_0_15px_rgba(251,191,36,0.2)] transition-all resize-none"></textarea>
                 </div>
                 <div class="mt-2 flex justify-end gap-3">
                     <button onclick="window.closeAIModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors">Cancelar</button>
-                    <button onclick="window.importJSONTopic()" class="bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-white px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center justify-center min-w-[160px]">
+                    <button id="btn-import-json" onclick="window.importJSONTopic()" class="bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-white px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center justify-center min-w-[190px]">
                         IMPORTAR MÓDULOS
                     </button>
                 </div>
@@ -417,7 +429,7 @@
         </div>
     </div>
 
-    <!-- 🌟 NUEVO MODAL: GESTIÓN DE MÓDULOS (EDITAR/ELIMINAR) -->
+    <!-- MODAL GESTIÓN DE MÓDULOS -->
     <div id="topic-action-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <div class="bg-[#0f111a] border border-cyan-500/30 rounded-2xl w-10/12 max-w-sm flex flex-col shadow-[0_0_50px_rgba(0,229,255,0.15)] transform scale-95 transition-transform duration-300 p-5 relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500"></div>
@@ -438,15 +450,37 @@
     </div>
 
     <script>
+        let windowSQLite; 
         let db;
         let sqlEditor;
         let dbFirestore = null; 
+        let activeDbTopicId = null; 
         
-        // 🌟 SE MANTIENE EL QUIZSTATES
         let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {} };
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
-        let syncUserId = "jose_admin_01"; 
+        
+        let syncUserId = "invitado"; 
         let selectedTopicIdForAction = null; 
+
+        window.addEventListener('online', () => { window.updateSyncBadge('online'); syncToCloud(); });
+        window.addEventListener('offline', () => { window.updateSyncBadge('offline'); });
+
+        window.updateSyncBadge = function(status) {
+            const badge = document.getElementById('sync-status');
+            if(status === 'offline') {
+                badge.innerHTML = '☁️ Sin Red';
+                badge.className = 'px-1.5 py-0.5 rounded-md bg-black/50 border border-red-700/50 text-[9px] text-red-400 shadow-inner transition-colors duration-300';
+            } else if(status === 'syncing') {
+                badge.innerHTML = '☁️ Guardando...';
+                badge.className = 'px-1.5 py-0.5 rounded-md bg-black/50 border border-blue-700/50 text-[9px] text-blue-400 shadow-inner transition-colors duration-300';
+            } else if(status === 'saved') {
+                badge.innerHTML = '☁️ Guardado';
+                badge.className = 'px-1.5 py-0.5 rounded-md bg-black/50 border border-emerald-700/50 text-[9px] text-emerald-400 shadow-inner transition-colors duration-300';
+            } else {
+                badge.innerHTML = '☁️ NUBE ACTIVA';
+                badge.className = 'px-2 py-0.5 rounded-md bg-emerald-950/80 border border-emerald-500/50 text-[9px] text-emerald-400 font-black tracking-wide shadow-[0_0_12px_rgba(16,185,129,0.4)] transition-all duration-300';
+            }
+        };
 
         const firebaseConfig = {
             apiKey: "AIzaSyAQdgFXt1YYG_uzkP6l8T2udyKV0hxAfOE",
@@ -460,7 +494,7 @@
 
         if (firebaseConfig.apiKey) {
             firebase.initializeApp(firebaseConfig); dbFirestore = firebase.firestore();
-            document.getElementById('sync-status').textContent = '☁️ Nube Activa'; document.getElementById('sync-status').classList.replace('text-amber-500', 'text-emerald-400');
+            window.updateSyncBadge('online');
         }
 
         if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').catch(err => console.log('SW Falló:', err)); }); }
@@ -479,49 +513,59 @@
 Tu tarea es transformar el material de estudio, tema o apuntes que te proporcionaré en un Módulo de Aprendizaje Interactivo (LMS) estructurado en un objeto JSON válido.
 
 REGLAS TÉCNICAS Y FORMATO OBLIGATORIAS:
-1. ESTRUCTURA DINÁMICA POR NIVEL: Cada ejercicio (nivel) debe contener su propia "teoría de apoyo" (buenas prácticas, errores comunes y ejemplos prácticos) y exactamente 3 "quizzes" relacionados exclusivamente a la dificultad de ese nivel.
-2. FORMATO DE CÓDIGO (CRÍTICO): PROHIBIDO escribir consultas SQL en una sola línea. Todo código SQL ("errorBadCode", "errorGoodCode", "exampleCode", "expectedQuery" y fragmentos en quizzes) DEBE utilizar saltos de línea (\\n) y espacios para indentación (Ejemplo: "SELECT\\n  columna1,\\n  columna2\\nFROM\\n  tabla\\nWHERE\\n  condicion;").
-3. ESTILO DE QUIZZES (TIPO SQLZoo/DataCamp): Los quizzes no deben ser puramente teóricos. Debes incluir escenarios de la vida real, predicción de resultados (Ej: "¿Cuál será la salida de este código?"), detección de errores de sintaxis y selección de la consulta correcta.
-4. BASES DE DATOS: Utiliza las tablas y el contexto que el usuario te proporcionará en su material (por ejemplo, la tabla 'world' de SQLZoo o bases de datos corporativas).
-5. FORMATO DE SALIDA: Debes devolver ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido, sin texto adicional antes ni después.
-6. CANTIDAD DE NIVELES (CRÍTICO): El arreglo "levels" debe contener EXACTAMENTE 9 elementos (misiones): 3 objetos con "diff": "easy", seguidos de 3 objetos con "diff": "med", y finalmente 3 objetos con "diff": "hard".
+1. ESTRUCTURA DINÁMICA POR NIVEL: Cada ejercicio debe contener su propia teoría de apoyo y exactamente 3 "quizzes" relacionados exclusivamente a ese nivel.
+2. FORMATO DE CÓDIGO (CRÍTICO): PROHIBIDO escribir consultas SQL en una sola línea. Todo código SQL DEBE utilizar saltos de línea (\\n) y espacios.
+3. DATOS SEMILLA (MOCK DATA): Debes construir un arreglo "tables" en la raíz del JSON. Allí definirás el nombre de la tabla, su esquema en SQL, y un arreglo "mockData" con mínimo 3 registros lógicos para que el estudiante interactúe con datos reales.
+4. BASES DE DATOS: Utiliza tablas con contexto corporativo real (ej. Facturación, Logística, Empleados).
+5. FORMATO DE SALIDA: ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido.
+6. NIVELES (CRÍTICO): Exactamente 9 elementos en el arreglo "levels" (3 easy, 3 med, 3 hard).
 
 ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 {
-  "topicName": "Título del Tema (Ej: SELECT FROM WORLD)",
+  "topicName": "Título del Tema",
   "introTitle": "Subtítulo motivador",
-  "introText": "Explicación teórica inicial muy clara y profesional.",
+  "introText": "Explicación teórica inicial.",
   "commands": [ 
-    {"name": "COMANDO", "desc": "Descripción técnica breve."} 
+    {"name": "COMANDO", "desc": "Descripción."} 
+  ],
+  "tables": [
+    {
+      "tableName": "Facturas_Ventas",
+      "schema": "FacturaID INT, Cliente VARCHAR, Monto DECIMAL, Fecha DATE",
+      "mockData": [
+        {"FacturaID": 1, "Cliente": "Empresa A", "Monto": 1500.50, "Fecha": "2023-10-01"},
+        {"FacturaID": 2, "Cliente": "Empresa B", "Monto": 300.00, "Fecha": "2023-10-02"}
+      ]
+    }
   ],
   "levels": [
     {
       "diff": "easy",
-      "escenario": "Contexto corporativo o de la vida real detallado.",
+      "escenario": "Contexto corporativo detallado.",
       "requerimiento": "Petición exacta de lo que el estudiante debe extraer.",
-      "tip": "Tip rápido o regla de oro.",
-      "schemaLine": "Tabla (Col1, Col2, Col3)",
+      "tip": "Tip rápido.",
+      "schemaLine": "Facturas_Ventas (FacturaID, Cliente, Monto, Fecha)",
       "schemaTitle": "Descripción de la tabla",
-      "schemaCols": [ {"name": "Col1", "desc": "Definición del tipo de dato"} ],
-      "expectedQuery": "SELECT\\n  Col1\\nFROM\\n  Tabla;",
-      "hints": ["Pista 1 detallada", "Pista 2", "Pista 3 reveladora"],
+      "schemaCols": [ {"name": "FacturaID", "desc": "ID único"} ],
+      "expectedQuery": "SELECT\\n  Cliente\\nFROM\\n  Facturas_Ventas;",
+      "hints": ["Pista 1", "Pista 2", "Pista 3"],
       "theoryUpdate": {
-        "bestPracticeTitle": "💡 BUENAS PRÁCTICAS CORPORATIVAS: [Escribe aquí el Concepto Específico]",
-        "bestPracticeText": "Consejo avanzado aplicable a este nivel.",
-        "errorTitle": "⚠️ UN ERROR HABITUAL: [Escribe aquí el Concepto Específico]",
-        "errorIntro": "Explicación de un error común en este tipo de consulta.",
+        "bestPracticeTitle": "💡 BUENAS PRÁCTICAS: [Concepto]",
+        "bestPracticeText": "Consejo avanzado.",
+        "errorTitle": "⚠️ UN ERROR HABITUAL: [Concepto]",
+        "errorIntro": "Explicación de un error común.",
         "errorBadCode": "SELECT\\n  mal\\nFROM\\n  tabla;",
-        "errorImpact": "Qué pasaría en la vida real si cometes este error.",
+        "errorImpact": "Impacto en la vida real.",
         "errorGoodCode": "SELECT\\n  bien\\nFROM\\n  tabla;",
-        "exampleContext": "Contexto de un requerimiento similar.",
+        "exampleContext": "Contexto de ejemplo.",
         "exampleCode": "SELECT\\n  ejemplo\\nFROM\\n  tabla;"
       },
       "quizzes": [
         {
-          "question": "Lee el siguiente código:\\nSELECT\\n  name\\nFROM\\n  world\\nWHERE\\n  population > 100;\\n¿Qué resultado producirá exactamente?",
+          "question": "Pregunta analítica aquí",
           "options": [
-            {"text": "Mostrará todas las columnas de países con población mayor a 100.", "isCorrect": false, "feedback": "Incorrecto. Solo proyecta la columna 'name'."},
-            {"text": "Mostrará solo el nombre de los países con población mayor a 100.", "isCorrect": true, "feedback": "¡Excelente! Has leído bien la proyección del SELECT."}
+            {"text": "Opción falsa", "isCorrect": false, "feedback": "Por qué es falsa."},
+            {"text": "Opción verdadera", "isCorrect": true, "feedback": "¡Excelente!"}
           ]
         }
       ]
@@ -531,7 +575,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             navigator.clipboard.writeText(prompt); window.showToast("¡Prompt Copiado!", "Pégalo en la IA junto con tu tema a estudiar.", "success");
         };
 
-        // 🌟 REINSERCIÓN DE FUNCIONES VITALES QUE SE HABÍAN BORRADO 🌟
         window.showErrorBox = function(titleMsg, techErrorMsg) { 
             document.getElementById('error-container').classList.remove('hidden'); 
             document.getElementById('error-title-msg').textContent = titleMsg; 
@@ -567,7 +610,11 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         };
 
         async function syncToCloud() {
+            if (!navigator.onLine) return; 
             if (!dbFirestore) return;
+            
+            window.updateSyncBadge('syncing');
+            
             try {
                 await dbFirestore.collection("usuarios").doc(syncUserId).set({
                     playerState: playerState,
@@ -575,11 +622,16 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     topicOrder: JSON.parse(localStorage.getItem('sql_topic_order') || "null"),
                     lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
                 });
-            } catch (e) { console.error("Error al sincronizar con Firestore:", e); }
+                window.updateSyncBadge('saved');
+                setTimeout(() => { if(navigator.onLine) window.updateSyncBadge('online'); }, 2000); 
+            } catch (e) { 
+                console.error("Error al sincronizar con Firestore:", e); 
+                window.updateSyncBadge('offline'); 
+            }
         }
 
         async function loadFromCloud() {
-            if (!dbFirestore) return false;
+            if (!dbFirestore || !navigator.onLine) return false;
             try {
                 const doc = await dbFirestore.collection("usuarios").doc(syncUserId).get();
                 if (doc.exists) {
@@ -591,7 +643,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
                     
                     const xpNext = playerState.level * 1000;
-                    // 🌟 CORRECCIÓN: Apuntamos al nuevo ID del Badge de Nivel
                     document.getElementById('ui-level-badge').textContent = playerState.level;
                     document.getElementById('ui-xp-bar').style.width = `${(playerState.xp / xpNext) * 100}%`;
                     document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`;
@@ -653,7 +704,13 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 };
             });
             
-            return { id: topicId, title: d.topicName || d.title || "Tema Sin Nombre", baseTheory: baseTheoryHTML, exercises: mappedExercises };
+            return { 
+                id: topicId, 
+                title: d.topicName || d.title || "Tema Sin Nombre", 
+                baseTheory: baseTheoryHTML, 
+                exercises: mappedExercises,
+                tables: d.tables || [] 
+            };
         }
 
         window.checkQuiz = function(btn, isCorrect, feedbackMsg, quizIdx, optIdx) {
@@ -711,6 +768,31 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 {"name": "SELECT", "desc": "Le dice al motor qué columnas exactas queremos proyectar en la pantalla."},
                 {"name": "FROM", "desc": "Indica la tabla de origen de donde provienen los datos."},
                 {"name": "WHERE", "desc": "Aplica un filtro condicional matemático o lógico a los resultados."}
+            ],
+            tables: [
+                {
+                    tableName: "Sales_Customers",
+                    schema: "CustomerID INT, CustomerName VARCHAR, Country VARCHAR, Score INT, CreditLimit DECIMAL",
+                    mockData: [
+                        {CustomerID: 1, CustomerName: 'Tailwind Toys', Country: 'USA', Score: 900, CreditLimit: 1500.00},
+                        {CustomerID: 2, CustomerName: 'Wingtip Toys', Country: 'UK', Score: 750, CreditLimit: 3000.00},
+                        {CustomerID: 3, CustomerName: 'A Datum Corporation', Country: 'Germany', Score: 350, CreditLimit: 3000.00},
+                        {CustomerID: 4, CustomerName: 'Contoso Retail', Country: 'USA', Score: 0, CreditLimit: 5000.00}
+                    ]
+                },
+                {
+                    tableName: "Warehouse_StockItems",
+                    schema: "StockItemID INT, StockItemName VARCHAR, UnitPrice DECIMAL, Quantity INT",
+                    mockData: [
+                        {StockItemID: 101, StockItemName: 'USB Drive 8GB', UnitPrice: 15.00, Quantity: 200},
+                        {StockItemID: 102, StockItemName: 'Teclado Mecanico', UnitPrice: 85.50, Quantity: 45},
+                        {StockItemID: 103, StockItemName: 'Monitor 24 pulgadas', UnitPrice: 150.00, Quantity: 15},
+                        {StockItemID: 104, StockItemName: 'Raton Inalambrico', UnitPrice: 55.00, Quantity: 80},
+                        {StockItemID: 105, StockItemName: 'Silla Ergonomica', UnitPrice: 120.00, Quantity: 10},
+                        {StockItemID: 106, StockItemName: 'Cable HDMI', UnitPrice: 12.00, Quantity: 50},
+                        {StockItemID: 107, StockItemName: 'Webcam HD', UnitPrice: 60.00, Quantity: 30}
+                    ]
+                }
             ],
             levels: [
                 {
@@ -844,8 +926,100 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
         let TOPICS = [];
 
+        window.buildTopicDatabase = function(topic) {
+            if (db) { try { db.close(); } catch(e){} }
+            db = new windowSQLite.Database(); 
+            let tableDictionary = {}; 
+
+            if (topic.tables && topic.tables.length > 0) {
+                topic.tables.forEach(t => {
+                    db.run(`CREATE TABLE ${t.tableName} (${t.schema});`);
+                    tableDictionary[t.tableName] = t.schema.split(',').map(c => c.trim().split(' ')[0]);
+                    
+                    if (t.mockData && t.mockData.length > 0) {
+                        t.mockData.forEach(row => {
+                            const keys = Object.keys(row);
+                            const values = keys.map(k => typeof row[k] === 'string' ? `'${row[k].replace(/'/g, "''")}'` : (row[k]===null ? 'NULL' : row[k]));
+                            db.run(`INSERT INTO ${t.tableName} (${keys.join(', ')}) VALUES (${values.join(', ')});`);
+                        });
+                    }
+                });
+            }
+            if(sqlEditor) { sqlEditor.setOption("hintOptions", { hint: window.customSqlHint, tables: tableDictionary, completeSingle: false }); }
+        }
+
+        // 🌟 INYECCIÓN DE INTELIGENCIA DE AUTOCOMPLETADO
+        window.customSqlHint = function(cm, options) {
+            const result = CodeMirror.hint.sql(cm, options) || { list: [], from: cm.getCursor(), to: cm.getCursor() };
+            const cursor = cm.getCursor();
+            const token = cm.getTokenAt(cursor);
+            let prefix = token.string.toLowerCase();
+            
+            if (/[^\w_]/.test(prefix)) prefix = "";
+
+            const tables = options.tables || {};
+            const allColumns = new Set();
+            
+            for (let t in tables) {
+                tables[t].forEach(col => allColumns.add(col));
+            }
+
+            allColumns.forEach(col => {
+                if (col.toLowerCase().startsWith(prefix)) {
+                    const exists = result.list.some(item => {
+                        const text = typeof item === 'string' ? item : item.text;
+                        return text.toLowerCase() === col.toLowerCase();
+                    });
+                    if (!exists) {
+                        result.list.push({ text: col, isColumn: true });
+                    }
+                }
+            });
+
+            result.list = result.list.map(item => {
+                if (typeof item === 'string' || item.isColumn) {
+                    let text = typeof item === 'string' ? item : item.text;
+                    let typeHTML = "";
+                    
+                    if (item.isColumn) {
+                        typeHTML = `<span style="color:#10b981; font-size:9px; border:1px solid #10b981; padding:2px 5px; border-radius:4px; font-weight:900; background:rgba(16,185,129,0.15); letter-spacing:1px;">COL</span>`;
+                    } else if (tables.hasOwnProperty(text)) {
+                        typeHTML = `<span style="color:#a855f7; font-size:9px; border:1px solid #a855f7; padding:2px 5px; border-radius:4px; font-weight:900; background:rgba(168,85,247,0.15); letter-spacing:1px;">TABLA</span>`;
+                    } else {
+                        typeHTML = `<span style="color:#64748b; font-size:9px; font-weight:900; opacity:0.8; letter-spacing:1px;">CMD</span>`;
+                    }
+
+                    return {
+                        text: text,
+                        render: function(elt, data, cur) {
+                            elt.style.display = "flex"; elt.style.justifyContent = "space-between"; elt.style.alignItems = "center";
+                            elt.innerHTML = `<span>${text}</span>${typeHTML}`;
+                        }
+                    };
+                }
+                return item;
+            });
+
+            return result;
+        };
+
+        // 🌟 FASE 3: INICIALIZACIÓN DE USUARIO (RESTAURADA)
+        function initializeUser() {
+            let savedUser = localStorage.getItem('sql_mastery_user');
+            if(!savedUser) {
+                savedUser = prompt("¡Bienvenido a SQL Mastery!\nIngresa tu ID de Usuario para guardar tu progreso:", "jose_admin_01");
+                if(!savedUser || savedUser.trim() === "") savedUser = "invitado_" + Math.floor(Math.random()*10000);
+                localStorage.setItem('sql_mastery_user', savedUser.trim());
+            }
+            syncUserId = savedUser.trim();
+            document.getElementById('user-id-display').textContent = syncUserId;
+        }
+
+        // 🌟 OPTIMIZACIÓN ASÍNCRONA DE CARGA (Zero Blocking UI)
         async function initApp() {
-            await loadFromCloud();
+            initializeUser(); 
+            
+            // 1. CARGA LOCAL INSTANTÁNEA (Sin interrupciones de red)
             TOPICS.push(createTopicFromJSON(RAW_TOPIC_1));
 
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
@@ -853,20 +1027,12 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             
             customTopics.forEach(d => { 
                 try {
-                    if (!d.id) { 
-                        d.id = "t" + Math.random().toString(36).substr(2, 9); 
-                        requiresSave = true; 
-                    } 
+                    if (!d.id) { d.id = "t" + Math.random().toString(36).substr(2, 9); requiresSave = true; } 
                     TOPICS.push(createTopicFromJSON(d)); 
-                } catch(e) {
-                    console.error("Ignorando tema corrupto:", e);
-                }
+                } catch(e) { console.error("Ignorando tema corrupto:", e); }
             });
 
-            if (requiresSave) {
-                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
-                syncToCloud(); 
-            }
+            if (requiresSave) { localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); syncToCloud(); }
 
             let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "null");
             if (savedOrder) {
@@ -877,10 +1043,11 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             }
 
             try {
+                // 2. RENDERIZADO VISUAL INMEDIATO DEL EDITOR (Elimina la caja blanca)
                 sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
                     mode: "text/x-sql", theme: "dracula", lineNumbers: true, lineWrapping: true,
                     extraKeys: { "Ctrl-Space": "autocomplete", "Tab": "autocomplete", "Enter": function(cm) { if (cm.state.completionActive) { cm.state.completionActive.pick(); } else { return CodeMirror.Pass; } } },
-                    hintOptions: { tables: { "Sales_Customers": ["CustomerID", "CustomerName", "Country", "Score", "CreditLimit"], "Warehouse_StockItems": ["StockItemID", "StockItemName", "UnitPrice", "Quantity"] }, completeSingle: false }
+                    hintOptions: { hint: window.customSqlHint, tables: {}, completeSingle: false }
                 });
 
                 sqlEditor.on("change", function(instance, changeObj) {
@@ -898,31 +1065,53 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 document.getElementById('next-btn').addEventListener('click', () => { window.loadExercise(currentTopicIdx, currentExerciseIdx + 1); });
                 document.getElementById('reset-btn').addEventListener('click', window.resetConsole);
 
-                const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
-                db = new SQL.Database();
-                
-                db.run(`
-                    CREATE TABLE Sales_Customers (CustomerID INT, CustomerName VARCHAR, Country VARCHAR, Score INT, CreditLimit DECIMAL);
-                    INSERT INTO Sales_Customers VALUES (1, 'Tailwind Toys', 'USA', 900, 1500.00); 
-                    INSERT INTO Sales_Customers VALUES (2, 'Wingtip Toys', 'UK', 750, 3000.00);
-                    INSERT INTO Sales_Customers VALUES (3, 'A Datum Corporation', 'Germany', 350, 3000.00); 
-                    INSERT INTO Sales_Customers VALUES (4, 'Contoso Retail', 'USA', 0, 5000.00);
-                    CREATE TABLE Warehouse_StockItems (StockItemID INT, StockItemName VARCHAR, UnitPrice DECIMAL, Quantity INT);
-                    INSERT INTO Warehouse_StockItems VALUES (101, 'USB Drive 8GB', 15.00, 200); 
-                    INSERT INTO Warehouse_StockItems VALUES (102, 'Teclado Mecanico', 85.50, 45);
-                    INSERT INTO Warehouse_StockItems VALUES (103, 'Monitor 24 pulgadas', 150.00, 15); 
-                    INSERT INTO Warehouse_StockItems VALUES (104, 'Raton Inalambrico', 55.00, 80);
-                    INSERT INTO Warehouse_StockItems VALUES (105, 'Silla Ergonomica', 120.00, 10); 
-                    INSERT INTO Warehouse_StockItems VALUES (106, 'Cable HDMI', 12.00, 50);
-                    INSERT INTO Warehouse_StockItems VALUES (107, 'Webcam HD', 60.00, 30);
-                `);
-                
+                // 3. PINTAR LA UI DE INMEDIATO (Reemplaza "Cargando...")
                 window.renderTopicsSidebar();
-                window.loadExercise(0, 0);
+                window.loadExercise(0, 0, true); // Pasamos 'true' para decirle que salte SQLite por un instante
 
-            } catch (err) { console.error("Error crítico:", err); }
+                // Bloqueo temporal interactivo del botón
+                const runBtn = document.getElementById('run-btn');
+                runBtn.innerHTML = `<svg class="w-4 h-4 spin-anim inline mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="4" stroke-dasharray="32" stroke-linecap="round"></circle></svg> INICIANDO MOTOR...`;
+                runBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                runBtn.disabled = true;
+
+                // 4. CARGA PESADA EN SEGUNDO PLANO (WASM y Firebase no bloquean)
+                Promise.all([
+                    initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` }),
+                    loadFromCloud()
+                ]).then(([sqlite, cloudLoaded]) => {
+                    windowSQLite = sqlite;
+                    
+                    // Ahora construimos la BD silenciosamente
+                    window.buildTopicDatabase(TOPICS[currentTopicIdx]);
+                    activeDbTopicId = TOPICS[currentTopicIdx].id;
+
+                    // Desbloqueamos el entorno
+                    runBtn.innerHTML = `<span class="text-sm">▶</span> EJECUTAR`;
+                    runBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    runBtn.disabled = false;
+                    
+                    if (requiresSave) syncToCloud();
+
+                    // Si Firebase trajo datos, actualizamos píldoras y teoría suavemente
+                    if(cloudLoaded) {
+                        window.renderExercisePills();
+                        if(Object.keys(playerState.quizStates).length > 0) {
+                             const currentScroll = document.getElementById('theory-scroll-container').scrollTop;
+                             window.loadExercise(currentTopicIdx, currentExerciseIdx, true); 
+                             document.getElementById('theory-scroll-container').scrollTop = currentScroll; 
+                        }
+                    }
+                }).catch(err => {
+                    console.error("Fallo crítico asíncrono:", err);
+                    runBtn.innerHTML = `❌ ERROR EN MOTOR`;
+                });
+
+            } catch (err) { console.error("Error de inicialización:", err); }
         }
 
+        /* 🌟 RESTAURACIÓN DE FUNCIONES DEL SISTEMA Y LÓGICA CORE */
+        
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sidebar'); const backdrop = document.getElementById('sidebar-backdrop');
             if (window.innerWidth < 768) { sidebar.classList.toggle('mobile-open'); backdrop.classList.toggle('show'); } 
@@ -953,12 +1142,21 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 btn.addEventListener('dragend', (e) => { btn.classList.remove('opacity-30', 'border-dashed', 'border-slate-500'); draggedTopicIndex = null; window.renderTopicsSidebar(); });
                 btn.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (draggedTopicIndex !== null && draggedTopicIndex !== idx) { btn.classList.add('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20'); } });
                 btn.addEventListener('dragleave', (e) => { btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20'); });
+                
                 btn.addEventListener('drop', (e) => {
                     e.preventDefault(); btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20');
                     if (draggedTopicIndex !== null && draggedTopicIndex !== idx) {
-                        let activeId = TOPICS[currentTopicIdx].id; const item = TOPICS.splice(draggedTopicIndex, 1)[0]; TOPICS.splice(idx, 0, item);
-                        const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
-                        currentTopicIdx = TOPICS.findIndex(t => t.id === activeId); window.renderTopicsSidebar();
+                        let activeId = TOPICS[currentTopicIdx].id; 
+                        
+                        const item = TOPICS.splice(draggedTopicIndex, 1)[0]; 
+                        TOPICS.splice(idx, 0, item); 
+                        
+                        const newOrder = TOPICS.map(t => t.id); 
+                        localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
+                        
+                        currentTopicIdx = TOPICS.findIndex(t => t.id === activeId); 
+                        
+                        window.renderTopicsSidebar();
                         syncToCloud(); 
                     }
                 });
@@ -967,33 +1165,24 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         };
 
         window.openTopicActionModal = function(e, topicId, title) {
-            e.stopPropagation(); 
-            selectedTopicIdForAction = topicId;
-            document.getElementById('action-topic-name').textContent = title;
-            const modal = document.getElementById('topic-action-modal');
-            modal.classList.remove('hidden');
-            requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.firstElementChild.classList.remove('scale-95'); });
+            e.stopPropagation(); selectedTopicIdForAction = topicId; document.getElementById('action-topic-name').textContent = title;
+            const modal = document.getElementById('topic-action-modal'); modal.classList.remove('hidden'); requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.firstElementChild.classList.remove('scale-95'); });
         };
 
         window.closeTopicActionModal = function() {
-            const modal = document.getElementById('topic-action-modal');
-            modal.classList.add('opacity-0'); modal.firstElementChild.classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 300);
+            const modal = document.getElementById('topic-action-modal'); modal.classList.add('opacity-0'); modal.firstElementChild.classList.add('scale-95'); setTimeout(() => modal.classList.add('hidden'), 300);
         };
 
         document.getElementById('btn-edit-topic').addEventListener('click', () => {
-            const topic = TOPICS.find(t => t.id === selectedTopicIdForAction);
-            if(!topic) return;
+            const topic = TOPICS.find(t => t.id === selectedTopicIdForAction); if(!topic) return;
             const newTitle = prompt("✏️ Escribe el nuevo título para el módulo:", topic.title);
             if(newTitle && newTitle.trim() !== "") {
                 topic.title = newTitle.trim();
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
                 let ct = customTopics.find(t => t.id === selectedTopicIdForAction);
                 if(ct) { ct.topicName = topic.title; localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); }
-                window.renderTopicsSidebar();
-                if(currentTopicIdx === TOPICS.findIndex(t => t.id === selectedTopicIdForAction)) { document.getElementById('topic-title').textContent = topic.title; }
-                window.showToast("Título Actualizado", "Nombre modificado con éxito.", "success");
-                syncToCloud();
+                window.renderTopicsSidebar(); if(currentTopicIdx === TOPICS.findIndex(t => t.id === selectedTopicIdForAction)) { document.getElementById('topic-title').textContent = topic.title; }
+                window.showToast("Título Actualizado", "Nombre modificado con éxito.", "success"); syncToCloud();
             }
             window.closeTopicActionModal();
         });
@@ -1001,44 +1190,31 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         document.getElementById('btn-delete-topic').addEventListener('click', () => {
             const confirmDelete = confirm("⚠️ ¿Estás absolutamente seguro de ELIMINAR este módulo?\nSe perderá su contenido y tendrás que importarlo de nuevo si lo necesitas.");
             if(confirmDelete) {
-                const idx = TOPICS.findIndex(t => t.id === selectedTopicIdForAction);
-                if(idx > -1) TOPICS.splice(idx, 1);
-                
+                const idx = TOPICS.findIndex(t => t.id === selectedTopicIdForAction); if(idx > -1) TOPICS.splice(idx, 1);
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
-                customTopics = customTopics.filter(t => t.id !== selectedTopicIdForAction);
-                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
-                
+                customTopics = customTopics.filter(t => t.id !== selectedTopicIdForAction); localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
                 let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "[]");
-                savedOrder = savedOrder.filter(id => id !== selectedTopicIdForAction);
-                localStorage.setItem('sql_topic_order', JSON.stringify(savedOrder));
-
+                savedOrder = savedOrder.filter(id => id !== selectedTopicIdForAction); localStorage.setItem('sql_topic_order', JSON.stringify(savedOrder));
                 window.renderTopicsSidebar();
-                
                 if(currentTopicIdx === idx || currentTopicIdx >= TOPICS.length) { window.loadExercise(0, 0); }
-                window.showToast("Módulo Eliminado", "El módulo fue borrado de tu cuenta.", "success");
-                syncToCloud();
+                window.showToast("Módulo Eliminado", "El módulo fue borrado de tu cuenta.", "success"); syncToCloud();
             }
             window.closeTopicActionModal();
         });
 
-        window.loadExercise = function(topicIdx, exIdx) {
+        window.loadExercise = function(topicIdx, exIdx, skipDb = false) {
             currentTopicIdx = topicIdx; currentExerciseIdx = exIdx; revealedHintsCount = 0;
             const topic = TOPICS[topicIdx]; const exercise = topic.exercises[exIdx]; const dynamicData = exercise.data; 
+
+            if (!skipDb && activeDbTopicId !== topic.id) { window.buildTopicDatabase(topic); activeDbTopicId = topic.id; }
 
             document.getElementById('topic-title').textContent = topic.title; 
             
             const topBar = document.getElementById('theory-top-bar');
-            if (topicIdx === 0) {
-                topBar.className = "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400";
-            } else {
-                const gradients = [
-                    "from-cyan-400 to-blue-600",
-                    "from-amber-400 to-purple-600",
-                    "from-emerald-400 to-cyan-500",
-                    "from-pink-500 to-violet-600"
-                ];
-                let chosenGrad = gradients[(topicIdx - 1) % gradients.length];
-                topBar.className = `absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${chosenGrad}`;
+            if (topicIdx === 0) { topBar.className = "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"; } 
+            else {
+                const gradients = [ "from-cyan-400 to-blue-600", "from-amber-400 to-purple-600", "from-emerald-400 to-cyan-500", "from-pink-500 to-violet-600" ];
+                let chosenGrad = gradients[(topicIdx - 1) % gradients.length]; topBar.className = `absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${chosenGrad}`;
             }
 
             let theoryHTML = topic.baseTheory || "";
@@ -1060,11 +1236,8 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                     let isAnsweredCorrectly = qState && qState.correct;
 
                     let optionsHTML = qz.options.map((opt, optIdx) => {
-                        let disabledAttr = isAnsweredCorrectly ? 'disabled' : '';
-                        let extraClass = '';
-                        if (isAnsweredCorrectly && optIdx === qState.selectedOpt) {
-                            extraClass = 'correct';
-                        }
+                        let disabledAttr = isAnsweredCorrectly ? 'disabled' : ''; let extraClass = '';
+                        if (isAnsweredCorrectly && optIdx === qState.selectedOpt) { extraClass = 'correct'; }
                         return `<button ${disabledAttr} onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}', ${idx}, ${optIdx})" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center ${extraClass}"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span></button>`;
                     }).join('');
 
@@ -1077,8 +1250,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 theoryHTML += `</div>`;
             }
 
-            document.getElementById('topic-theory').innerHTML = theoryHTML;
-            document.getElementById('theory-scroll-container').scrollTop = 0; 
+            document.getElementById('topic-theory').innerHTML = theoryHTML; document.getElementById('theory-scroll-container').scrollTop = 0; 
 
             document.getElementById('ex-task').innerHTML = dynamicData.taskHtml; document.getElementById('ex-schema').innerHTML = dynamicData.schemaLine;
             document.getElementById('ex-schema-desc').innerHTML = dynamicData.descHtml; document.getElementById('ex-xp-badge').textContent = `+${exercise.xp} XP`;
@@ -1116,10 +1288,13 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
         window.executeUserQuery = function() {
             const query = sqlEditor.getValue().trim(); if (!query) return;
-            const resContainer = document.getElementById('results-container'); const rowCountEl = document.getElementById('row-count'); const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; document.getElementById('error-container').classList.add('hidden');
+            const resContainer = document.getElementById('results-container'); const rowCountEl = document.getElementById('row-count'); 
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; 
+            document.getElementById('error-container').classList.add('hidden');
 
             try {
                 const userResult = db.exec(query);
+                
                 if (userResult.length > 0) {
                     const columns = userResult[0].columns; const values = userResult[0].values; rowCountEl.textContent = `${values.length} FILAS`;
                     let tableHTML = '<table class="sql-table"><thead><tr>'; columns.forEach(col => tableHTML += `<th>${col}</th>`); tableHTML += '</tr></thead><tbody>';
@@ -1131,13 +1306,67 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 }
 
                 let isCorrect = false; let expectedResult;
+                let diag = ""; let titleMsg = "LOS DATOS EXTRAÍDOS NO COINCIDEN";
+
                 try {
                     let hasCommentIfRequired = exercise.expectedQuery.includes("--") ? query.includes("--") : true;
-                    const cleanExpected = exercise.expectedQuery.replace(/--.*?\n/g, ""); const cleanUser = query.replace(/--.*?\n/g, "");
+                    const cleanExpected = exercise.expectedQuery.replace(/--.*?\n/g, ""); 
                     expectedResult = db.exec(cleanExpected);
-                    if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && hasCommentIfRequired) { isCorrect = true; } 
-                    else if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && !hasCommentIfRequired) { window.showErrorBox("Falta Documentación Corporativa", "- Los datos extraídos son correctos, pero olvidaste poner el comentario requerido (usando --).\n- Un script no documentado será rechazado en el trabajo real."); return; }
-                } catch(e) {}
+
+                    let userCount = userResult.length > 0 ? userResult[0].values.length : 0;
+                    let expectedCount = expectedResult.length > 0 ? expectedResult[0].values.length : 0;
+                    let userCols = userResult.length > 0 ? userResult[0].columns : [];
+                    let expectedCols = expectedResult.length > 0 ? expectedResult[0].columns : [];
+
+                    if (!hasCommentIfRequired) {
+                        titleMsg = "FALTA DOCUMENTACIÓN CORPORATIVA";
+                        diag = "- Los datos extraídos son correctos, pero olvidaste poner el comentario requerido (usando --).\n- Un script no documentado será rechazado en un entorno de producción real.";
+                    } else if (userCount === 0 && expectedCount === 0) {
+                         isCorrect = true; 
+                    } else if (userCount === 0 && expectedCount > 0) {
+                        diag = "- Tu código devolvió una tabla vacía (0 registros), pero el negocio espera ver datos.\n- Revisa tus filtros matemáticos (WHERE) porque excluyeron absolutamente todas las filas requeridas.";
+                    } else if (userCount > 0 && expectedCount === 0) {
+                        diag = "- Tu código devolvió datos, pero el negocio esperaba que la consulta no retornara nada bajo esas condiciones.\n- Revisa tu filtrado y tus operadores lógicos, estás siendo poco restrictivo.";
+                    } else if (userCols.length !== expectedCols.length) {
+                        diag = `- Extraes ${userCols.length} columnas, pero el requerimiento exige exactamente ${expectedCols.length}.\n- Revisa tu cláusula SELECT. ¿Acaso usaste '*' cuando debías especificar columnas, o viceversa?`;
+                    } else {
+                        // 🛡️ REQUERIMIENTO ESTRICTO DE ORDEN DE COLUMNAS AÑADIDO:
+                        let strictOrderMatch = true;
+                        let mismatchedCol = "";
+                        for(let i=0; i<expectedCols.length; i++) {
+                            if(userCols[i].toLowerCase() !== expectedCols[i].toLowerCase()) {
+                                strictOrderMatch = false;
+                                mismatchedCol = expectedCols[i];
+                                break;
+                            }
+                        }
+
+                        if (!strictOrderMatch) {
+                             diag = `- Las columnas solicitadas están en un orden incorrecto.\n- Es una buena práctica respetar la semántica del negocio. Se esperaba la columna '${mismatchedCol}' en esa posición específica.`;
+                        } else if (userCount !== expectedCount) {
+                            diag = `- Extraes ${userCount} registros, pero el requerimiento espera exactamente ${expectedCount}.\n- Tu filtro (WHERE) es incorrecto. Verifica los operadores usados (>, <, AND, OR, IN).`;
+                        } else {
+                            let allMatch = true;
+                            let usrVals = userResult[0].values;
+                            let expVals = expectedResult[0].values;
+
+                            for(let r = 0; r < expVals.length; r++) {
+                                for(let c = 0; c < expectedCols.length; c++) {
+                                    let ev = expVals[r][c];
+                                    let uv = usrVals[r][c];
+                                    if (ev != uv) { allMatch = false; break; }
+                                }
+                                if(!allMatch) break;
+                            }
+
+                            if(allMatch) {
+                                isCorrect = true;
+                            } else {
+                                diag = "- Las columnas y la cantidad de filas son correctas, pero los datos internos no coinciden con la solución esperada.\n- Verifica si te equivocaste en algún operador de comparación o si estás filtrando valores que no corresponden.";
+                            }
+                        }
+                    }
+                } catch(e) { console.error("Error en validación profunda:", e); }
 
                 if (isCorrect) {
                     if (!playerState.completedExercises.includes(exercise.id)) {
@@ -1148,11 +1377,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                         if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); }
                     }
                 } else {
-                    let diag = ""; let expectedCount = expectedResult && expectedResult.length > 0 ? expectedResult[0].values.length : 0; let userCount = userResult.length > 0 ? userResult[0].values.length : 0;
-                    if(userCount === 0 && expectedCount > 0) { diag = "- Tu código devolvió una tabla vacía (0 registros), pero el negocio espera ver datos.\n- Revisa tus filtros matemáticos (WHERE) porque excluyeron absolutamente todas las filas."; } 
-                    else if (userCount > 0 && expectedCount === 0) { diag = "- Tu código devolvió datos, pero el negocio esperaba que la consulta no retornara nada bajo esas condiciones.\n- Revisa tu filtrado y tus operadores lógicos."; } 
-                    else { diag = "- Tu código arrojó un resultado diferente al esperado.\n- Revisa el panel 'Salida de Datos' y compáralo con el Requerimiento de la Misión.\n- Asegúrate de invocar exactamente las columnas pedidas en el SELECT."; }
-                    window.showErrorBox("LOS DATOS EXTRAÍDOS NO COINCIDEN", diag);
+                    window.showErrorBox(titleMsg, diag);
                 }
             } catch (err) {
                 rowCountEl.textContent = 'ERROR'; resContainer.innerHTML = ''; let errorMsg = err.message; let titleMsg = "FALLO DE COMPILACIÓN"; let liveDiagnosis = "";
@@ -1163,17 +1388,29 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         };
 
         window.openDatabaseModal = function() {
-            const backdrop = document.getElementById('db-modal-backdrop'); const card = document.getElementById('db-modal-card'); const content = document.getElementById('db-modal-content'); const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; const schemaText = exercise.data.schemaLine || "";
-            let tablesToQuery = []; if (schemaText.includes("Sales_Customers")) tablesToQuery.push("Sales_Customers"); if (schemaText.includes("Warehouse_StockItems")) tablesToQuery.push("Warehouse_StockItems");
-            let html = ''; tablesToQuery.forEach(tableName => {
-                const res = db.exec("SELECT * FROM " + tableName);
-                if (res.length > 0) {
-                    html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span></h3></div><div class="bg-[#05060a] rounded-xl border border-cyan-900/50 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all group-hover:border-cyan-700/80"><div class="overflow-x-auto"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
-                    res[0].columns.forEach(col => html += `<th>${col}</th>`); html += `</tr></thead><tbody>`;
-                    res[0].values.forEach(row => { html += `<tr>`; row.forEach(val => html += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`); html += `</tr>`; });
-                    html += `</tbody></table></div></div></div>`;
+            const backdrop = document.getElementById('db-modal-backdrop'); 
+            const card = document.getElementById('db-modal-card'); 
+            const content = document.getElementById('db-modal-content'); 
+            
+            let html = '';
+            try {
+                const tablesRes = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
+                if (tablesRes.length > 0) {
+                    const tables = tablesRes[0].values.map(v => v[0]);
+                    tables.forEach(tableName => {
+                        const res = db.exec("SELECT * FROM " + tableName);
+                        if (res.length > 0) {
+                            html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span></h3></div><div class="bg-[#05060a] rounded-xl border border-cyan-900/50 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all group-hover:border-cyan-700/80"><div class="overflow-x-auto"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
+                            res[0].columns.forEach(col => html += `<th>${col}</th>`); html += `</tr></thead><tbody>`;
+                            res[0].values.forEach(row => { html += `<tr>`; row.forEach(val => html += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`); html += `</tr>`; });
+                            html += `</tbody></table></div></div></div>`;
+                        } else {
+                            html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span> <span class="text-slate-500 text-xs">(Sin Registros)</span></h3></div></div>`;
+                        }
+                    });
                 }
-            });
+            } catch(e) { console.error("Error leyendo DB:", e); }
+
             content.innerHTML = html === '' ? "<div class='text-slate-400 text-center font-bold'>Sin datos asociados al esquema actual.</div>" : html;
             backdrop.classList.remove('hidden'); requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); });
         };
@@ -1238,7 +1475,6 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 playerState.xp -= xpNext; playerState.level++; xpNext = playerState.level * 1000; 
                 window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success"); 
                 
-                // Animación visual extra al subir de nivel
                 const badgeContainer = document.getElementById('level-badge-container');
                 badgeContainer.classList.add('level-up-anim');
                 setTimeout(() => badgeContainer.classList.remove('level-up-anim'), 1000);
