@@ -489,6 +489,9 @@
     </div>
 
     <script>
+        // 🌟 CORRECCIÓN CRÍTICA: DECLARACIÓN GLOBAL DE TOPICS RESTAURADA
+        let TOPICS = [];
+        
         let db;
         let sqlEditor;
         let dbFirestore = null; 
@@ -1001,8 +1004,15 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
                 if (isCorrect) {
                     if (!playerState.completedExercises.includes(exercise.id)) {
-                        playerState.completedExercises.push(exercise.id); window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti();
-                        window.registerDailyActivity(); window.checkAndUnlockBadges(exercise); window.checkAndUnlockTrophies();
+                        playerState.completedExercises.push(exercise.id); 
+                        window.grantRewards(exercise.xp, exercise.coins); 
+                        window.renderExercisePills(); 
+                        window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); 
+                        window.fireConfetti();
+                        window.registerDailyActivity();
+                        
+                        window.checkAndUnlockBadges(exercise);
+                        window.checkAndUnlockTrophies();
                         
                         if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); } else { setTimeout(() => window.showToast("🏆 Módulo Dominado", "Has completado todos los ejercicios de este tema.", "success"), 1000); }
                     } else {
