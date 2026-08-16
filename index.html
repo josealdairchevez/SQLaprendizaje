@@ -16,14 +16,12 @@
     <!-- Fuentes Premium -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
     
-    <!-- CodeMirror (Editor de Código) -->
+    <!-- CodeMirror -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/display/placeholder.min.js"></script>
-    
-    <!-- CodeMirror Autocompletado (IntelliSense) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/sql-hint.min.js"></script>
@@ -105,9 +103,7 @@
         .error-panel { background: #0f111a; border: 1px solid rgba(255, 71, 87, 0.15); border-left: 4px solid #ff4757; border-radius: 0.75rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 71, 87, 0.05); animation: slideIn 0.3s ease-out forwards; position: relative; overflow: hidden; padding: 1.25rem; }
         .error-panel::before { content: ''; position: absolute; top: -20px; left: -20px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(255, 71, 87, 0.15), transparent 60%); pointer-events: none; z-index: 0; }
         .tech-detail-pill { background-color: #161822; border: 1px solid rgba(255, 71, 87, 0.2); border-radius: 0.5rem; padding: 0.6rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem; color: #ff8a95; font-weight: 900; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; position: relative; z-index: 10; }
-        .tech-detail-pill:hover { background-color: #1a1c27; border-color: rgba(255, 71, 87, 0.4); box-shadow: 0 0 15px rgba(255, 71, 87, 0.15); }
         .code-glow { background-color: #000000; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.8); border: 1px solid rgba(0, 229, 255, 0.3); transition: all 0.3s ease; }
-        .code-glow:hover { box-shadow: 0 0 25px rgba(0, 229, 255, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.8); border-color: rgba(0, 229, 255, 0.6); }
 
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .shake-animation { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
@@ -154,11 +150,36 @@
     <!-- MOTOR DE FORJA PROCEDURAL (Repositorio Químico SVG) -->
     <svg width="0" height="0" class="absolute hidden" aria-hidden="true">
         <defs>
-            <radialGradient id="bronzeGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#fca5a5"/><stop offset="50%" stop-color="#b91c1c"/><stop offset="100%" stop-color="#7f1d1d"/></radialGradient>
-            <linearGradient id="silverGrad" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#f8fafc"/><stop offset="40%" stop-color="#94a3b8"/><stop offset="60%" stop-color="#475569"/><stop offset="100%" stop-color="#f8fafc"/></linearGradient>
-            <linearGradient id="goldGrad" x1="0" y1="100" x2="100" y2="0"><stop offset="0%" stop-color="#b45309"/><stop offset="30%" stop-color="#fbbf24"/><stop offset="50%" stop-color="#fef08a"/><stop offset="70%" stop-color="#d97706"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient>
-            <linearGradient id="diamondGrad" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#ffffff"/><stop offset="30%" stop-color="#cffafe"/><stop offset="70%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#0284c7"/></linearGradient>
-            <linearGradient id="darkMatterGrad" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#1e1b4b"/><stop offset="40%" stop-color="#000000"/><stop offset="60%" stop-color="#4c1d95"/><stop offset="100%" stop-color="#000000"/></linearGradient>
+            <radialGradient id="bronzeGrad" cx="30%" cy="30%" r="70%">
+                <stop offset="0%" stop-color="#fca5a5"/>
+                <stop offset="50%" stop-color="#b91c1c"/>
+                <stop offset="100%" stop-color="#7f1d1d"/>
+            </radialGradient>
+            <linearGradient id="silverGrad" x1="0" y1="0" x2="100" y2="100">
+                <stop offset="0%" stop-color="#f8fafc"/>
+                <stop offset="40%" stop-color="#94a3b8"/>
+                <stop offset="60%" stop-color="#475569"/>
+                <stop offset="100%" stop-color="#f8fafc"/>
+            </linearGradient>
+            <linearGradient id="goldGrad" x1="0" y1="100" x2="100" y2="0">
+                <stop offset="0%" stop-color="#b45309"/>
+                <stop offset="30%" stop-color="#fbbf24"/>
+                <stop offset="50%" stop-color="#fef08a"/>
+                <stop offset="70%" stop-color="#d97706"/>
+                <stop offset="100%" stop-color="#f59e0b"/>
+            </linearGradient>
+            <linearGradient id="diamondGrad" x1="0" y1="0" x2="100" y2="100">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="30%" stop-color="#cffafe"/>
+                <stop offset="70%" stop-color="#22d3ee"/>
+                <stop offset="100%" stop-color="#0284c7"/>
+            </linearGradient>
+            <linearGradient id="darkMatterGrad" x1="0" y1="0" x2="100" y2="100">
+                <stop offset="0%" stop-color="#1e1b4b"/>
+                <stop offset="40%" stop-color="#000000"/>
+                <stop offset="60%" stop-color="#4c1d95"/>
+                <stop offset="100%" stop-color="#000000"/>
+            </linearGradient>
         </defs>
     </svg>
 
@@ -489,7 +510,7 @@
     </div>
 
     <script>
-        // 🌟 CORRECCIÓN CRÍTICA: DECLARACIÓN GLOBAL DE TOPICS RESTAURADA
+        // 🌟 CORRECCIÓN CRÍTICA: DECLARACIÓN GLOBAL ABSOLUTA
         let TOPICS = [];
         
         let db;
@@ -509,9 +530,12 @@
         let selectedTopicIdForAction = null; 
 
         const STREAK_PHRASES = [
-            "El conocimiento es constancia.", "Un paso a la vez, una consulta a la vez.",
-            "Ya no es suerte, es pura disciplina.", "Los arquitectos de datos se forjan en el fuego diario.",
-            "No rompas la cadena. La maestría te espera.", "El código fluye cuando la mente no se detiene.",
+            "El conocimiento es constancia.", 
+            "Un paso a la vez, una consulta a la vez.",
+            "Ya no es suerte, es pura disciplina.", 
+            "Los arquitectos de datos se forjan en el fuego diario.",
+            "No rompas la cadena. La maestría te espera.", 
+            "El código fluye cuando la mente no se detiene.",
             "Siete días. Un hábito. Una nueva mentalidad."
         ];
 
@@ -783,7 +807,14 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
         async function syncToCloud() {
             if (!dbFirestore) return;
-            try { await dbFirestore.collection("usuarios").doc(syncUserId).set({ playerState: playerState, customTopics: JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"), topicOrder: JSON.parse(localStorage.getItem('sql_topic_order') || "null"), lastUpdate: firebase.firestore.FieldValue.serverTimestamp() }); } catch (e) { console.error("Error al sincronizar:", e); }
+            try { 
+                await dbFirestore.collection("usuarios").doc(syncUserId).set({ 
+                    playerState: playerState, 
+                    customTopics: JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"), 
+                    topicOrder: JSON.parse(localStorage.getItem('sql_topic_order') || "null"), 
+                    lastUpdate: firebase.firestore.FieldValue.serverTimestamp() 
+                }); 
+            } catch (e) { console.error("Error al sincronizar:", e); }
         }
 
         async function loadFromCloud() {
@@ -793,17 +824,25 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 if (doc.exists) {
                     const data = doc.data();
                     playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {}, streak: 0, lastActiveDate: null, badges: [], trophies: [] };
-                    if (!playerState.quizStates) playerState.quizStates = {}; if (playerState.streak === undefined) playerState.streak = 0;
-                    if (!playerState.badges) playerState.badges = []; if (!playerState.trophies) playerState.trophies = [];
+                    
+                    // Salvavidas de Estado Crítico: Asegurar que los arrays y objetos existen incluso en partidas antiguas
+                    if (!playerState.completedExercises) playerState.completedExercises = [];
+                    if (!playerState.quizStates) playerState.quizStates = {}; 
+                    if (playerState.streak === undefined) playerState.streak = 0;
+                    if (!playerState.badges) playerState.badges = []; 
+                    if (!playerState.trophies) playerState.trophies = [];
 
                     if (data.customTopics) localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
                     if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
                     
                     const xpNext = playerState.level * 1000;
-                    document.getElementById('ui-level-badge').textContent = playerState.level; document.getElementById('ui-xp-bar').style.width = `${(playerState.xp / xpNext) * 100}%`;
-                    document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`; document.getElementById('ui-coins').textContent = playerState.coins;
+                    document.getElementById('ui-level-badge').textContent = playerState.level; 
+                    document.getElementById('ui-xp-bar').style.width = `${(playerState.xp / xpNext) * 100}%`;
+                    document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`; 
+                    document.getElementById('ui-coins').textContent = playerState.coins;
                     
-                    window.updatePlayerTitle(); window.updateStreakUI(); window.checkAndUnlockTrophies(); return true;
+                    window.updatePlayerTitle(); window.updateStreakUI(); window.checkAndUnlockTrophies(); 
+                    return true;
                 }
             } catch (e) { console.error("Error al descargar:", e); }
             return false;
@@ -869,8 +908,12 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
         }
 
         window.loadExercise = function(topicIdx, exIdx) {
+            if (!TOPICS || TOPICS.length === 0) return;
+            
             currentTopicIdx = topicIdx; currentExerciseIdx = exIdx; revealedHintsCount = 0; currentExerciseAttempts = 0;
-            const topic = TOPICS[topicIdx]; const exercise = topic.exercises[exIdx]; const dynamicData = exercise.data; 
+            const topic = TOPICS[topicIdx]; if (!topic) return;
+            const exercise = topic.exercises[exIdx]; if (!exercise) return;
+            const dynamicData = exercise.data; 
 
             document.getElementById('topic-title').textContent = topic.title; 
             
@@ -1004,15 +1047,8 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
                 if (isCorrect) {
                     if (!playerState.completedExercises.includes(exercise.id)) {
-                        playerState.completedExercises.push(exercise.id); 
-                        window.grantRewards(exercise.xp, exercise.coins); 
-                        window.renderExercisePills(); 
-                        window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); 
-                        window.fireConfetti();
-                        window.registerDailyActivity();
-                        
-                        window.checkAndUnlockBadges(exercise);
-                        window.checkAndUnlockTrophies();
+                        playerState.completedExercises.push(exercise.id); window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti();
+                        window.registerDailyActivity(); window.checkAndUnlockBadges(exercise); window.checkAndUnlockTrophies();
                         
                         if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); } else { setTimeout(() => window.showToast("🏆 Módulo Dominado", "Has completado todos los ejercicios de este tema.", "success"), 1000); }
                     } else {
@@ -1072,7 +1108,9 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 let nextNumber = TOPICS.length + 1; let rawName = parsedData.topicName || parsedData.title || "Nuevo Módulo"; rawName = rawName.replace(/^\d+[\.\-]\s*/, ''); parsedData.topicName = `${nextNumber}. ${rawName}`;
                 const newTopic = createTopicFromJSON(parsedData); parsedData.id = newTopic.id;
                 TOPICS.push(newTopic);
-                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); customTopics.push(parsedData); localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+                let customTopics = [];
+                try { customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); } catch(e) { customTopics = []; }
+                customTopics.push(parsedData); localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
                 
                 let newOrder = [];
                 for(let i=0; i<TOPICS.length; i++) { newOrder.push(TOPICS[i].id); }
@@ -1119,7 +1157,14 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             await loadFromCloud();
             TOPICS.push(createTopicFromJSON(RAW_TOPIC_1));
 
-            let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
+            let customTopics = [];
+            try {
+                customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
+            } catch(e) {
+                console.error("Local storage corrupto. Reseteando temas.");
+                localStorage.removeItem('sql_custom_topics');
+            }
+
             let requiresSave = false;
             
             for(let i=0; i<customTopics.length; i++) {
@@ -1132,7 +1177,9 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 
             if (requiresSave) { localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); syncToCloud(); }
 
-            let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "null");
+            let savedOrder = null;
+            try { savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "null"); } catch(e) {}
+
             if (savedOrder) {
                 TOPICS.sort((a, b) => {
                     let indexA = savedOrder.indexOf(a.id); let indexB = savedOrder.indexOf(b.id);
@@ -1182,7 +1229,12 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
                 `);
                 
                 window.renderTopicsSidebar();
-                window.loadExercise(0, 0);
+                
+                if (TOPICS && TOPICS.length > 0) {
+                    window.loadExercise(0, 0);
+                } else {
+                    console.error("No hay tópicos disponibles para cargar.");
+                }
 
             } catch (err) { console.error("Error crítico:", err); }
         }
