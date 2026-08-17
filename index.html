@@ -192,7 +192,7 @@
 
 <body class="min-h-screen md:h-screen flex flex-col overflow-x-hidden md:overflow-hidden relative">
 
-    <!-- 🌟 MODAL DE LOGIN (FIREBASE AUTH) -->
+    <!-- 🌟 MODAL DE LOGIN (FIREBASE AUTH - REDIRECCIÓN) -->
     <div id="login-modal-backdrop" class="fixed inset-0 bg-[#020617]/95 backdrop-blur-md z-[200] flex items-center justify-center transition-opacity duration-500">
         <div class="bg-[#0f111a] border border-cyan-500/30 rounded-2xl p-8 max-w-sm w-11/12 shadow-[0_0_50px_rgba(0,229,255,0.15)] flex flex-col items-center text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500"></div>
@@ -202,7 +202,7 @@
             <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400 mb-2">SQL MASTERY</h2>
             <p class="text-slate-400 text-sm font-medium mb-8">Identifícate para guardar tu progreso, nivel y oro en la nube de forma segura.</p>
             
-            <button onclick="window.loginWithGoogle()" class="w-full bg-white text-slate-900 hover:bg-slate-100 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+            <button id="btn-google-login" onclick="window.loginWithGoogle()" class="w-full bg-white text-slate-900 hover:bg-slate-100 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]">
                 <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
                 Continuar con Google
             </button>
@@ -213,7 +213,7 @@
         <div class="flex items-center gap-4 mb-4 md:mb-0">
             <button onclick="window.toggleSidebar()" class="md:hidden text-cyan-400 text-3xl leading-none font-bold mr-2" style="text-shadow: 0 0 10px rgba(0,229,255,0.5);">≡</button>
             
-            <!-- 🌟 FASE 5: IDENTIDAD VISUAL REAL CON GMAIL AVATAR -->
+            <!-- 🌟 IDENTIDAD VISUAL REAL CON GMAIL AVATAR -->
             <div class="relative group">
                 <img id="user-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" class="w-12 h-12 rounded-full bg-slate-800 border-2 border-cyan-500/50 object-cover shadow-[0_0_15px_rgba(0,229,255,0.3)] cursor-pointer transition-all hover:border-red-500">
                 <button onclick="window.logoutFirebase()" class="absolute -bottom-2 -right-2 bg-red-600 hover:bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg hidden group-hover:block transition-all z-20">Salir</button>
@@ -561,39 +561,82 @@
             measurementId: "G-BS1GWW12XR"
         };
 
+        window.setupMockLogin = function() {
+            const loginModal = document.getElementById('login-modal-backdrop');
+            const btn = document.getElementById('btn-google-login');
+            btn.innerHTML = `<span class="text-xl">🧪</span> Entrar en Modo Prueba (Vista Previa)`;
+            btn.className = "w-full bg-indigo-600 text-white hover:bg-indigo-500 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)]";
+            
+            btn.onclick = async () => {
+                syncUserId = "usuario_prueba_vista_previa";
+                isUserLoggedIn = true;
+                document.getElementById('user-id-display').textContent = "Modo Prueba";
+                
+                loginModal.classList.add('opacity-0');
+                setTimeout(() => loginModal.classList.add('hidden'), 500);
+
+                await loadFromCloud();
+                window.updateProgressUI();
+                window.renderExercisePills();
+                window.showToast("Modo Prueba", "Inicio de sesión simulado activado.", "success");
+                window.updateSyncBadge('offline');
+            };
+            
+            loginModal.classList.remove('hidden');
+            requestAnimationFrame(() => loginModal.classList.remove('opacity-0'));
+        };
+
         if (firebaseConfig.apiKey) {
             firebase.initializeApp(firebaseConfig); 
             dbFirestore = firebase.firestore();
             dbAuth = firebase.auth();
             
-            // 🌟 FASE 5: OBSERVADOR DE AUTENTICACIÓN GOOGLE
-            dbAuth.onAuthStateChanged(async (user) => {
-                const loginModal = document.getElementById('login-modal-backdrop');
-                if (user) {
-                    syncUserId = user.uid;
-                    isUserLoggedIn = true;
-                    
-                    document.getElementById('user-id-display').textContent = user.displayName || user.email.split('@')[0];
-                    if (user.photoURL) {
-                        document.getElementById('user-avatar').src = user.photoURL;
-                    }
-                    
-                    loginModal.classList.add('opacity-0');
-                    setTimeout(() => loginModal.classList.add('hidden'), 500);
+            const isPreviewEnv = window.location.protocol === 'blob:' || window.location.protocol === 'data:' || window.location.protocol === 'about:';
 
-                    await loadFromCloud();
-                    window.updateProgressUI();
-                    window.renderExercisePills();
-                    window.showToast("¡Autenticado!", `Bienvenido ${user.displayName.split(' ')[0]}`, "success");
-                    window.updateSyncBadge('online');
-                } else {
-                    isUserLoggedIn = false;
+            if (isPreviewEnv) {
+                console.warn("Entorno de vista previa detectado. Activando Modo Prueba de forma preventiva.");
+                window.setupMockLogin();
+            } else {
+                // 🌟 1. ATRAPAR POSIBLES ERRORES DE LA REDIRECCIÓN
+                dbAuth.getRedirectResult().then((result) => {
+                    // Si result.user existe, el inicio de sesión fue exitoso (onAuthStateChanged lo atrapará)
+                }).catch((error) => {
+                    console.error("Error en la redirección:", error);
+                    window.showToast("Error", "Fallo al conectar con Google.", "error");
+                    const loginModal = document.getElementById('login-modal-backdrop');
                     loginModal.classList.remove('hidden');
                     requestAnimationFrame(() => loginModal.classList.remove('opacity-0'));
-                    document.getElementById('user-id-display').textContent = "Usuario";
-                    window.updateSyncBadge('offline');
-                }
-            });
+                });
+
+                // 🌟 2. OBSERVADOR DE AUTENTICACIÓN GOOGLE
+                dbAuth.onAuthStateChanged(async (user) => {
+                    const loginModal = document.getElementById('login-modal-backdrop');
+                    if (user) {
+                        syncUserId = user.uid;
+                        isUserLoggedIn = true;
+                        
+                        document.getElementById('user-id-display').textContent = user.displayName || user.email.split('@')[0];
+                        if (user.photoURL) {
+                            document.getElementById('user-avatar').src = user.photoURL;
+                        }
+                        
+                        loginModal.classList.add('opacity-0');
+                        setTimeout(() => loginModal.classList.add('hidden'), 500);
+
+                        await loadFromCloud();
+                        window.updateProgressUI();
+                        window.renderExercisePills();
+                        window.showToast("¡Autenticado!", `Bienvenido ${user.displayName.split(' ')[0]}`, "success");
+                        window.updateSyncBadge('online');
+                    } else {
+                        isUserLoggedIn = false;
+                        loginModal.classList.remove('hidden');
+                        requestAnimationFrame(() => loginModal.classList.remove('opacity-0'));
+                        document.getElementById('user-id-display').textContent = "Usuario";
+                        window.updateSyncBadge('offline');
+                    }
+                });
+            }
         }
 
         if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').catch(err => console.log('SW Falló:', err)); }); }
@@ -708,12 +751,40 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             document.getElementById('next-btn').classList.add('hidden'); 
         };
 
-        // 🌟 FASE 5: AUTENTICACIÓN Y SINCRONIZACIÓN BLINDADA
+        // 🌟 FASE 5 MEJORADA: AUTENTICACIÓN CON REDIRECCIÓN (Evita bloqueos de GitHub Pages)
         window.loginWithGoogle = function() {
+            const isPreviewEnv = window.location.protocol === 'blob:' || window.location.protocol === 'data:' || window.location.protocol === 'about:';
+            
+            if (isPreviewEnv) {
+                window.setupMockLogin();
+                document.getElementById('btn-google-login').click();
+                return;
+            }
+
             const provider = new firebase.auth.GoogleAuthProvider();
-            dbAuth.signInWithPopup(provider).catch(err => {
-                console.error("Error en login:", err);
-                window.showToast("Error", "No se pudo iniciar sesión.", "error");
+            
+            // Indicador visual de carga
+            const btn = document.getElementById('btn-google-login');
+            if(btn) {
+                btn.innerHTML = `<span class="animate-spin text-xl">⏳</span> Redirigiendo a Google...`;
+                btn.classList.add('opacity-80', 'cursor-wait');
+                btn.disabled = true;
+            }
+            
+            // Usar Redirección en lugar de Popup
+            dbAuth.signInWithRedirect(provider).catch(err => {
+                console.error("Error al iniciar redirección:", err);
+                if (err.code === 'auth/operation-not-supported-in-this-environment') {
+                    window.setupMockLogin();
+                    document.getElementById('btn-google-login').click();
+                    return;
+                }
+                window.showToast("Error", "No se pudo conectar.", "error");
+                if(btn) {
+                    btn.innerHTML = `<svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Continuar con Google`;
+                    btn.classList.remove('opacity-80', 'cursor-wait');
+                    btn.disabled = false;
+                }
             });
         };
 
