@@ -597,17 +597,6 @@
                 console.warn("Entorno de vista previa detectado. Activando Modo Prueba de forma preventiva.");
                 window.setupMockLogin();
             } else {
-                // 🌟 1. ATRAPAR POSIBLES ERRORES DE LA REDIRECCIÓN
-                dbAuth.getRedirectResult().then((result) => {
-                    // Si result.user existe, el inicio de sesión fue exitoso (onAuthStateChanged lo atrapará)
-                }).catch((error) => {
-                    console.error("Error en la redirección:", error);
-                    window.showToast("Error", "Fallo al conectar con Google.", "error");
-                    const loginModal = document.getElementById('login-modal-backdrop');
-                    loginModal.classList.remove('hidden');
-                    requestAnimationFrame(() => loginModal.classList.remove('opacity-0'));
-                });
-
                 // 🌟 2. OBSERVADOR DE AUTENTICACIÓN GOOGLE
                 dbAuth.onAuthStateChanged(async (user) => {
                     const loginModal = document.getElementById('login-modal-backdrop');
@@ -751,7 +740,7 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             document.getElementById('next-btn').classList.add('hidden'); 
         };
 
-        // 🌟 FASE 5 MEJORADA: AUTENTICACIÓN CON REDIRECCIÓN (Evita bloqueos de GitHub Pages)
+        // 🌟 FASE 5 MEJORADA: AUTENTICACIÓN CON POPUP (AHORA QUE ESTÁ EN PRODUCCIÓN FUNCIONARÁ)
         window.loginWithGoogle = function() {
             const isPreviewEnv = window.location.protocol === 'blob:' || window.location.protocol === 'data:' || window.location.protocol === 'about:';
             
@@ -766,20 +755,22 @@ ESTRUCTURA EXACTA DEL JSON REQUERIDO:
             // Indicador visual de carga
             const btn = document.getElementById('btn-google-login');
             if(btn) {
-                btn.innerHTML = `<span class="animate-spin text-xl">⏳</span> Redirigiendo a Google...`;
+                btn.innerHTML = `<span class="animate-spin text-xl">⏳</span> Abriendo Google...`;
                 btn.classList.add('opacity-80', 'cursor-wait');
                 btn.disabled = true;
             }
             
-            // Usar Redirección en lugar de Popup
-            dbAuth.signInWithRedirect(provider).catch(err => {
-                console.error("Error al iniciar redirección:", err);
+            // Usar Popup ahora que Google Cloud está en Producción
+            dbAuth.signInWithPopup(provider).then((result) => {
+                // El éxito lo captura automáticamente onAuthStateChanged arriba
+            }).catch(err => {
+                console.error("Error al iniciar con popup:", err);
                 if (err.code === 'auth/operation-not-supported-in-this-environment') {
                     window.setupMockLogin();
                     document.getElementById('btn-google-login').click();
                     return;
                 }
-                window.showToast("Error", "No se pudo conectar.", "error");
+                window.showToast("Error", "Se cerró la ventana o falló la conexión.", "error");
                 if(btn) {
                     btn.innerHTML = `<svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Continuar con Google`;
                     btn.classList.remove('opacity-80', 'cursor-wait');
