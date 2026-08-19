@@ -608,52 +608,49 @@
 Tu tarea es transformar el material de estudio, tema o apuntes que te proporcionaré en un Módulo de Aprendizaje Interactivo (LMS) estructurado en un objeto JSON válido.
 
 REGLAS TÉCNICAS Y FORMATO OBLIGATORIAS:
-1. ESTRUCTURA DINÁMICA POR NIVEL: Cada ejercicio debe contener su propia teoría de apoyo y exactamente 3 "quizzes" relacionados exclusivamente a ese nivel.
-2. FORMATO DE CÓDIGO (CRÍTICO): PROHIBIDO escribir consultas SQL en una sola línea. Todo código SQL DEBE utilizar saltos de línea (\\n) y espacios.
-3. DATOS SEMILLA (MOCK DATA): Debes construir un arreglo "tables" en la raíz del JSON. Allí definirás el nombre de la tabla, su esquema en SQL, y un arreglo "mockData" con mínimo 3 registros lógicos para que el estudiante interactúe con datos reales.
-4. BASES DE DATOS: Utiliza tablas con contexto corporativo real (ej. Facturación, Logística, Empleados).
+1. ESTRUCTURA DINÁMICA POR NIVEL: Cada ejercicio debe contener su propia teoría de apoyo y exactamente 3 "quizzes".
+2. FORMATO DE CÓDIGO (CRÍTICO): PROHIBIDO escribir consultas en una sola línea. Usa saltos de línea (\\n) y espacios.
+3. DATOS SEMILLA Y DIAGRAMA ERD (CRÍTICO): En el arreglo "tables", el "schema" DEBE incluir obligatoriamente "PRIMARY KEY" y, si hay relaciones, "REFERENCES tabla(columna)" para Foreign Keys. Esto es vital para renderizar el Mapa ERD automáticamente. Incluye "mockData" realista.
+4. ADAPTABILIDAD DE COMANDOS (DQL, DML, DDL): El campo "expectedQuery" debe adaptarse al tema. Puede ser SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, o incluso CREATE PROCEDURE. El simulador lo soporta todo.
 5. FORMATO DE SALIDA: ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido.
-6. NIVELES (CRÍTICO): Exactamente 9 elementos en el arreglo "levels" (3 easy, 3 med, 3 hard).
+6. NIVELES: Exactamente 9 elementos en el arreglo "levels" (3 easy, 3 med, 3 hard).
 
 ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 {
-  "topicName": "Título del Tema",
+  "topicName": "Título del Tema (Ej: 5. Procedimientos Almacenados)",
   "introTitle": "Subtítulo motivador",
   "introText": "Explicación teórica inicial.",
   "commands": [ 
-    {"name": "COMANDO", "desc": "Descripción."} 
+    {"name": "COMANDO", "desc": "Descripción adaptada al tema (Ej: EXEC, UPDATE, CREATE)."} 
   ],
   "tables": [
     {
-      "tableName": "Facturas_Ventas",
-      "schema": "FacturaID INT, Cliente VARCHAR, Monto DECIMAL, Fecha DATE",
-      "mockData": [
-        {"FacturaID": 1, "Cliente": "Empresa A", "Monto": 1500.50, "Fecha": "2023-10-01"},
-        {"FacturaID": 2, "Cliente": "Empresa B", "Monto": 300.00, "Fecha": "2023-10-02"}
-      ]
+      "tableName": "Empleados",
+      "schema": "EmpID INT PRIMARY KEY, Nombre VARCHAR, DptoID INT REFERENCES Departamentos(DptoID)",
+      "mockData": [ {"EmpID": 1, "Nombre": "Ana", "DptoID": 10} ]
     }
   ],
   "levels": [
     {
       "diff": "easy",
       "escenario": "Contexto corporativo detallado.",
-      "requerimiento": "Petición exacta de lo que el estudiante debe extraer.",
+      "requerimiento": "Petición exacta adaptada al tema (Ej: Crea un procedimiento, actualiza un salario, o haz un SELECT).",
       "tip": "Tip rápido.",
-      "schemaLine": "Facturas_Ventas (FacturaID, Cliente, Monto, Fecha)",
+      "schemaLine": "Empleados (EmpID, Nombre, DptoID)",
       "schemaTitle": "Descripción de la tabla",
-      "schemaCols": [ {"name": "FacturaID", "desc": "ID único"} ],
-      "expectedQuery": "SELECT\\n  Cliente\\nFROM\\n  Facturas_Ventas;",
+      "schemaCols": [ {"name": "EmpID", "desc": "ID único"} ],
+      "expectedQuery": "SELECT\\n  *\\nFROM\\n  Empleados;",
       "hints": ["Pista 1", "Pista 2", "Pista 3"],
       "theoryUpdate": {
         "bestPracticeTitle": "💡 BUENAS PRÁCTICAS: [Concepto]",
         "bestPracticeText": "Consejo avanzado.",
         "errorTitle": "⚠️ UN ERROR HABITUAL: [Concepto]",
         "errorIntro": "Explicación de un error común.",
-        "errorBadCode": "SELECT\\n  mal\\nFROM\\n  tabla;",
+        "errorBadCode": "CÓDIGO INCORRECTO AQUÍ",
         "errorImpact": "Impacto en la vida real.",
-        "errorGoodCode": "SELECT\\n  bien\\nFROM\\n  tabla;",
+        "errorGoodCode": "CÓDIGO CORRECTO AQUÍ",
         "exampleContext": "Contexto de ejemplo.",
-        "exampleCode": "SELECT\\n  ejemplo\\nFROM\\n  tabla;"
+        "exampleCode": "CÓDIGO DE EJEMPLO AQUÍ"
       },
       "quizzes": [
         {
