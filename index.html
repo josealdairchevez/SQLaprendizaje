@@ -581,89 +581,80 @@
 
         window.fireConfetti = function() { if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); };
 
-        window.changeName = function() {
-            if(!isUserLoggedIn && syncUserId !== "usuario_prueba_vista_previa") return;
-            const newName = prompt("✏️ Escribe tu nombre o apodo de estudiante:");
-            if(newName && newName.trim() !== "") {
-                playerState.customName = newName.trim();
-                document.getElementById('user-id-display').innerHTML = `${playerState.customName.toUpperCase()} <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">✏️</span>`;
-                syncToCloud();
-                window.showToast("Perfil Actualizado", "Tu nombre se ha guardado.", "success");
-            }
-        };
-
-        window.changeAvatar = function() {
-            if(!isUserLoggedIn && syncUserId !== "usuario_prueba_vista_previa") return;
-            const newAvatar = prompt("📸 Pega el enlace (URL) de tu nueva foto de perfil:");
-            if(newAvatar && newAvatar.trim() !== "") {
-                playerState.customAvatar = newAvatar.trim();
-                document.getElementById('user-avatar').src = playerState.customAvatar;
-                syncToCloud();
-                window.showToast("Foto Actualizada", "Tu avatar ha cambiado.", "success");
-            }
-        };
-
         window.copyPrompt = function() {
             const prompt = `Actúa como un Arquitecto de Bases de Datos SQL Senior, Diseñador Instruccional y experto en SQL Server. 
-Tu tarea es transformar el material de estudio, tema o apuntes que te proporcionaré en un Módulo de Aprendizaje Interactivo (LMS) estructurado en un objeto JSON válido.
+Tu misión es generar un módulo de aprendizaje interactivo estructurado EXCLUSIVAMENTE en formato JSON. 
+No imprimas texto fuera del JSON.
 
-REGLAS TÉCNICAS Y FORMATO OBLIGATORIAS:
-1. ESTRUCTURA DINÁMICA POR NIVEL: Cada ejercicio debe contener su propia teoría de apoyo y exactamente 3 "quizzes".
-2. FORMATO DE CÓDIGO (CRÍTICO): PROHIBIDO escribir consultas en una sola línea. Usa saltos de línea (\\n) y espacios.
-3. DATOS SEMILLA Y DIAGRAMA ERD (CRÍTICO): En el arreglo "tables", el "schema" DEBE incluir obligatoriamente "PRIMARY KEY" y, si hay relaciones, "REFERENCES tabla(columna)" para Foreign Keys. Esto es vital para renderizar el Mapa ERD automáticamente. Incluye "mockData" realista.
-4. ADAPTABILIDAD DE COMANDOS (DQL, DML, DDL): El campo "expectedQuery" debe adaptarse al tema. Puede ser SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, o incluso CREATE PROCEDURE. El simulador lo soporta todo.
-5. FORMATO DE SALIDA: ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido.
-6. NIVELES: Exactamente 9 elementos en el arreglo "levels" (3 easy, 3 med, 3 hard).
+### REGLAS ESTRUCTURALES Y FORMATO (CRÍTICO PARA LA PLATAFORMA):
+1. FORMATO DE CÓDIGO CON SALTOS DE LÍNEA: En TODOS los campos que contengan código SQL (expectedQuery, errorBadCode, errorGoodCode, exampleCode y opciones de quizzes), DEBES utilizar el salto de línea "\\n" y espacios para estructurar el código verticalmente. 
+   - PROHIBIDO: "SELECT * FROM Tabla WHERE id = 1;"
+   - OBLIGATORIO: "SELECT\\n  *\\nFROM\\n  Tabla\\nWHERE\\n  id = 1;"
+2. ESQUEMA Y DIAGRAMA ERD (VITAL): En el array "tables", el campo "schema" DEBE incluir explícitamente "PRIMARY KEY" y, cuando aplique, "REFERENCES tabla(columna)". El sistema usa esto para dibujar el Mapa ERD automáticamente.
+3. DATOS SEMILLA (MOCK DATA): Proporciona datos reales y coherentes. Si usas valores nulos, escríbelos estrictamente en minúsculas (null) sin comillas para no romper el parseo.
+4. CANTIDAD DE NIVELES: Genera EXACTAMENTE 9 niveles dentro del array "levels" (3 "easy", 3 "med", 3 "hard"). La dificultad debe ser lógica y progresiva.
+5. DESCRIPCIÓN DE TABLAS (schemaCols): NUNCA dejes este array vacío. Define al menos 1 o 2 columnas relevantes del nivel con su "name" y "desc".
+6. ADAPTABILIDAD DML/DDL: El "expectedQuery" debe adaptarse al tema. Si el tema es UPDATE, usa UPDATE. El simulador soporta SELECT, INSERT, UPDATE, DELETE y CREATE PROCEDURE.
 
-ESTRUCTURA EXACTA DEL JSON REQUERIDO:
+### REGLA DE QUIZZES (ESTILO SQL ZOO):
+Cada nivel DEBE tener EXACTAMENTE 3 preguntas en el array "quizzes". Al menos 2 de ellas deben ser PRÁCTICAS. Plantea un caso en la pregunta y pon BLOQUES DE CÓDIGO SQL como opciones de respuesta ("text") para que el usuario analice la sintaxis correcta. (Recuerda usar "\\n" en el código de las opciones para mantener el formato vertical).
+
+### ESTRUCTURA ESTRICTA DEL JSON ESPERADO:
 {
-  "topicName": "Título del Tema (Ej: 5. Procedimientos Almacenados)",
-  "introTitle": "Subtítulo motivador",
-  "introText": "Explicación teórica inicial.",
-  "commands": [ 
-    {"name": "COMANDO", "desc": "Descripción adaptada al tema (Ej: EXEC, UPDATE, CREATE)."} 
+  "topicName": "Número. Título del Tema",
+  "introTitle": "Título impactante",
+  "introText": "Explicación profunda y corporativa del tema.",
+  "commands": [
+    {"name": "Comando/Operador", "desc": "Descripción técnica"}
   ],
   "tables": [
     {
-      "tableName": "Empleados",
-      "schema": "EmpID INT PRIMARY KEY, Nombre VARCHAR, DptoID INT REFERENCES Departamentos(DptoID)",
-      "mockData": [ {"EmpID": 1, "Nombre": "Ana", "DptoID": 10} ]
+      "tableName": "NombreTabla",
+      "schema": "Columna1 TIPO PRIMARY KEY, Columna2 TIPO REFERENCES OtraTabla(ColumnaX)",
+      "mockData": [
+        {"Columna1": 1, "Columna2": "Dato", "Columna3": null}
+      ]
     }
   ],
   "levels": [
     {
       "diff": "easy",
-      "escenario": "Contexto corporativo detallado.",
-      "requerimiento": "Petición exacta adaptada al tema (Ej: Crea un procedimiento, actualiza un salario, o haz un SELECT).",
-      "tip": "Tip rápido.",
-      "schemaLine": "Empleados (EmpID, Nombre, DptoID)",
-      "schemaTitle": "Descripción de la tabla",
-      "schemaCols": [ {"name": "EmpID", "desc": "ID único"} ],
-      "expectedQuery": "SELECT\\n  *\\nFROM\\n  Empleados;",
+      "escenario": "Contexto corporativo del problema.",
+      "requerimiento": "Instrucción clara de lo que el usuario debe consultar o modificar.",
+      "tip": "Un consejo corto.",
+      "schemaLine": "TablaA a | TablaB b",
+      "schemaTitle": "Título del paso",
+      "schemaCols": [
+        {"name": "Columna", "desc": "Significado"}
+      ],
+      "expectedQuery": "SELECT\\n  *\\nFROM\\n  Tabla;",
       "hints": ["Pista 1", "Pista 2", "Pista 3"],
       "theoryUpdate": {
-        "bestPracticeTitle": "💡 BUENAS PRÁCTICAS: [Concepto]",
-        "bestPracticeText": "Consejo avanzado.",
-        "errorTitle": "⚠️ UN ERROR HABITUAL: [Concepto]",
-        "errorIntro": "Explicación de un error común.",
-        "errorBadCode": "CÓDIGO INCORRECTO AQUÍ",
-        "errorImpact": "Impacto en la vida real.",
-        "errorGoodCode": "CÓDIGO CORRECTO AQUÍ",
-        "exampleContext": "Contexto de ejemplo.",
-        "exampleCode": "CÓDIGO DE EJEMPLO AQUÍ"
+        "bestPracticeTitle": "💡 BUENAS PRÁCTICAS: [TEMA]",
+        "bestPracticeText": "Consejo de arquitecto de bases de datos.",
+        "errorTitle": "⚠️ UN ERROR HABITUAL: [TEMA]",
+        "errorIntro": "Por qué suele fallar esto.",
+        "errorBadCode": "CÓDIGO\\nMALO",
+        "errorImpact": "Consecuencias en el servidor o reporte.",
+        "errorGoodCode": "CÓDIGO\\nBUENO",
+        "exampleContext": "Ejemplo extra aplicable:",
+        "exampleCode": "SELECT\\n  *\\nFROM\\n  Ejemplo;"
       },
       "quizzes": [
         {
-          "question": "Pregunta analítica aquí",
+          "question": "Pregunta práctica o teórica",
           "options": [
-            {"text": "Opción falsa", "isCorrect": false, "feedback": "Por qué es falsa."},
-            {"text": "Opción verdadera", "isCorrect": true, "feedback": "¡Excelente!"}
-          ]
+            {"text": "SELECT\\n  *\\nFROM\\n  A;", "isCorrect": true, "feedback": "Por qué es correcta."},
+            {"text": "SELECT * FROM A;", "isCorrect": false, "feedback": "Por qué es incorrecta."}
+          ],
+          "references": { "question_reference": [], "hint_reference": [] }
         }
       ]
     }
   ]
-}`;
+}
+
+TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             navigator.clipboard.writeText(prompt); window.showToast("¡Prompt Copiado!", "Pégalo en la IA junto con tu tema a estudiar.", "success");
         };
 
