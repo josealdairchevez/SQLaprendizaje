@@ -12,22 +12,22 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Fuentes Premium -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
-    
+
     <!-- CodeMirror (Editor de Código) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/display/placeholder.min.js"></script>
-    
+
     <!-- CodeMirror Autocompletado (IntelliSense) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/sql-hint.min.js"></script>
-    
+
     <!-- SQL.js, Confeti y MERMAID (Diagramas ERD) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -40,7 +40,7 @@
 
     <style>
         html { background-color: #020617 !important; }
-        
+
         :root {
             --bg-dark: #020617; --panel-bg: rgba(15, 23, 42, 0.75);
             --accent-cyan: #00e5ff; --accent-purple: #a855f7;
@@ -63,7 +63,7 @@
 
         .console-wrapper { position: relative; border-radius: 0.75rem; padding: 2px; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0)); transition: all 0.3s ease; }
         .console-wrapper:focus-within { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)); box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); }
-        
+
         /* CodeMirror Custom Styles */
         .CodeMirror, .cm-s-dracula.CodeMirror, .cm-s-dracula .CodeMirror-gutters { background-color: #000000 !important; border-right: 1px solid rgba(255,255,255,0.05) !important; }
         .CodeMirror { border-radius: 0.6rem; height: 170px; font-family: 'Fira Code', monospace; font-size: 0.95rem; line-height: 1.5; }
@@ -101,7 +101,7 @@
         .ex-pill:hover { transform: scale(1.15); z-index: 20; }
         .ex-pill.active { transform: scale(1.2); box-shadow: 0 0 20px currentColor; color: #ffffff !important; }
         .ex-pill.completed { background-color: currentColor !important; color: #ffffff !important; border-color: transparent; box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
-        
+
         .pill-easy { border-color: var(--accent-green); color: var(--accent-green); } .pill-easy:hover { box-shadow: 0 0 15px rgba(16,185,129,0.4); background: rgba(16,185,129,0.15); } .pill-easy.active { background: var(--accent-green); }
         .pill-med { border-color: var(--accent-gold); color: var(--accent-gold); } .pill-med:hover { box-shadow: 0 0 15px rgba(251,191,36,0.4); background: rgba(251,191,36,0.15); } .pill-med.active { background: var(--accent-gold); }
         .pill-hard { border-color: var(--accent-rose); color: var(--accent-rose); } .pill-hard:hover { box-shadow: 0 0 15px rgba(244,63,94,0.4); background: rgba(244,63,94,0.15); } .pill-hard.active { background: var(--accent-rose); }
@@ -141,14 +141,14 @@
 
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .shake-animation { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-        
+
         .quiz-option { border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s ease; cursor: pointer; }
         .quiz-option:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); }
         .quiz-option.correct { background: rgba(16, 185, 129, 0.2); border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
         .quiz-option.correct .quiz-circle { border-color: #10b981; background: #10b981; }
         .quiz-option.incorrect { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
         .quiz-option.incorrect .quiz-circle { border-color: #ef4444; background: #ef4444; }
-        
+
         @keyframes levelUpPulse { 0% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.15); filter: brightness(1.5); box-shadow: 0 0 30px rgba(0, 229, 255, 0.8); } 100% { transform: scale(1); filter: brightness(1); } }
         .level-up-anim { animation: levelUpPulse 1s ease-out; }
 
@@ -174,7 +174,7 @@
             overflow: auto;
         }
         .mermaid svg { max-width: 100% !important; height: auto !important; }
-        
+
         .er.entityBox { fill: #0f172a !important; stroke: #00e5ff !important; stroke-width: 2px !important; }
         .er.attributeBoxOdd { fill: #1e293b !important; stroke: #334155 !important; }
         .er.attributeBoxEven { fill: #0f172a !important; stroke: #334155 !important; }
@@ -190,7 +190,7 @@
 
     <!-- 🌟 MODAL DE LOGIN (FIREBASE AUTH) -->
     <div id="login-modal-backdrop" class="fixed inset-0 bg-[#020617]/95 backdrop-blur-md z-[200] flex items-center justify-center transition-opacity duration-500">
-        
+
         <!-- SPINNER DE CARGA INICIAL -->
         <div id="auth-loading-spinner" class="flex flex-col items-center justify-center absolute inset-0 z-10 transition-opacity duration-500">
             <div class="w-16 h-16 border-4 border-slate-800 border-t-cyan-400 rounded-full animate-spin mb-4 shadow-[0_0_20px_rgba(0,229,255,0.4)]"></div>
@@ -205,7 +205,7 @@
             </div>
             <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 mb-2">SQL MASTERY</h2>
             <p class="text-slate-400 text-sm mb-6 font-medium">Identifícate para guardar tu progreso, nivel y oro en la nube de forma segura.</p>
-            
+
             <button id="btn-google-login" class="w-full bg-white text-slate-900 hover:bg-gray-100 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:-translate-y-0.5">
                 <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                 Continuar con Google
@@ -235,7 +235,7 @@
                 </p>
             </div>
         </div>
-        
+
         <div class="flex items-center gap-3">
             <div class="flex flex-col items-end">
                 <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-widest">Experiencia</div>
@@ -248,7 +248,7 @@
                     <span id="ui-xp-text" class="text-[11px] font-black text-cyan-300 w-14 text-right tracking-wider">0/1000</span>
                 </div>
             </div>
-            
+
             <div class="relative group cursor-default" id="level-badge-container">
                 <div class="absolute inset-0 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-xl blur-[6px] opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative bg-slate-900 border border-slate-700/50 px-3 py-1.5 rounded-xl flex flex-col items-center justify-center shadow-xl">
@@ -275,13 +275,13 @@
                 <h2 class="text-lg text-white font-bold flex items-center gap-2"><span>🗺️</span> <span class="temario-text">Temario</span></h2>
                 <span id="sidebar-chevron" class="text-slate-400 font-black text-xl leading-none">◀</span>
             </div>
-            
+
             <div class="text-[10px] text-center text-slate-500 font-bold uppercase tracking-widest pt-2 pb-1 border-b border-slate-800 bg-black/20 temario-text shrink-0">
                 Arrastra para ordenar ↕
             </div>
 
             <div id="topics-container" class="flex-1 overflow-y-auto p-3 space-y-2 transition-opacity duration-300 min-h-0"></div>
-            
+
             <div id="ai-btn-container" class="p-3 border-t border-slate-700/50 bg-slate-900/60 shrink-0">
                 <button onclick="window.openAIModal()" class="w-full bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-[0_0_15px_rgba(251,191,36,0.2)] hover:shadow-[0_0_25px_rgba(251,191,36,0.4)] transition-all flex justify-center items-center gap-2">
                     <span>✨</span> Importar Módulo JSON
@@ -291,7 +291,7 @@
 
         <section id="main-content" class="flex-1 flex flex-col gap-4 w-full md:overflow-hidden">
             <div class="glass-panel shrink-0 flex flex-col md:flex-row md:overflow-hidden md:max-h-[40vh]">
-                
+
                 <div class="flex-1 p-5 border-b md:border-b-0 md:border-r border-slate-700/50 md:overflow-y-auto relative" id="theory-scroll-container">
                     <div id="theory-top-bar" class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
                     <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
@@ -308,9 +308,9 @@
                             <span id="ex-coin-badge" class="bg-amber-900/50 text-amber-300 px-2 py-0.5 rounded text-xs font-bold border border-amber-500/30">5 🪙</span>
                         </div>
                     </div>
-                    
+
                     <div id="ex-task" class="text-sm font-medium leading-relaxed mb-4 min-h-0 shrink-0"></div>
-                    
+
                     <div class="mt-auto pt-3 shrink-0">
                         <div class="bg-emerald-950/20 border border-emerald-900/50 rounded-xl overflow-hidden shadow-[0_0_15px_rgba(16,185,129,0.05)] relative">
                             <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-cyan-500"></div>
@@ -356,13 +356,13 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="flex-1 flex flex-col md:flex-row md:overflow-hidden min-h-0">
                     <div class="m-3 flex-1 flex flex-col gap-3 md:overflow-y-auto pr-2 relative min-h-0 pb-2">
                         <div class="console-wrapper shrink-0">
                             <textarea id="sql-editor"></textarea>
                         </div>
-                        
+
                         <div class="flex flex-wrap items-center gap-2 shrink-0 mb-1">
                             <button id="run-btn" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:-translate-y-0.5 flex items-center justify-center gap-1.5 shrink-0">
                                 <span class="text-sm">▶</span> EJECUTAR
@@ -406,17 +406,17 @@
                             <div id="hints-list" class="flex flex-col gap-3 min-w-0"></div>
                         </div>
                     </div>
-                    
+
                     <div class="flex-1 output-panel mx-3 mb-3 mt-4 md:mt-0 relative rounded-xl overflow-hidden flex flex-col min-h-[250px] md:min-h-0">
                         <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50 z-20"></div>
-                        
+
                         <div class="bg-[#05060a]/80 px-4 py-2.5 text-xs font-black uppercase tracking-widest border-b border-cyan-900/50 flex justify-between items-center shrink-0 z-10 relative">
                             <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 flex items-center gap-2 drop-shadow-[0_0_5px_rgba(0,229,255,0.3)]">
                                 <span class="text-cyan-400">📊</span> SALIDA DE DATOS
                             </span>
                             <span id="row-count" class="bg-cyan-950/80 border border-cyan-500/50 px-2.5 py-1 rounded-md text-cyan-300 shadow-[0_0_10px_rgba(0,229,255,0.2)] font-mono">0 FILAS</span>
                         </div>
-                        
+
                         <div id="results-container" class="flex-1 overflow-auto p-0 relative bg-gradient-to-b from-[#090b14] to-black min-h-0">
                             <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
                                 <div class="w-16 h-16 rounded-full bg-slate-800/30 border border-slate-700/50 flex items-center justify-center mb-3 shadow-inner">
@@ -444,12 +444,12 @@
     <div id="db-modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-md z-40 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <div class="bg-[#090b14] border border-cyan-500/30 rounded-2xl w-11/12 max-w-5xl max-h-[85vh] flex flex-col shadow-[0_0_50px_rgba(0,229,255,0.15)] transform scale-95 transition-transform duration-300 relative overflow-hidden" id="db-modal-card">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 z-50"></div>
-            
+
             <div class="p-5 border-b border-cyan-900/50 bg-[#05060a] flex justify-between items-center shrink-0 relative z-10">
                 <h2 class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 flex items-center gap-2 drop-shadow-md">
                     <span class="text-cyan-400 text-xl">👁️</span> EXPLORADOR DE BASE DE DATOS
                 </h2>
-                
+
                 <div class="flex items-center gap-4">
                     <div class="bg-black/50 p-1 rounded-lg border border-slate-700/50 flex gap-1">
                         <button id="tab-datos" onclick="window.switchDbTab('datos')" class="px-4 py-1.5 rounded-md text-xs font-bold transition-all bg-cyan-900/50 text-cyan-300 shadow-inner">
@@ -465,7 +465,7 @@
 
             <!-- Contenedor Tab Datos -->
             <div class="p-6 overflow-y-auto flex-1 bg-gradient-to-b from-[#090b14] to-black" id="db-modal-content"></div>
-            
+
             <!-- Contenedor Tab Diagrama ERD -->
             <div class="p-6 overflow-y-auto flex-1 bg-gradient-to-b from-[#090b14] to-black hidden" id="db-modal-diagram">
                 <div id="mermaid-container"></div>
@@ -525,13 +525,25 @@
     </div>
 
     <script>
-        // INYECCIÓN DE MEJORA: Resaltador de Sintaxis Inteligente
+        // SOLUCIÓN: Resaltador de Sintaxis Inteligente y Seguro
+        // Utiliza un Single-Pass Regex para evitar romper HTML renderizado al encadenar replaces.
         window.highlightSQLCode = function(code) {
             if(!code) return "";
-            return code.replace(/\b(SELECT|FROM|WHERE|AND|OR|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|UPDATE|SET|DELETE|INSERT INTO|VALUES|CREATE|DROP|ALTER|TABLE|PRIMARY KEY|FOREIGN KEY|REFERENCES|AS|IN|IS NULL|IS NOT NULL|EXISTS|BETWEEN|LIKE|UNION|ALL|EXCEPT|INTERSECT)\b/gi, '<span class="text-cyan-400 font-bold">$1</span>')
-                       .replace(/'(.*?)'/g, '<span class="text-amber-500">\'$1\'</span>')
-                       .replace(/\b(\d+)\b/g, '<span class="text-emerald-400">$1</span>')
-                       .replace(/--.*/g, '<span class="text-slate-500 italic">$&</span>');
+            
+            // 1. Escapar caracteres HTML básicos para evitar XSS y DOM corrupto
+            let safeCode = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // 2. Regex Unificada (Grupo 1: Comentarios, Grupo 2: Strings, Grupo 3: Keywords, Grupo 4: Números)
+            const sqlRegex = /(--.*)|('(?:[^'\\]|\\.)*')|\b(SELECT|FROM|WHERE|AND|OR|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|UPDATE|SET|DELETE|INSERT INTO|VALUES|CREATE|DROP|ALTER|TABLE|PRIMARY KEY|FOREIGN KEY|REFERENCES|AS|IN|IS NULL|IS NOT NULL|EXISTS|BETWEEN|LIKE|UNION|ALL|EXCEPT|INTERSECT|PROCEDURE|PROC|BEGIN|END)\b|\b(\d+)\b/gi;
+            
+            // 3. Replacer con lógica de Switch
+            return safeCode.replace(sqlRegex, function(match, p1, p2, p3, p4) {
+                if (p1) return `<span class="text-slate-500 italic">${p1}</span>`;
+                if (p2) return `<span class="text-amber-500">${p2}</span>`;
+                if (p3) return `<span class="text-cyan-400 font-bold">${p3.toUpperCase()}</span>`;
+                if (p4) return `<span class="text-emerald-400">${p4}</span>`;
+                return match;
+            });
         };
 
         let windowSQLite; 
@@ -540,14 +552,14 @@
         let dbFirestore = null; 
         let dbAuth = null;
         let activeDbTopicId = null; 
-        
+
         // GAMIFICACIÓN: Variables Persistentes
         let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {}, customName: null, customAvatar: null };
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
         let syncUserId = "invitado"; 
         let isUserLoggedIn = false;
         let selectedTopicIdForAction = null; 
-        
+
         let provider = new firebase.auth.GoogleAuthProvider();
 
         window.addEventListener('online', () => { if(isUserLoggedIn) { window.updateSyncBadge('online'); syncToCloud(); } });
@@ -712,9 +724,9 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
 
         async function syncToCloud() {
             if (!navigator.onLine || !dbFirestore || !isUserLoggedIn) return;
-            
+
             window.updateSyncBadge('syncing');
-            
+
             try {
                 await dbFirestore.collection("usuarios").doc(syncUserId).set({
                     playerState: playerState,
@@ -741,7 +753,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
 
                     if (data.customTopics) localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
                     if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
-                    
+
                     window.updateProgressUI();
                     return true;
                 }
@@ -761,11 +773,12 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             return { taskHtml, schemaLine, descHtml };
         };
 
+        // INYECCIÓN: Resaltador aplicado limpiamente en el generador JSON
         function createTopicFromJSON(d) {
             let topicId = d.id || ("t" + Math.random().toString(36).substr(2, 9));
-            
+
             let commandsHTML = (d.commands || []).map(cmd => `<div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 shadow-md relative overflow-hidden group hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(0,229,255,0.2)] transition-all"><div class="absolute top-0 left-0 w-1 h-full bg-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity"></div><div class="flex flex-col md:flex-row md:items-center gap-3"><code class="bg-black/50 border border-cyan-500/50 text-cyan-300 font-black px-3 py-1.5 rounded-lg shadow-inner text-sm tracking-wider w-max">${cmd.name}</code><p class="text-sm text-slate-300">${cmd.desc}</p></div></div>`).join('');
-            
+
             let baseTheoryHTML = `
                 <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative overflow-hidden group hover:border-cyan-400/50 transition-all duration-300 mb-6"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div><h4 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-black mb-3 uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-md"><span>🚀</span> ${d.introTitle || 'Introducción'}</h4><p class="text-sm text-slate-300 mb-4 leading-relaxed whitespace-pre-wrap">${d.introText || ''}</p></div>
             `;
@@ -779,15 +792,18 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     baseTheoryHTML += `<div class="mb-6 bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(99,102,241,0.1)] relative overflow-hidden group hover:border-indigo-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-purple-500"></div><h4 class="text-indigo-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span>🛡️</span> BUENAS PRÁCTICAS CORPORATIVAS</h4><p class="text-sm text-slate-300 mb-3 whitespace-pre-wrap">${d.bestPracticeText}</p></div>`;
                 }
                 if (d.errorTitle) {
-                    baseTheoryHTML += `<div class="mb-6 error-panel"><div class="flex items-start gap-5 relative z-10 min-w-0"><div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative"><div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div><svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1 pt-1 min-w-0"><h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">${d.errorTitle}</h4><p class="text-sm text-slate-300 mb-4 font-medium">${d.errorIntro || ''}</p><div class="relative mb-4"><div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap">${d.errorBadCode || ''}</pre></div><div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4"><h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5><p class="text-sm text-slate-300 whitespace-pre-wrap">${d.errorImpact || ''}</p></div><div class="relative"><div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed">${d.errorGoodCode || ''}</pre></div></div></div></div>`;
+                    let safeBadCode = window.highlightSQLCode(d.errorBadCode || '');
+                    let safeGoodCode = window.highlightSQLCode(d.errorGoodCode || '');
+                    baseTheoryHTML += `<div class="mb-6 error-panel"><div class="flex items-start gap-5 relative z-10 min-w-0"><div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative"><div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div><svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1 pt-1 min-w-0"><h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">${d.errorTitle}</h4><p class="text-sm text-slate-300 mb-4 font-medium">${d.errorIntro || ''}</p><div class="relative mb-4"><div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap">${safeBadCode}</pre></div><div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4"><h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5><p class="text-sm text-slate-300 whitespace-pre-wrap">${d.errorImpact || ''}</p></div><div class="relative"><div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed">${safeGoodCode}</pre></div></div></div></div>`;
                 }
                 if (d.exampleContext) {
-                    baseTheoryHTML += `<div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div><h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]"><span>💡</span> Ejemplo Práctico</h4><div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner mb-4"><p class="text-sm text-amber-100/80 italic flex items-start gap-2"><span class="text-lg not-italic mt-0.5">🏢</span> "${d.exampleContext}"</p></div><div class="relative mt-2"><div class="absolute -top-3 right-3 bg-blue-900/80 border border-blue-500/50 px-2 py-0.5 rounded text-[9px] text-blue-200 font-bold uppercase tracking-widest z-10 shadow-md">Solución SQL</div><pre class="code-glow overflow-x-auto pt-5 pb-4 px-4 rounded-xl text-sm font-mono whitespace-pre-wrap leading-relaxed">${d.exampleCode}</pre></div></div>`;
+                    let safeExampleCode = window.highlightSQLCode(d.exampleCode || '');
+                    baseTheoryHTML += `<div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div><h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]"><span>💡</span> Ejemplo Práctico</h4><div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner mb-4"><p class="text-sm text-amber-100/80 italic flex items-start gap-2"><span class="text-lg not-italic mt-0.5">🏢</span> "${d.exampleContext}"</p></div><div class="relative mt-2"><div class="absolute -top-3 right-3 bg-blue-900/80 border border-blue-500/50 px-2 py-0.5 rounded text-[9px] text-blue-200 font-bold uppercase tracking-widest z-10 shadow-md">Solución SQL</div><pre class="code-glow overflow-x-auto pt-5 pb-4 px-4 rounded-xl text-sm font-mono whitespace-pre-wrap leading-relaxed">${safeExampleCode}</pre></div></div>`;
                 }
                 if (d.quizzes && d.quizzes.length > 0) {
                     baseTheoryHTML += `<div class="mt-8 space-y-6">`;
                     d.quizzes.forEach((qz, idx) => {
-                        let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span></button>`).join('');
+                        let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><span class="text-sm text-slate-300 font-mono whitespace-pre-wrap">${window.highlightSQLCode(opt.text)}</span></button>`).join('');
                         baseTheoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz ${idx+1}/${d.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${qz.question}</pre><div class="space-y-2">${optionsHTML}</div><div class="quiz-feedback hidden"></div></div>`;
                     });
                     baseTheoryHTML += `</div>`;
@@ -811,7 +827,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     quizzes: lvl.quizzes || []
                 };
             });
-            
+
             return { 
                 id: topicId, 
                 title: d.topicName || d.title || "Tema Sin Nombre", 
@@ -935,7 +951,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             if (topic.tables && topic.tables.length > 0) {
                 topic.tables.forEach(t => {
                     db.run(`CREATE TABLE ${t.tableName} (${t.schema});`);
-                    
+
                     let cols = t.schema.split(',').map(c => c.trim().split(' ')[0]);
                     tableDictionary[t.tableName] = cols;
 
@@ -956,15 +972,15 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             const loginCard = document.getElementById('login-card');
             const spinner = document.getElementById('auth-loading-spinner');
             const btn = document.getElementById('btn-google-login');
-            
+
             btn.innerHTML = `<span class="text-xl">🧪</span> Entrar en Modo Prueba (Vista Previa)`;
             btn.className = "w-full bg-indigo-600 text-white hover:bg-indigo-500 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)]";
-            
+
             btn.onclick = async () => {
                 syncUserId = "usuario_prueba_vista_previa";
                 isUserLoggedIn = true;
                 document.getElementById('user-id-display').innerHTML = `MODO PRUEBA <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">✏️</span>`;
-                
+
                 loginModal.classList.add('opacity-0');
                 setTimeout(() => {
                     loginModal.classList.add('hidden');
@@ -977,7 +993,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 window.showToast("Modo Prueba", "Inicio de sesión simulado activado.", "success");
                 window.updateSyncBadge('offline');
             };
-            
+
             loginModal.classList.remove('hidden');
             requestAnimationFrame(() => loginModal.classList.remove('opacity-0'));
 
@@ -996,7 +1012,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 firebase.initializeApp(firebaseConfig); 
                 dbFirestore = firebase.firestore();
                 dbAuth = firebase.auth();
-                
+
                 const isPreviewEnv = window.location.protocol === 'blob:' || window.location.protocol === 'data:' || window.location.protocol === 'about:';
 
                 if (isPreviewEnv) {
@@ -1019,19 +1035,19 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                         const loginModal = document.getElementById('login-modal-backdrop');
                         const loginCard = document.getElementById('login-card');
                         const spinner = document.getElementById('auth-loading-spinner');
-                        
+
                         if (user) {
                             syncUserId = user.uid;
                             isUserLoggedIn = true;
-                            
+
                             await loadFromCloud(); 
-                            
+
                             let displayName = playerState.customName || user.displayName || user.email.split('@')[0];
                             document.getElementById('user-id-display').innerHTML = `${displayName.toUpperCase()} <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">✏️</span>`;
-                            
+
                             let displayAvatar = playerState.customAvatar || user.photoURL || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
                             document.getElementById('user-avatar').src = displayAvatar;
-                            
+
                             loginModal.classList.add('opacity-0');
                             setTimeout(() => {
                                 loginModal.classList.add('hidden');
@@ -1044,7 +1060,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                             window.updateSyncBadge('online');
                         } else {
                             isUserLoggedIn = false;
-                            
+
                             if(spinner && loginCard) {
                                 spinner.classList.add('opacity-0');
                                 setTimeout(() => {
@@ -1071,7 +1087,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
 
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
             let requiresSave = false;
-            
+
             customTopics.forEach(d => { 
                 try {
                     if (!d.id) { d.id = "t" + Math.random().toString(36).substr(2, 9); requiresSave = true; } 
@@ -1091,27 +1107,23 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
 
             try {
                 windowSQLite = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
-                
-                // INYECCIÓN DE MEJORA: Wrapper personalizado de CodeMirror Hint para el Diseño Premium con Columnas Globales
+
                 CodeMirror.hint.premiumSql = function(editor, options) {
                     let cur = editor.getCursor();
                     let token = editor.getTokenAt(cur);
                     let searchWord = token.string.toUpperCase();
-                    // Si el token no es alfanumérico, lo tratamos como vacío para sugerir todo
                     if (/[^a-zA-Z0-9_]/.test(searchWord)) searchWord = "";
-                    
+
                     let result = CodeMirror.hint.sql(editor, options);
                     if (!result) result = { list: [], from: cur, to: cur };
 
                     let wordsMap = new Map();
 
-                    // 1. Clasificar resultados por defecto
                     result.list.forEach(word => {
                         let textStr = typeof word === 'string' ? word : word.text;
                         wordsMap.set(textStr.toUpperCase(), { text: textStr, type: 'keyword' });
                     });
 
-                    // 2. Inyectar forzosamente Tablas y Columnas del schema actual para que aparezcan siempre
                     if (options.tables) {
                         for (let tableName in options.tables) {
                             if (tableName.toUpperCase().startsWith(searchWord) || searchWord === "") {
@@ -1125,7 +1137,6 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                         }
                     }
 
-                    // 3. Forzar comandos vitales si coinciden con la búsqueda
                     ['SELECT', 'FROM', 'WHERE', 'JOIN', 'SET', 'UNION', 'ALL', 'EXCEPT', 'INTERSECT', 'AND', 'OR'].forEach(cmd => {
                         if (cmd.startsWith(searchWord) || searchWord === "") {
                             wordsMap.set(cmd, { text: cmd, type: 'keyword' });
@@ -1135,14 +1146,12 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     let finalArray = Array.from(wordsMap.values());
                     finalArray.sort((a, b) => a.text.localeCompare(b.text));
 
-                    // 4. Mapear al diseño HTML Premium
                     result.list = finalArray.map(item => {
                         return {
                             text: item.text,
                             render: function(Element, data, cur) {
-                                // SOLUCIÓN: Agregamos flexbox pero conservamos las clases nativas de CodeMirror para el teclado y fondo
                                 Element.classList.add("flex", "justify-between", "items-center", "w-full");
-                                
+
                                 if (item.type === 'table') {
                                     Element.innerHTML = `<span class="text-cyan-400 font-bold">${item.text}</span>`;
                                 } else if (item.type === 'column') {
@@ -1197,24 +1206,24 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             TOPICS.forEach((topic, idx) => {
                 const btn = document.createElement('div'); const isActive = idx === currentTopicIdx;
                 btn.className = `w-full text-left p-3 rounded-xl mb-2 transition-all font-bold text-sm flex justify-between items-center cursor-grab active:cursor-grabbing border ${isActive ? 'bg-cyan-900/40 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.15)]' : 'bg-slate-800/40 text-slate-400 border-transparent hover:bg-slate-700/50'}`;
-                
+
                 let optionsHtml = (topic.id === "t1_base") 
                     ? `<span class="opacity-50 pointer-events-none text-lg leading-none mb-1">⋮</span>`
                     : `<button class="opacity-50 hover:opacity-100 hover:text-cyan-400 px-2 py-1 text-xl leading-none transition-all z-20 relative" onclick="window.openTopicActionModal(event, '${topic.id}', '${topic.title.replace(/'/g, "\\'")}')">⋮</button>`;
-                
+
                 btn.innerHTML = `<span class="truncate pr-2 pointer-events-none">${topic.title}</span>${optionsHtml}`;
                 btn.draggable = true;
-                
+
                 btn.onclick = () => { 
                     window.loadExercise(idx, 0); 
                     if(window.innerWidth < 768) { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('sidebar-backdrop').classList.remove('show'); }
                 };
-                
+
                 btn.addEventListener('dragstart', (e) => { draggedTopicIndex = idx; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => { btn.classList.add('opacity-30', 'border-dashed', 'border-slate-500'); }, 0); });
                 btn.addEventListener('dragend', (e) => { btn.classList.remove('opacity-30', 'border-dashed', 'border-slate-500'); draggedTopicIndex = null; window.renderTopicsSidebar(); });
                 btn.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (draggedTopicIndex !== null && draggedTopicIndex !== idx) { btn.classList.add('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20'); } });
                 btn.addEventListener('dragleave', (e) => { btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20'); });
-                
+
                 btn.addEventListener('drop', (e) => {
                     e.preventDefault(); btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20');
                     if (draggedTopicIndex !== null && draggedTopicIndex !== idx) {
@@ -1270,6 +1279,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             window.closeTopicActionModal();
         });
 
+        // INYECCIÓN: Resaltador aplicado limpiamente en loadExercise
         window.loadExercise = function(topicIdx, exIdx) {
             currentTopicIdx = topicIdx; currentExerciseIdx = exIdx; revealedHintsCount = 0;
             const topic = TOPICS[topicIdx]; const exercise = topic.exercises[exIdx]; const dynamicData = exercise.data; 
@@ -1277,7 +1287,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             if (activeDbTopicId !== topic.id) { window.buildTopicDatabase(topic); activeDbTopicId = topic.id; }
 
             document.getElementById('topic-title').textContent = topic.title; 
-            
+
             const topBar = document.getElementById('theory-top-bar');
             if (topicIdx === 0) { topBar.className = "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"; } 
             else {
@@ -1288,17 +1298,21 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             let theoryHTML = topic.baseTheory || "";
             if (exercise.theoryUpdate && exercise.theoryUpdate.bestPracticeTitle) {
                 let tu = exercise.theoryUpdate;
+                let safeBadCode = window.highlightSQLCode(tu.errorBadCode || '');
+                let safeGoodCode = window.highlightSQLCode(tu.errorGoodCode || '');
+                let safeExampleCode = window.highlightSQLCode(tu.exampleCode || '');
+
                 theoryHTML += `
                     <div class="mb-6 bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(99,102,241,0.1)] relative overflow-hidden group hover:border-indigo-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-purple-500"></div><h4 class="text-indigo-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span>🛡️</span> ${tu.bestPracticeTitle}</h4><p class="text-sm text-slate-300 mb-3 whitespace-pre-wrap">${tu.bestPracticeText}</p></div>
-                    <div class="mb-6 error-panel"><div class="flex items-start gap-5 relative z-10 min-w-0"><div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative"><div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div><svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1 pt-1 min-w-0"><h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">${tu.errorTitle}</h4><p class="text-sm text-slate-300 mb-4 font-medium">${tu.errorIntro}</p><div class="relative mb-4"><div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap">${tu.errorBadCode}</pre></div><div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4"><h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5><p class="text-sm text-slate-300 whitespace-pre-wrap">${tu.errorImpact}</p></div><div class="relative"><div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed">${tu.errorGoodCode}</pre></div></div></div></div>
-                    <div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div><h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]"><span>💡</span> Ejemplo Práctico</h4><div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner mb-4"><p class="text-sm text-amber-100/80 italic flex items-start gap-2"><span class="text-lg not-italic mt-0.5">🏢</span> "${tu.exampleContext}"</p></div><div class="relative mt-2"><div class="absolute -top-3 right-3 bg-blue-900/80 border border-blue-500/50 px-2 py-0.5 rounded text-[9px] text-blue-200 font-bold uppercase tracking-widest z-10 shadow-md">Solución SQL</div><pre class="code-glow overflow-x-auto pt-5 pb-4 px-4 rounded-xl text-sm font-mono whitespace-pre-wrap leading-relaxed">${tu.exampleCode}</pre></div></div>
+                    <div class="mb-6 error-panel"><div class="flex items-start gap-5 relative z-10 min-w-0"><div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative"><div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div><svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1 pt-1 min-w-0"><h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">${tu.errorTitle}</h4><p class="text-sm text-slate-300 mb-4 font-medium">${tu.errorIntro}</p><div class="relative mb-4"><div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap">${safeBadCode}</pre></div><div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4"><h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5><p class="text-sm text-slate-300 whitespace-pre-wrap">${tu.errorImpact}</p></div><div class="relative"><div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed">${safeGoodCode}</pre></div></div></div></div>
+                    <div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div><h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]"><span>💡</span> Ejemplo Práctico</h4><div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner mb-4"><p class="text-sm text-amber-100/80 italic flex items-start gap-2"><span class="text-lg not-italic mt-0.5">🏢</span> "${tu.exampleContext}"</p></div><div class="relative mt-2"><div class="absolute -top-3 right-3 bg-blue-900/80 border border-blue-500/50 px-2 py-0.5 rounded text-[9px] text-blue-200 font-bold uppercase tracking-widest z-10 shadow-md">Solución SQL</div><pre class="code-glow overflow-x-auto pt-5 pb-4 px-4 rounded-xl text-sm font-mono whitespace-pre-wrap leading-relaxed">${safeExampleCode}</pre></div></div>
                 `;
             }
 
             if (exercise.quizzes && exercise.quizzes.length > 0) {
                 theoryHTML += `<div class="mt-8 space-y-6">`;
                 const savedQuizState = (playerState.quizStates && playerState.quizStates[exercise.id]) || {};
-                
+
                 exercise.quizzes.forEach((qz, idx) => {
                     let qState = savedQuizState[idx];
                     let isAnsweredCorrectly = qState && qState.correct;
@@ -1306,7 +1320,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     let optionsHTML = qz.options.map((opt, optIdx) => {
                         let disabledAttr = isAnsweredCorrectly ? 'disabled' : ''; let extraClass = '';
                         if (isAnsweredCorrectly && optIdx === qState.selectedOpt) { extraClass = 'correct'; }
-                        return `<button ${disabledAttr} onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}', ${idx}, ${optIdx})" class="quiz-option w-full text-left p-3 rounded-lg bg-slate-800/50 flex gap-3 items-center ${extraClass}"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><span class="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode ? window.highlightSQLCode(opt.text) : opt.text}</span></button>`;
+                        return `<button ${disabledAttr} onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}', ${idx}, ${optIdx})" class="quiz-option w-full text-left p-3 rounded-lg bg-slate-800/50 flex gap-3 items-center ${extraClass}"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><span class="text-sm text-slate-300 font-mono whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode(opt.text)}</span></button>`;
                     }).join('');
 
                     let feedbackClass = isAnsweredCorrectly ? "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2" : "quiz-feedback hidden";
@@ -1323,7 +1337,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             document.getElementById('ex-task').innerHTML = dynamicData.taskHtml; document.getElementById('ex-schema').innerHTML = dynamicData.schemaLine;
             document.getElementById('ex-schema-desc').innerHTML = dynamicData.descHtml; document.getElementById('ex-xp-badge').textContent = `+${exercise.xp} XP`;
             document.getElementById('ex-coin-badge').textContent = `+${exercise.coins} 🪙`;
-            
+
             window.renderExercisePills(); document.getElementById('run-btn').classList.remove('hidden'); document.getElementById('next-btn').classList.add('hidden');
             window.resetConsole(); window.renderTopicsSidebar();
             window.updateHintsUI();
@@ -1344,7 +1358,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 btn.classList.add('correct'); 
                 feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
                 feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
-                
+
                 if (!playerState.quizStates[exercise.id][quizIdx]) {
                     window.fireConfetti(); 
                     window.grantRewards(5, 1);
@@ -1375,7 +1389,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     if (upperQuery.includes("AS") && upperQuery.includes("BEGIN") && upperQuery.includes("END")) {
                         rowCountEl.textContent = 'COMPLETADO';
                         resContainer.innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-emerald-950/20"><div class="w-16 h-16 rounded-full bg-emerald-900/30 border border-emerald-500/30 flex items-center justify-center mb-3 shadow-[0_0_15px_rgba(16,185,129,0.2)]"><span class="text-3xl drop-shadow-[0_0_10px_rgba(16,185,129,0.4)]">✅</span></div><span class="text-emerald-400 font-black uppercase tracking-widest text-sm mb-1 drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]">Comandos completados exitosamente.</span><span class="text-emerald-200/60 text-xs max-w-[80%] font-medium">El Procedimiento Almacenado ha sido compilado y guardado en la memoria temporal (Modo Simulación T-SQL).</span></div>`;
-                        
+
                         if (exercise.expectedQuery.toUpperCase().includes("CREATE PROC")) {
                             if (!playerState.completedExercises.includes(exercise.id)) {
                                 playerState.completedExercises.push(exercise.id); window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti();
@@ -1389,7 +1403,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 }
 
                 const userResult = db.exec(query);
-                
+
                 if (userResult.length > 0) {
                     const columns = userResult[0].columns; const values = userResult[0].values; rowCountEl.textContent = `${values.length} FILAS`;
                     let tableHTML = '<table class="sql-table"><thead><tr>'; columns.forEach(col => tableHTML += `<th>${col}</th>`); tableHTML += '</tr></thead><tbody>';
@@ -1429,7 +1443,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     } else {
                         let colMap = [];
                         let missingCols = [];
-                        
+
                         for(let i=0; i<expectedCols.length; i++) {
                             let idx = userCols.findIndex(c => c.toLowerCase() === expectedCols[i].toLowerCase());
                             if(idx === -1) missingCols.push(expectedCols[i]);
@@ -1447,7 +1461,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                                 for(let c = 0; c < colMap.length; c++) {
                                     let ev = expVals[r][colMap[c].expIdx];
                                     let uv = usrVals[r][colMap[c].usrIdx];
-                                    
+
                                     if (ev != uv) {
                                         allMatch = false; 
                                         break;
@@ -1487,13 +1501,13 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
         window.revealHint = function() {
             const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
             const btn = document.getElementById('btn-next-hint');
-            
+
             if (revealedHintsCount < exercise.hints.length) {
                 if (playerState.coins >= 5) {
                     playerState.coins -= 5;
                     document.getElementById('ui-coins').textContent = playerState.coins;
                     syncToCloud();
-                    
+
                     const hintsList = document.getElementById('hints-list'); const newHint = document.createElement('div');
                     newHint.className = 'bg-blue-950/30 border border-blue-800/50 p-4 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.1)] relative overflow-hidden group min-w-0';
                     newHint.style.animation = 'slideIn 0.3s ease-out forwards';
@@ -1507,19 +1521,22 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             }
         };
 
+        // INYECCIÓN: Resaltador de Solución Final
         window.revealSolution = function() {
             const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
             const btn = document.getElementById('btn-show-solution');
-            
+
             if (playerState.coins >= 20) {
                 playerState.coins -= 20;
                 document.getElementById('ui-coins').textContent = playerState.coins;
                 syncToCloud();
 
+                let safeExpectedQuery = window.highlightSQLCode(exercise.expectedQuery || '');
+
                 const hintsList = document.getElementById('hints-list'); const solDiv = document.createElement('div');
                 solDiv.className = 'bg-emerald-950/30 border border-emerald-800/50 p-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.15)] relative overflow-hidden mb-2 min-w-0';
                 solDiv.style.animation = 'slideIn 0.3s ease-out forwards';
-                solDiv.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-green-500"></div><div class="text-emerald-400 font-black text-xs uppercase tracking-widest mb-2 flex items-center gap-2"><span>🗝️</span> Solución Oficial</div><div class="bg-black/60 p-3 rounded-lg border border-emerald-900/50 shadow-inner"><pre class="font-mono text-xs text-emerald-100 overflow-x-auto whitespace-pre-wrap leading-relaxed">${exercise.expectedQuery}</pre></div>`;
+                solDiv.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-green-500"></div><div class="text-emerald-400 font-black text-xs uppercase tracking-widest mb-2 flex items-center gap-2"><span>🗝️</span> Solución Oficial</div><div class="bg-black/60 p-3 rounded-lg border border-emerald-900/50 shadow-inner"><pre class="font-mono text-xs text-slate-100 overflow-x-auto whitespace-pre-wrap leading-relaxed">${safeExpectedQuery}</pre></div>`;
                 hintsList.prepend(solDiv); btn.classList.add('hidden');
             } else {
                 btn.classList.add('shake-denied');
@@ -1534,7 +1551,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             const noMoreMsg = document.getElementById('no-more-hints'); 
             const btnShowSol = document.getElementById('btn-show-solution');
             const remaining = exercise.hints.length - revealedHintsCount;
-            
+
             if (remaining > 0) { 
                 btnNext.classList.remove('hidden'); 
                 noMoreMsg.classList.add('hidden'); 
@@ -1571,7 +1588,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
         window.renderMermaidDiagram = async function() {
             const container = document.getElementById('mermaid-container');
             let mermaidCode = "erDiagram\n";
-            
+
             try {
                 const tablesRes = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
                 if (tablesRes.length > 0) {
@@ -1581,15 +1598,15 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     tables.forEach(tableName => {
                         schemas[tableName] = { pk: null, cols: [] };
                         const colsRes = db.exec(`PRAGMA table_info(${tableName});`);
-                        
+
                         if (colsRes.length > 0) {
                             colsRes[0].values.forEach((col, index) => {
                                 let colName = col[1].replace(/\s+/g, '_');
                                 let colType = (col[2] || 'VARCHAR').replace(/[^a-zA-Z0-9_]/g, '');
                                 if(!colType) colType = 'VARCHAR';
-                                
+
                                 let isPk = col[5] === 1 || colName.toLowerCase() === tableName.toLowerCase() + 'id' || colName.toLowerCase() === tableName.replace(/s$/, '').toLowerCase() + 'id' || (index === 0 && colName.toLowerCase().endsWith('id'));
-                                
+
                                 if(isPk && !schemas[tableName].pk) schemas[tableName].pk = colName;
                                 schemas[tableName].cols.push({ name: colName, type: colType, isPk: isPk });
                             });
@@ -1602,7 +1619,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                             let keyType = c.isPk ? 'PK' : '';
                             let isFk = !c.isPk && tables.some(otherT => otherT !== tableName && schemas[otherT].pk && schemas[otherT].pk.toLowerCase() === c.name.toLowerCase());
                             if(isFk) keyType = 'FK';
-                            
+
                             mermaidCode += `        ${c.type} ${c.name} ${keyType}\n`;
                         });
                         mermaidCode += `    }\n`;
@@ -1636,7 +1653,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             const backdrop = document.getElementById('db-modal-backdrop'); 
             const card = document.getElementById('db-modal-card'); 
             const content = document.getElementById('db-modal-content'); 
-            
+
             window.switchDbTab('datos');
 
             let html = '';
@@ -1671,7 +1688,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             try {
                 let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); 
                 const parsedData = JSON.parse(cleanJson); 
-                
+
                 let nextNumber = TOPICS.length + 1;
                 let rawName = parsedData.topicName || parsedData.title || "Nuevo Módulo";
                 rawName = rawName.replace(/^\d+[\.\-]\s*/, '');
@@ -1679,16 +1696,16 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
 
                 const newTopic = createTopicFromJSON(parsedData); 
                 parsedData.id = newTopic.id;
-                
+
                 TOPICS.push(newTopic);
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); 
                 customTopics.push(parsedData); 
                 localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
-                
+
                 const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
-                
+
                 window.renderTopicsSidebar(); 
-                
+
                 let newTopicIndex = TOPICS.findIndex(t => t.id === newTopic.id);
                 window.loadExercise(newTopicIndex, 0);
 
@@ -1721,7 +1738,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             if (playerState.xp >= xpNext) { 
                 playerState.xp -= xpNext; playerState.level++; xpNext = playerState.level * 1000; 
                 window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success"); 
-                
+
                 const badgeContainer = document.getElementById('level-badge-container');
                 badgeContainer.classList.add('level-up-anim');
                 setTimeout(() => badgeContainer.classList.remove('level-up-anim'), 1000);
