@@ -818,8 +818,8 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     baseTheoryHTML += `<div class="mt-8 space-y-6">`;
                     d.quizzes.forEach((qz, idx) => {
                         let safeQ = window.highlightSQLCode(qz.question || '');
-                        // Corrección de Quizzes: Alineación items-start, etiqueta pre para saltos de línea y flex-1
-                        let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-4 rounded-xl bg-slate-800/50 flex gap-4 items-start hover:bg-slate-700/60 transition-all"><div class="quiz-circle w-5 h-5 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><pre class="text-sm text-slate-300 font-mono whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode(opt.text)}</pre></button>`).join('');
+                        // Corrección de Quizzes: fuente normal (font-sans) respetando saltos de línea (whitespace-pre-wrap)
+                        let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-4 rounded-xl bg-slate-800/50 flex gap-4 items-start hover:bg-slate-700/60 transition-all"><div class="quiz-circle w-5 h-5 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><div class="text-sm text-slate-300 font-sans whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode(opt.text)}</div></button>`).join('');
                         baseTheoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz ${idx+1}/${d.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${safeQ}</pre><div class="space-y-3">${optionsHTML}</div><div class="quiz-feedback hidden"></div></div>`;
                     });
                     baseTheoryHTML += `</div>`;
@@ -1338,11 +1338,11 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     let isAnsweredCorrectly = qState && qState.correct;
                     let safeQ = window.highlightSQLCode(qz.question || '');
 
-                    // Aplicando `<pre class="flex-1">` con `items-start` en las opciones
+                    // Aplicando `<div>` con `font-sans` para texto normal y `whitespace-pre-wrap` para saltos de línea
                     let optionsHTML = qz.options.map((opt, optIdx) => {
                         let disabledAttr = isAnsweredCorrectly ? 'disabled' : ''; let extraClass = '';
                         if (isAnsweredCorrectly && optIdx === qState.selectedOpt) { extraClass = 'correct'; }
-                        return `<button ${disabledAttr} onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}', ${idx}, ${optIdx})" class="quiz-option w-full text-left p-4 rounded-xl bg-slate-800/50 flex gap-4 items-start ${extraClass} hover:bg-slate-700/60 transition-all"><div class="quiz-circle w-5 h-5 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><pre class="text-sm text-slate-300 font-mono whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode(opt.text)}</pre></button>`;
+                        return `<button ${disabledAttr} onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}', ${idx}, ${optIdx})" class="quiz-option w-full text-left p-4 rounded-xl bg-slate-800/50 flex gap-4 items-start ${extraClass} hover:bg-slate-700/60 transition-all"><div class="quiz-circle w-5 h-5 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><div class="text-sm text-slate-300 font-sans whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode(opt.text)}</div></button>`;
                     }).join('');
 
                     let feedbackClass = isAnsweredCorrectly ? "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2" : "quiz-feedback hidden";
