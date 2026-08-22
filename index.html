@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQL Mastery - Entrenamiento Avanzado</title>
 
-    <meta name="color-scheme" content="dark">
+    <!-- 🌟 ETIQUETAS PWA -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#020617">
     <link rel="apple-touch-icon" href="./icon-192.png">
@@ -28,19 +28,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/sql-hint.min.js"></script>
     
-    <!-- SQL.js, Confeti y MERMAID (Diagramas ERD) -->
+    <!-- SQL.js y Confeti -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.4.3/mermaid.min.js"></script>
 
     <!-- FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
     <style>
-        html { background-color: #020617 !important; }
-        
         :root {
             --bg-dark: #020617; --panel-bg: rgba(15, 23, 42, 0.75);
             --accent-cyan: #00e5ff; --accent-purple: #a855f7;
@@ -64,7 +60,6 @@
         .console-wrapper { position: relative; border-radius: 0.75rem; padding: 2px; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0)); transition: all 0.3s ease; }
         .console-wrapper:focus-within { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)); box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); }
         
-        /* CodeMirror Custom Styles */
         .CodeMirror, .cm-s-dracula.CodeMirror, .cm-s-dracula .CodeMirror-gutters { background-color: #000000 !important; border-right: 1px solid rgba(255,255,255,0.05) !important; }
         .CodeMirror { border-radius: 0.6rem; height: 170px; font-family: 'Fira Code', monospace; font-size: 0.95rem; line-height: 1.5; }
         .CodeMirror-placeholder { color: #475569 !important; }
@@ -79,13 +74,12 @@
         .CodeMirror-hints {
             background-color: #0f111a; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 0.5rem;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8); font-family: 'Fira Code', monospace; 
-            font-size: 1rem; color: #cbd5e1; padding: 0; max-height: 250px; overflow-y: auto;
+            font-size: 1rem; color: #cbd5e1; padding: 8px 0; max-height: 250px; overflow-y: auto;
             z-index: 99999 !important; touch-action: auto;
         }
-        .CodeMirror-hint { padding: 0; border-bottom: 1px solid rgba(255,255,255,0.05); margin: 0; }
+        .CodeMirror-hint { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .CodeMirror-hint-active { background-color: rgba(0, 229, 255, 0.2); color: #00e5ff; font-weight: bold; }
 
-        /* Output Panel Styling */
         .output-panel { background-color: #090b14; box-shadow: 0 0 20px rgba(0, 229, 255, 0.1), inset 0 0 15px rgba(0, 0, 0, 0.8); border: 1px solid rgba(0, 229, 255, 0.2); }
         .sql-table { width: 100%; border-collapse: separate; border-spacing: 0; font-family: 'Fira Code', monospace; font-size: 0.8rem; }
         .sql-table th { background: #090b14; color: var(--accent-cyan); text-align: left; padding: 0.75rem; border-bottom: 2px solid var(--accent-cyan); text-transform: uppercase; letter-spacing: 1px; position: sticky; top: 0; z-index: 10; }
@@ -130,7 +124,6 @@
             #sidebar.collapsed #topics-container, #sidebar.collapsed .temario-text, #sidebar.collapsed #ai-btn-container { display: none !important; opacity: 0 !important; }
         }
 
-        /* Error Panels */
         .error-panel { background: #0f111a; border: 1px solid rgba(255, 71, 87, 0.15); border-left: 4px solid #ff4757; border-radius: 0.75rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 71, 87, 0.05); animation: slideIn 0.3s ease-out forwards; position: relative; overflow: hidden; padding: 1.25rem; }
         .error-panel::before { content: ''; position: absolute; top: -20px; left: -20px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(255, 71, 87, 0.15), transparent 60%); pointer-events: none; z-index: 0; }
         .tech-detail-pill { background-color: #161822; border: 1px solid rgba(255, 71, 87, 0.2); border-radius: 0.5rem; padding: 0.6rem 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem; color: #ff8a95; font-weight: 900; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; position: relative; z-index: 10; }
@@ -140,6 +133,7 @@
 
         @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .shake-animation { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
         
         .quiz-option { border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s ease; cursor: pointer; }
         .quiz-option:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); }
@@ -148,93 +142,29 @@
         .quiz-option.incorrect { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
         .quiz-option.incorrect .quiz-circle { border-color: #ef4444; background: #ef4444; }
         
+        /* Animación para el Nivel */
         @keyframes levelUpPulse { 0% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.15); filter: brightness(1.5); box-shadow: 0 0 30px rgba(0, 229, 255, 0.8); } 100% { transform: scale(1); filter: brightness(1); } }
         .level-up-anim { animation: levelUpPulse 1s ease-out; }
-
-        @keyframes shake-denied { 
-            0%, 100% { transform: translateX(0); } 
-            25% { transform: translateX(-5px); } 
-            75% { transform: translateX(5px); } 
-        }
-        .shake-denied { 
-            animation: shake-denied 0.3s ease-in-out !important; 
-            background-color: #ef4444 !important; 
-            color: white !important; 
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.8) !important;
-        }
-
-        #mermaid-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: transparent !important;
-            padding: 20px;
-            overflow: auto;
-        }
-        .mermaid svg { max-width: 100% !important; height: auto !important; }
-        
-        .er.entityBox { fill: #0f172a !important; stroke: #00e5ff !important; stroke-width: 2px !important; }
-        .er.attributeBoxOdd { fill: #1e293b !important; stroke: #334155 !important; }
-        .er.attributeBoxEven { fill: #0f172a !important; stroke: #334155 !important; }
-        .er.relationshipLabelBox { fill: #090b14 !important; stroke: #a855f7 !important; }
-        .er.relationshipLabel { fill: #f8fafc !important; font-size: 14px !important; font-weight: bold !important; }
-        .er.relationshipLine { stroke: #a855f7 !important; stroke-width: 2.5px !important; }
-        text.er.entityLabel { fill: #00e5ff !important; font-weight: 900 !important; font-size: 18px !important; }
-        text.er.attributeLabel { fill: #cbd5e1 !important; font-size: 14px !important; }
     </style>
 </head>
 
 <body class="min-h-screen md:h-screen flex flex-col overflow-x-hidden md:overflow-hidden relative">
 
-    <!-- 🌟 MODAL DE LOGIN (FIREBASE AUTH) -->
-    <div id="login-modal-backdrop" class="fixed inset-0 bg-[#020617]/95 backdrop-blur-md z-[200] flex items-center justify-center transition-opacity duration-500">
-        
-        <!-- SPINNER DE CARGA INICIAL -->
-        <div id="auth-loading-spinner" class="flex flex-col items-center justify-center absolute inset-0 z-10 transition-opacity duration-500">
-            <div class="w-16 h-16 border-4 border-slate-800 border-t-cyan-400 rounded-full animate-spin mb-4 shadow-[0_0_20px_rgba(0,229,255,0.4)]"></div>
-            <span class="text-cyan-400 font-black tracking-[0.2em] text-xs uppercase animate-pulse drop-shadow-[0_0_8px_rgba(0,229,255,0.5)]">Verificando Sesión...</span>
-        </div>
-
-        <!-- TARJETA DE LOGIN OCULTA POR DEFECTO -->
-        <div id="login-card" class="bg-[#0f111a] border border-cyan-500/30 rounded-2xl p-8 max-w-sm w-11/12 shadow-[0_0_50px_rgba(0,229,255,0.15)] flex flex-col items-center text-center relative overflow-hidden hidden opacity-0 scale-95 transition-all duration-500 z-20">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500"></div>
-            <div class="w-20 h-20 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-4xl mb-4 shadow-inner">
-                <span class="drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">🔐</span>
-            </div>
-            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 mb-2">SQL MASTERY</h2>
-            <p class="text-slate-400 text-sm mb-6 font-medium">Identifícate para guardar tu progreso, nivel y oro en la nube de forma segura.</p>
-            
-            <button id="btn-google-login" class="w-full bg-white text-slate-900 hover:bg-gray-100 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:-translate-y-0.5">
-                <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-                Continuar con Google
-            </button>
-        </div>
-    </div>
-
     <header class="glass-panel m-4 p-4 flex flex-col md:flex-row justify-between items-center z-10 shrink-0">
         <div class="flex items-center gap-4 mb-4 md:mb-0">
             <button onclick="window.toggleSidebar()" class="md:hidden text-cyan-400 text-3xl leading-none font-bold mr-2" style="text-shadow: 0 0 10px rgba(0,229,255,0.5);">≡</button>
-            <div class="relative group cursor-pointer" onclick="window.changeAvatar()" title="Cambiar Foto de Perfil">
-                <div class="absolute inset-0 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-10">
-                    <span class="text-white text-lg">📸</span>
-                </div>
-                <img id="user-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" class="w-12 h-12 rounded-full border border-slate-700 object-cover shadow-[0_0_15px_rgba(0,229,255,0.3)] bg-slate-800" alt="Avatar">
-            </div>
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(0,229,255,0.5)]">👩‍💻</div>
             <div>
                 <h1 class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">SQL MASTERY</h1>
+                <!-- 🌟 CORRECCIÓN SEMÁNTICA: Se quita la palabra MÓDULO y se mejora el subtítulo -->
                 <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold flex items-center gap-2">
-                    <span id="user-id-display" class="text-cyan-400 font-black hover:text-white cursor-pointer transition-colors flex items-center gap-1 group" onclick="window.changeName()" title="Editar Nombre">
-                        USUARIO <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">✏️</span>
-                    </span> 
-                    <span class="opacity-50">|</span>
-                    <span id="sync-status" class="px-2 py-0.5 rounded-md bg-emerald-900/40 border border-emerald-500/50 text-[9px] text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)] transition-all duration-300 flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Nube Activa
-                    </span>
+                    Entrenamiento SQL 
+                    <span id="sync-status" class="px-1.5 py-0.5 rounded-md bg-black/50 border border-slate-700/50 text-[9px] text-amber-500 shadow-inner">☁️ Local</span>
                 </p>
             </div>
         </div>
         
+        <!-- 🌟 REDISEÑO COMPLETO DEL HUB DEL JUGADOR (Nivel, XP y Oro integrados) -->
         <div class="flex items-center gap-3">
             <div class="flex flex-col items-end">
                 <div class="text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-widest">Experiencia</div>
@@ -248,6 +178,7 @@
                 </div>
             </div>
             
+            <!-- BADGE DE NIVEL DINÁMICO -->
             <div class="relative group cursor-default" id="level-badge-container">
                 <div class="absolute inset-0 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-xl blur-[6px] opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative bg-slate-900 border border-slate-700/50 px-3 py-1.5 rounded-xl flex flex-col items-center justify-center shadow-xl">
@@ -256,6 +187,7 @@
                 </div>
             </div>
 
+            <!-- CONTADOR DE ORO -->
             <div class="bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-xl flex flex-col items-center justify-center shadow-inner ml-1">
                 <span class="text-[8px] uppercase tracking-[0.2em] text-slate-400 font-black mb-[-2px]">Oro</span>
                 <div class="flex items-center gap-1.5">
@@ -291,6 +223,7 @@
         <section id="main-content" class="flex-1 flex flex-col gap-4 w-full md:overflow-hidden">
             <div class="glass-panel shrink-0 flex flex-col md:flex-row md:overflow-hidden md:max-h-[40vh]">
                 
+                <!-- 🌟 CONTENEDOR DE TEORÍA CON BARRA SUPERIOR DINÁMICA -->
                 <div class="flex-1 p-5 border-b md:border-b-0 md:border-r border-slate-700/50 md:overflow-y-auto relative" id="theory-scroll-container">
                     <div id="theory-top-bar" class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
                     <h2 id="topic-title" class="text-2xl text-cyan-300 mb-4 font-black tracking-wide">Cargando...</h2>
@@ -395,11 +328,11 @@
                         <div id="hints-container" class="hidden flex-col gap-3 shrink-0 pb-2 mt-2 min-w-0">
                             <div class="flex flex-wrap items-center gap-3 bg-slate-900/60 p-2.5 rounded-xl border border-slate-700/50 shadow-inner w-full">
                                 <button id="btn-next-hint" onclick="window.revealHint()" class="flex items-center gap-2 bg-blue-900/40 hover:bg-blue-800/60 border border-blue-500/30 text-blue-300 px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-[0_0_10px_rgba(59,130,246,0.1)] hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:-translate-y-0.5">
-                                    <span class="text-base">💡</span> Pista <span class="bg-blue-900 text-blue-300 px-1.5 py-0.5 rounded text-[10px] ml-1">-5 🪙</span>
+                                    <span class="text-base">💡</span> Solicitar Pista (<span id="hints-left">2</span>)
                                 </button>
                                 <span id="no-more-hints" class="text-slate-500 text-xs font-medium hidden flex items-center gap-1"><span class="text-slate-600">📭</span> No hay más pistas disponibles</span>
                                 <button id="btn-show-solution" onclick="window.revealSolution()" class="hidden flex items-center gap-2 bg-emerald-900/40 hover:bg-emerald-800/60 border border-emerald-500/30 text-emerald-300 px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 ml-auto">
-                                    <span class="text-base">🗝️</span> Solución <span class="bg-emerald-900 text-emerald-300 px-1.5 py-0.5 rounded text-[10px] ml-1">-20 🪙</span>
+                                    <span class="text-base">🗝️</span> Revelar Solución
                                 </button>
                             </div>
                             <div id="hints-list" class="flex flex-col gap-3 min-w-0"></div>
@@ -439,36 +372,17 @@
         </div>
     </div>
 
-    <!-- MODAL EXPLORADOR BD CON PESTAÑAS -->
+    <!-- MODAL EXPLORADOR BD -->
     <div id="db-modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-md z-40 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <div class="bg-[#090b14] border border-cyan-500/30 rounded-2xl w-11/12 max-w-5xl max-h-[85vh] flex flex-col shadow-[0_0_50px_rgba(0,229,255,0.15)] transform scale-95 transition-transform duration-300 relative overflow-hidden" id="db-modal-card">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 z-50"></div>
-            
             <div class="p-5 border-b border-cyan-900/50 bg-[#05060a] flex justify-between items-center shrink-0 relative z-10">
                 <h2 class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 flex items-center gap-2 drop-shadow-md">
                     <span class="text-cyan-400 text-xl">👁️</span> EXPLORADOR DE BASE DE DATOS
                 </h2>
-                
-                <div class="flex items-center gap-4">
-                    <div class="bg-black/50 p-1 rounded-lg border border-slate-700/50 flex gap-1">
-                        <button id="tab-datos" onclick="window.switchDbTab('datos')" class="px-4 py-1.5 rounded-md text-xs font-bold transition-all bg-cyan-900/50 text-cyan-300 shadow-inner">
-                            📄 DATOS
-                        </button>
-                        <button id="tab-diagrama" onclick="window.switchDbTab('diagrama')" class="px-4 py-1.5 rounded-md text-xs font-bold transition-all text-slate-400 hover:text-white">
-                            🗺️ DIAGRAMA ERD
-                        </button>
-                    </div>
-                    <button onclick="window.closeDatabaseModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/50 hover:bg-red-900/50 border border-transparent hover:border-red-500/50 text-slate-400 hover:text-red-400 transition-all text-xl font-bold leading-none">&times;</button>
-                </div>
+                <button onclick="window.closeDatabaseModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/50 hover:bg-red-900/50 border border-transparent hover:border-red-500/50 text-slate-400 hover:text-red-400 transition-all text-xl font-bold leading-none">&times;</button>
             </div>
-
-            <!-- Contenedor Tab Datos -->
             <div class="p-6 overflow-y-auto flex-1 bg-gradient-to-b from-[#090b14] to-black" id="db-modal-content"></div>
-            
-            <!-- Contenedor Tab Diagrama ERD -->
-            <div class="p-6 overflow-y-auto flex-1 bg-gradient-to-b from-[#090b14] to-black hidden" id="db-modal-diagram">
-                <div id="mermaid-container"></div>
-            </div>
         </div>
     </div>
 
@@ -491,7 +405,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-amber-400 uppercase tracking-wide mb-1">Código JSON del Módulo</label>
-                    <textarea id="ai-json-input" rows="8" placeholder='{"topicName": "2. GROUP BY...", "tables": [...], "levels": [...] }' class="w-full bg-black/50 border border-slate-700 text-cyan-300 font-mono text-xs p-3 rounded-lg focus:outline-none focus:border-amber-500 focus:shadow-[0_0_15px_rgba(251,191,36,0.2)] transition-all resize-none"></textarea>
+                    <textarea id="ai-json-input" rows="8" placeholder='{"topicName": "2. GROUP BY...", "levels": [...] }' class="w-full bg-black/50 border border-slate-700 text-cyan-300 font-mono text-xs p-3 rounded-lg focus:outline-none focus:border-amber-500 focus:shadow-[0_0_15px_rgba(251,191,36,0.2)] transition-all resize-none"></textarea>
                 </div>
                 <div class="mt-2 flex justify-end gap-3">
                     <button onclick="window.closeAIModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors">Cancelar</button>
@@ -503,7 +417,7 @@
         </div>
     </div>
 
-    <!-- MODAL GESTIÓN DE MÓDULOS -->
+    <!-- 🌟 NUEVO MODAL: GESTIÓN DE MÓDULOS (EDITAR/ELIMINAR) -->
     <div id="topic-action-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <div class="bg-[#0f111a] border border-cyan-500/30 rounded-2xl w-10/12 max-w-sm flex flex-col shadow-[0_0_50px_rgba(0,229,255,0.15)] transform scale-95 transition-transform duration-300 p-5 relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500"></div>
@@ -524,50 +438,15 @@
     </div>
 
     <script>
-        // INYECCIÓN DE MEJORA: Resaltador de Sintaxis Inteligente
-        window.highlightSQLCode = function(code) {
-            if(!code) return "";
-            return code.replace(/\b(SELECT|FROM|WHERE|AND|OR|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|UPDATE|SET|DELETE|INSERT INTO|VALUES|CREATE|DROP|ALTER|TABLE|PRIMARY KEY|FOREIGN KEY|REFERENCES|AS|IN|IS NULL|IS NOT NULL|EXISTS|BETWEEN|LIKE|UNION|ALL|EXCEPT|INTERSECT)\b/gi, '<span class="text-cyan-400 font-bold">$1</span>')
-                       .replace(/'(.*?)'/g, '<span class="text-amber-500">\'$1\'</span>')
-                       .replace(/\b(\d+)\b/g, '<span class="text-emerald-400">$1</span>')
-                       .replace(/--.*/g, '<span class="text-slate-500 italic">$&</span>');
-        };
-
-        let windowSQLite; 
         let db;
         let sqlEditor;
         let dbFirestore = null; 
-        let dbAuth = null;
-        let activeDbTopicId = null; 
         
-        // GAMIFICACIÓN: Variables Persistentes
-        let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {}, customName: null, customAvatar: null };
+        // 🌟 SE MANTIENE EL QUIZSTATES
+        let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {} };
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
-        let syncUserId = "invitado"; 
-        let isUserLoggedIn = false;
+        let syncUserId = "jose_admin_01"; 
         let selectedTopicIdForAction = null; 
-        
-        let provider = new firebase.auth.GoogleAuthProvider();
-
-        window.addEventListener('online', () => { if(isUserLoggedIn) { window.updateSyncBadge('online'); syncToCloud(); } });
-        window.addEventListener('offline', () => { window.updateSyncBadge('offline'); });
-
-        window.updateSyncBadge = function(status) {
-            const badge = document.getElementById('sync-status');
-            if(status === 'offline') {
-                badge.innerHTML = '☁️ Sin Red';
-                badge.className = 'px-2 py-0.5 rounded-md bg-black/50 border border-red-700/50 text-[9px] text-red-400 shadow-inner transition-colors duration-300 flex items-center gap-1.5';
-            } else if(status === 'syncing') {
-                badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> Guardando...';
-                badge.className = 'px-2 py-0.5 rounded-md bg-blue-900/40 border border-blue-500/50 text-[9px] text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.2)] transition-all duration-300 flex items-center gap-1.5';
-            } else if(status === 'saved') {
-                badge.innerHTML = '☁️ Guardado';
-                badge.className = 'px-2 py-0.5 rounded-md bg-black/50 border border-emerald-700/50 text-[9px] text-emerald-400 shadow-inner transition-colors duration-300 flex items-center gap-1.5';
-            } else {
-                badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Nube Activa';
-                badge.className = 'px-2 py-0.5 rounded-md bg-emerald-900/40 border border-emerald-500/50 text-[9px] text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)] transition-all duration-300 flex items-center gap-1.5';
-            }
-        };
 
         const firebaseConfig = {
             apiKey: "AIzaSyAQdgFXt1YYG_uzkP6l8T2udyKV0hxAfOE",
@@ -578,6 +457,11 @@
             appId: "1:346869904430:web:9627d272758c902a425bbf",
             measurementId: "G-BS1GWW12XR"
         };
+
+        if (firebaseConfig.apiKey) {
+            firebase.initializeApp(firebaseConfig); dbFirestore = firebase.firestore();
+            document.getElementById('sync-status').textContent = '☁️ Nube Activa'; document.getElementById('sync-status').classList.replace('text-amber-500', 'text-emerald-400');
+        }
 
         if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').catch(err => console.log('SW Falló:', err)); }); }
 
@@ -592,81 +476,62 @@
 
         window.copyPrompt = function() {
             const prompt = `Actúa como un Arquitecto de Bases de Datos SQL Senior, Diseñador Instruccional y experto en SQL Server. 
-Tu misión es generar un módulo de aprendizaje interactivo estructurado EXCLUSIVAMENTE en formato JSON. 
-No imprimas texto fuera del JSON.
+Tu tarea es transformar el material de estudio, tema o apuntes que te proporcionaré en un Módulo de Aprendizaje Interactivo (LMS) estructurado en un objeto JSON válido.
 
-### REGLAS ESTRUCTURALES Y FORMATO (CRÍTICO PARA LA PLATAFORMA):
-1. FORMATO DE CÓDIGO CON SALTOS DE LÍNEA: En TODOS los campos que contengan código SQL (expectedQuery, errorBadCode, errorGoodCode, exampleCode y opciones de quizzes), DEBES utilizar el salto de línea "\\n" y espacios para estructurar el código verticalmente. 
-   - PROHIBIDO: "SELECT * FROM Tabla WHERE id = 1;"
-   - OBLIGATORIO: "SELECT\\n  *\\nFROM\\n  Tabla\\nWHERE\\n  id = 1;"
-2. ESQUEMA Y DIAGRAMA ERD (VITAL): En el array "tables", el campo "schema" DEBE incluir explícitamente "PRIMARY KEY" y, cuando aplique, "REFERENCES tabla(columna)". El sistema usa esto para dibujar el Mapa ERD automáticamente.
-3. DATOS SEMILLA (MOCK DATA): Proporciona datos reales y coherentes. Si usas valores nulos, escríbelos estrictamente en minúsculas (null) sin comillas para no romper el parseo.
-4. CANTIDAD DE NIVELES: Genera EXACTAMENTE 9 niveles dentro del array "levels" (3 "easy", 3 "med", 3 "hard"). La dificultad debe ser lógica y progresiva.
-5. DESCRIPCIÓN DE TABLAS (schemaCols): NUNCA dejes este array vacío. Define al menos 1 o 2 columnas relevantes del nivel con su "name" y "desc".
-6. ADAPTABILIDAD DML/DDL: El "expectedQuery" debe adaptarse al tema. Si el tema es UPDATE, usa UPDATE. El simulador soporta SELECT, INSERT, UPDATE, DELETE y CREATE PROCEDURE.
+REGLAS TÉCNICAS Y FORMATO OBLIGATORIAS:
+1. ESTRUCTURA DINÁMICA POR NIVEL: Cada ejercicio (nivel) debe contener su propia "teoría de apoyo" (buenas prácticas, errores comunes y ejemplos prácticos) y exactamente 3 "quizzes" relacionados exclusivamente a la dificultad de ese nivel.
+2. FORMATO DE CÓDIGO (CRÍTICO): PROHIBIDO escribir consultas SQL en una sola línea. Todo código SQL ("errorBadCode", "errorGoodCode", "exampleCode", "expectedQuery" y fragmentos en quizzes) DEBE utilizar saltos de línea (\\n) y espacios para indentación (Ejemplo: "SELECT\\n  columna1,\\n  columna2\\nFROM\\n  tabla\\nWHERE\\n  condicion;").
+3. ESTILO DE QUIZZES (TIPO SQLZoo/DataCamp): Los quizzes no deben ser puramente teóricos. Debes incluir escenarios de la vida real, predicción de resultados (Ej: "¿Cuál será la salida de este código?"), detección de errores de sintaxis y selección de la consulta correcta.
+4. BASES DE DATOS: Utiliza las tablas y el contexto que el usuario te proporcionará en su material (por ejemplo, la tabla 'world' de SQLZoo o bases de datos corporativas).
+5. FORMATO DE SALIDA: Debes devolver ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido, sin texto adicional antes ni después.
+6. CANTIDAD DE NIVELES (CRÍTICO): El arreglo "levels" debe contener EXACTAMENTE 9 elementos (misiones): 3 objetos con "diff": "easy", seguidos de 3 objetos con "diff": "med", y finalmente 3 objetos con "diff": "hard".
 
-### REGLA DE QUIZZES (ESTILO SQL ZOO):
-Cada nivel DEBE tener EXACTAMENTE 3 preguntas en el array "quizzes". Al menos 2 de ellas deben ser PRÁCTICAS. Plantea un caso en la pregunta y pon BLOQUES DE CÓDIGO SQL como opciones de respuesta ("text") para que el usuario analice la sintaxis correcta. (Recuerda usar "\\n" en el código de las opciones para mantener el formato vertical).
-
-### ESTRUCTURA ESTRICTA DEL JSON ESPERADO:
+ESTRUCTURA EXACTA DEL JSON REQUERIDO:
 {
-  "topicName": "Número. Título del Tema",
-  "introTitle": "Título impactante",
-  "introText": "Explicación profunda y corporativa del tema.",
-  "commands": [
-    {"name": "Comando/Operador", "desc": "Descripción técnica"}
-  ],
-  "tables": [
-    {
-      "tableName": "NombreTabla",
-      "schema": "Columna1 TIPO PRIMARY KEY, Columna2 TIPO REFERENCES OtraTabla(ColumnaX)",
-      "mockData": [
-        {"Columna1": 1, "Columna2": "Dato", "Columna3": null}
-      ]
-    }
+  "topicName": "Título del Tema (Ej: SELECT FROM WORLD)",
+  "introTitle": "Subtítulo motivador",
+  "introText": "Explicación teórica inicial muy clara y profesional.",
+  "commands": [ 
+    {"name": "COMANDO", "desc": "Descripción técnica breve."} 
   ],
   "levels": [
     {
       "diff": "easy",
-      "escenario": "Contexto corporativo del problema.",
-      "requerimiento": "Instrucción clara de lo que el usuario debe consultar o modificar.",
-      "tip": "Un consejo corto.",
-      "schemaLine": "TablaA a | TablaB b",
-      "schemaTitle": "Título del paso",
-      "schemaCols": [
-        {"name": "Columna", "desc": "Significado"}
-      ],
-      "expectedQuery": "SELECT\\n  *\\nFROM\\n  Tabla;",
-      "hints": ["Pista 1", "Pista 2", "Pista 3"],
+      "escenario": "Contexto corporativo o de la vida real detallado.",
+      "requerimiento": "Petición exacta de lo que el estudiante debe extraer.",
+      "tip": "Tip rápido o regla de oro.",
+      "schemaLine": "Tabla (Col1, Col2, Col3)",
+      "schemaTitle": "Descripción de la tabla",
+      "schemaCols": [ {"name": "Col1", "desc": "Definición del tipo de dato"} ],
+      "expectedQuery": "SELECT\\n  Col1\\nFROM\\n  Tabla;",
+      "hints": ["Pista 1 detallada", "Pista 2", "Pista 3 reveladora"],
       "theoryUpdate": {
-        "bestPracticeTitle": "💡 BUENAS PRÁCTICAS: [TEMA]",
-        "bestPracticeText": "Consejo de arquitecto de bases de datos.",
-        "errorTitle": "⚠️ UN ERROR HABITUAL: [TEMA]",
-        "errorIntro": "Por qué suele fallar esto.",
-        "errorBadCode": "CÓDIGO\\nMALO",
-        "errorImpact": "Consecuencias en el servidor o reporte.",
-        "errorGoodCode": "CÓDIGO\\nBUENO",
-        "exampleContext": "Ejemplo extra aplicable:",
-        "exampleCode": "SELECT\\n  *\\nFROM\\n  Ejemplo;"
+        "bestPracticeTitle": "💡 BUENAS PRÁCTICAS CORPORATIVAS: [Escribe aquí el Concepto Específico]",
+        "bestPracticeText": "Consejo avanzado aplicable a este nivel.",
+        "errorTitle": "⚠️ UN ERROR HABITUAL: [Escribe aquí el Concepto Específico]",
+        "errorIntro": "Explicación de un error común en este tipo de consulta.",
+        "errorBadCode": "SELECT\\n  mal\\nFROM\\n  tabla;",
+        "errorImpact": "Qué pasaría en la vida real si cometes este error.",
+        "errorGoodCode": "SELECT\\n  bien\\nFROM\\n  tabla;",
+        "exampleContext": "Contexto de un requerimiento similar.",
+        "exampleCode": "SELECT\\n  ejemplo\\nFROM\\n  tabla;"
       },
       "quizzes": [
         {
-          "question": "Pregunta práctica o teórica",
+          "question": "Lee el siguiente código:\\nSELECT\\n  name\\nFROM\\n  world\\nWHERE\\n  population > 100;\\n¿Qué resultado producirá exactamente?",
           "options": [
-            {"text": "SELECT\\n  *\\nFROM\\n  A;", "isCorrect": true, "feedback": "Por qué es correcta."},
-            {"text": "SELECT * FROM A;", "isCorrect": false, "feedback": "Por qué es incorrecta."}
-          ],
-          "references": { "question_reference": [], "hint_reference": [] }
+            {"text": "Mostrará todas las columnas de países con población mayor a 100.", "isCorrect": false, "feedback": "Incorrecto. Solo proyecta la columna 'name'."},
+            {"text": "Mostrará solo el nombre de los países con población mayor a 100.", "isCorrect": true, "feedback": "¡Excelente! Has leído bien la proyección del SELECT."}
+          ]
         }
       ]
     }
   ]
-}
-
-TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
+}`;
             navigator.clipboard.writeText(prompt); window.showToast("¡Prompt Copiado!", "Pégalo en la IA junto con tu tema a estudiar.", "success");
         };
 
+        // 🌟 REINSERCIÓN DE FUNCIONES VITALES QUE SE HABÍAN BORRADO 🌟
         window.showErrorBox = function(titleMsg, techErrorMsg) { 
             document.getElementById('error-container').classList.remove('hidden'); 
             document.getElementById('error-title-msg').textContent = titleMsg; 
@@ -701,19 +566,8 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             document.getElementById('next-btn').classList.add('hidden'); 
         };
 
-        window.updateProgressUI = function() {
-            const xpNext = playerState.level * 1000;
-            document.getElementById('ui-level-badge').textContent = playerState.level;
-            document.getElementById('ui-xp-bar').style.width = `${(playerState.xp / xpNext) * 100}%`;
-            document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`;
-            document.getElementById('ui-coins').textContent = playerState.coins;
-        };
-
         async function syncToCloud() {
-            if (!navigator.onLine || !dbFirestore || !isUserLoggedIn) return;
-            
-            window.updateSyncBadge('syncing');
-            
+            if (!dbFirestore) return;
             try {
                 await dbFirestore.collection("usuarios").doc(syncUserId).set({
                     playerState: playerState,
@@ -721,44 +575,32 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     topicOrder: JSON.parse(localStorage.getItem('sql_topic_order') || "null"),
                     lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                window.updateSyncBadge('saved');
-                setTimeout(() => { if(navigator.onLine) window.updateSyncBadge('online'); }, 2000);
-            } catch (e) { 
-                console.error("Error al sincronizar:", e); 
-                window.updateSyncBadge('offline');
-            }
+            } catch (e) { console.error("Error al sincronizar con Firestore:", e); }
         }
 
         async function loadFromCloud() {
-            if (!dbFirestore || !navigator.onLine) return false;
+            if (!dbFirestore) return false;
             try {
                 const doc = await dbFirestore.collection("usuarios").doc(syncUserId).get();
                 if (doc.exists) {
                     const data = doc.data();
-                    playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {}, customName: null, customAvatar: null };
+                    playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {} };
                     if (!playerState.quizStates) playerState.quizStates = {}; 
 
                     if (data.customTopics) localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
                     if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
                     
-                    window.updateProgressUI();
+                    const xpNext = playerState.level * 1000;
+                    // 🌟 CORRECCIÓN: Apuntamos al nuevo ID del Badge de Nivel
+                    document.getElementById('ui-level-badge').textContent = playerState.level;
+                    document.getElementById('ui-xp-bar').style.width = `${(playerState.xp / xpNext) * 100}%`;
+                    document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`;
+                    document.getElementById('ui-coins').textContent = playerState.coins;
                     return true;
                 }
             } catch (e) { console.error("Error al descargar de Firestore:", e); }
             return false;
         }
-
-        window.createMissionHTML = function(escenario, requerimiento, tip, schemaLine, descObj) {
-            let descHtml = `<p class="text-sm text-emerald-100/80 mb-3 italic">${descObj.title}</p><div class="bg-black/50 p-3 rounded-lg shadow-inner space-y-2">`;
-            if (descObj && descObj.cols) { descObj.cols.forEach(col => { descHtml += `<div class="flex items-start gap-2 min-w-0"><code class="text-cyan-300 font-bold bg-cyan-900/30 border border-cyan-500/30 px-1.5 py-0.5 rounded text-xs shrink-0">${col.name}</code><span class="text-sm text-emerald-50 mt-0.5 break-words">${col.desc}</span></div>`; }); }
-            descHtml += `</div>`;
-            const taskHtml = `
-                <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-5 shadow-[0_0_20px_rgba(0,0,0,0.4)] relative overflow-hidden group hover:border-slate-600/50 transition-all duration-300 mb-4"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-purple-600"></div><h4 class="text-cyan-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span class="text-lg">🏢</span> El Escenario</h4><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">${escenario}</p></div>
-                <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-5 shadow-[0_0_20px_rgba(0,0,0,0.4)] relative overflow-hidden group hover:border-slate-600/50 transition-all duration-300 mb-4"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-500 to-rose-500"></div><h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span class="text-lg">⚙️</span> El Requerimiento</h4><div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner"><p class="text-sm text-white font-medium leading-relaxed whitespace-pre-wrap">${requerimiento}</p></div></div>
-                <div class="bg-blue-900/20 border-l-4 border-blue-500 p-3 rounded-r-xl shadow-md"><h4 class="text-blue-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>💡</span> Tip de Misión</h4><p class="text-xs text-blue-200">${tip}</p></div>
-            `;
-            return { taskHtml, schemaLine, descHtml };
-        };
 
         function createTopicFromJSON(d) {
             let topicId = d.id || ("t" + Math.random().toString(36).substr(2, 9));
@@ -786,8 +628,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 if (d.quizzes && d.quizzes.length > 0) {
                     baseTheoryHTML += `<div class="mt-8 space-y-6">`;
                     d.quizzes.forEach((qz, idx) => {
-                        // INYECCIÓN DE MEJORA: Coloreado y saltos de línea para Quizzes (sin mono)
-                        let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-3 rounded-lg bg-slate-800/50 flex gap-3 items-center"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><span class="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode ? window.highlightSQLCode(opt.text) : opt.text}</span></button>`).join('');
+                        let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span></button>`).join('');
                         baseTheoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz ${idx+1}/${d.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${qz.question}</pre><div class="space-y-2">${optionsHTML}</div><div class="quiz-feedback hidden"></div></div>`;
                     });
                     baseTheoryHTML += `</div>`;
@@ -812,14 +653,54 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 };
             });
             
-            return { 
-                id: topicId, 
-                title: d.topicName || d.title || "Tema Sin Nombre", 
-                baseTheory: baseTheoryHTML, 
-                exercises: mappedExercises,
-                tables: d.tables || [] 
-            };
+            return { id: topicId, title: d.topicName || d.title || "Tema Sin Nombre", baseTheory: baseTheoryHTML, exercises: mappedExercises };
         }
+
+        window.checkQuiz = function(btn, isCorrect, feedbackMsg, quizIdx, optIdx) {
+            const container = btn.closest('.quiz-container'); 
+            const buttons = container.querySelectorAll('.quiz-option'); 
+            buttons.forEach(b => b.disabled = true);
+            const feedbackDiv = container.querySelector('.quiz-feedback'); 
+            feedbackDiv.classList.remove('hidden');
+
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            playerState.quizStates = playerState.quizStates || {};
+            playerState.quizStates[exercise.id] = playerState.quizStates[exercise.id] || {};
+
+            if (isCorrect) {
+                btn.classList.add('correct'); 
+                feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
+                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
+                
+                if (!playerState.quizStates[exercise.id][quizIdx]) {
+                    window.fireConfetti(); 
+                    window.grantRewards(5, 1);
+                    playerState.quizStates[exercise.id][quizIdx] = { selectedOpt: optIdx, correct: true };
+                    syncToCloud();
+                }
+            } else {
+                btn.classList.add('incorrect', 'shake-animation'); 
+                feedbackDiv.innerHTML = `<span class="text-red-400 text-lg">❌</span> <span class="text-red-300">${feedbackMsg}</span>`;
+                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-red-900/30 border border-red-500/50 flex items-start gap-2";
+                setTimeout(() => { 
+                    btn.classList.remove('incorrect', 'shake-animation'); 
+                    feedbackDiv.classList.add('hidden'); 
+                    buttons.forEach(b => b.disabled = false); 
+                }, 2000);
+            }
+        };
+
+        window.createMissionHTML = function(escenario, requerimiento, tip, schemaLine, descObj) {
+            let descHtml = `<p class="text-sm text-emerald-100/80 mb-3 italic">${descObj.title}</p><div class="bg-black/50 p-3 rounded-lg shadow-inner space-y-2">`;
+            if (descObj && descObj.cols) { descObj.cols.forEach(col => { descHtml += `<div class="flex items-start gap-2 min-w-0"><code class="text-cyan-300 font-bold bg-cyan-900/30 border border-cyan-500/30 px-1.5 py-0.5 rounded text-xs shrink-0">${col.name}</code><span class="text-sm text-emerald-50 mt-0.5 break-words">${col.desc}</span></div>`; }); }
+            descHtml += `</div>`;
+            const taskHtml = `
+                <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-5 shadow-[0_0_20px_rgba(0,0,0,0.4)] relative overflow-hidden group hover:border-slate-600/50 transition-all duration-300 mb-4"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-purple-600"></div><h4 class="text-cyan-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span class="text-lg">🏢</span> El Escenario</h4><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">${escenario}</p></div>
+                <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-5 shadow-[0_0_20px_rgba(0,0,0,0.4)] relative overflow-hidden group hover:border-slate-600/50 transition-all duration-300 mb-4"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-500 to-rose-500"></div><h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span class="text-lg">⚙️</span> El Requerimiento</h4><div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner"><p class="text-sm text-white font-medium leading-relaxed whitespace-pre-wrap">${requerimiento}</p></div></div>
+                <div class="bg-blue-900/20 border-l-4 border-blue-500 p-3 rounded-r-xl shadow-md"><h4 class="text-blue-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>💡</span> Tip de Misión</h4><p class="text-xs text-blue-200">${tip}</p></div>
+            `;
+            return { taskHtml, schemaLine, descHtml };
+        };
 
         const RAW_TOPIC_1 = {
             id: "t1_base", 
@@ -830,31 +711,6 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 {"name": "SELECT", "desc": "Le dice al motor qué columnas exactas queremos proyectar en la pantalla."},
                 {"name": "FROM", "desc": "Indica la tabla de origen de donde provienen los datos."},
                 {"name": "WHERE", "desc": "Aplica un filtro condicional matemático o lógico a los resultados."}
-            ],
-            tables: [
-                {
-                    tableName: "Sales_Customers",
-                    schema: "CustomerID INT, CustomerName VARCHAR, Country VARCHAR, Score INT, CreditLimit DECIMAL",
-                    mockData: [
-                        {CustomerID: 1, CustomerName: 'Tailwind Toys', Country: 'USA', Score: 900, CreditLimit: 1500.00},
-                        {CustomerID: 2, CustomerName: 'Wingtip Toys', Country: 'UK', Score: 750, CreditLimit: 3000.00},
-                        {CustomerID: 3, CustomerName: 'A Datum Corporation', Country: 'Germany', Score: 350, CreditLimit: 3000.00},
-                        {CustomerID: 4, CustomerName: 'Contoso Retail', Country: 'USA', Score: 0, CreditLimit: 5000.00}
-                    ]
-                },
-                {
-                    tableName: "Warehouse_StockItems",
-                    schema: "StockItemID INT, StockItemName VARCHAR, UnitPrice DECIMAL, Quantity INT",
-                    mockData: [
-                        {StockItemID: 101, StockItemName: 'USB Drive 8GB', UnitPrice: 15.00, Quantity: 200},
-                        {StockItemID: 102, StockItemName: 'Teclado Mecanico', UnitPrice: 85.50, Quantity: 45},
-                        {StockItemID: 103, StockItemName: 'Monitor 24 pulgadas', UnitPrice: 150.00, Quantity: 15},
-                        {StockItemID: 104, StockItemName: 'Raton Inalambrico', UnitPrice: 55.00, Quantity: 80},
-                        {StockItemID: 105, StockItemName: 'Silla Ergonomica', UnitPrice: 120.00, Quantity: 10},
-                        {StockItemID: 106, StockItemName: 'Cable HDMI', UnitPrice: 12.00, Quantity: 50},
-                        {StockItemID: 107, StockItemName: 'Webcam HD', UnitPrice: 60.00, Quantity: 30}
-                    ]
-                }
             ],
             levels: [
                 {
@@ -884,153 +740,112 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                         { "question": "Al escribir el nombre de una columna en el SELECT, ¿qué sucede si cometes un 'typo' (error ortográfico)?", "options": [ {"text": "El motor auto-corrige el error y extrae la columna más parecida.", "isCorrect": false, "feedback": "El motor de SQL no tiene auto-corrector. Es estricto."}, {"text": "Genera un error de 'Invalid Column Name' y detiene la ejecución.", "isCorrect": true, "feedback": "¡Exacto! El nombre de la columna debe ser idéntico al esquema."} ] },
                         { "question": "¿Cuál es el propósito principal de la cláusula SELECT?", "options": [ {"text": "Indicar explícitamente qué campos queremos proyectar en la pantalla.", "isCorrect": true, "feedback": "Esa es la definición técnica perfecta."}, {"text": "Filtrar los resultados basados en un requerimiento numérico.", "isCorrect": false, "feedback": "Falso. Esa es la función exclusiva de la cláusula WHERE."} ] }
                     ]
+                },
+                {
+                    diff: "easy", escenario: "El departamento de riesgos requiere mapear a cada cliente con su ID interno de sistema para validar cuentas.", requerimiento: "Selecciona las columnas CustomerID y CustomerName de la tabla Sales_Customers.", tip: "Separa ambas columnas con una coma en tu cláusula SELECT.", schemaLine: "Sales_Customers (CustomerID, CustomerName, Country, Score, CreditLimit)", schemaTitle: "Clientes corporativos.", schemaCols: [], expectedQuery: "SELECT\n  CustomerID,\n  CustomerName\nFROM\n  Sales_Customers;", hints: ["Pon una coma entre las columnas."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: FORMATO MULTICOLUMNA", bestPracticeText: "Cuando pides múltiples columnas, colócalas en líneas separadas para mejorar la legibilidad del código durante las revisiones de tu equipo.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: OLVIDAR LA COMA", errorIntro: "Listar las columnas con espacios en vez de comas.",
+                        errorBadCode: "SELECT\n  CustomerID\n  CustomerName\nFROM\n  Sales_Customers;", errorImpact: "SQL Server creerá que estás intentando crear un 'Alias' y el código fallará miserablemente.", errorGoodCode: "SELECT\n  CustomerID,\n  CustomerName\nFROM\n  Sales_Customers;",
+                        exampleContext: "Nombre y Continente.", exampleCode: "SELECT\n  name,\n  continent\nFROM\n  world;"
+                    },
+                    quizzes: [
+                        { "question": "Analiza este código:\nSELECT\n  name\n  population\nFROM\n  world;\n\n¿Qué ocurrirá al intentar ejecutarlo?", "options": [ {"text": "Mostrará ambas columnas sin problema.", "isCorrect": false, "feedback": "Incorrecto. En SQL la separación mediante comas es estrictamente obligatoria."}, {"text": "Lanzará un error de sintaxis por la falta de una coma (,).", "isCorrect": true, "feedback": "¡Excelente detección de errores!"} ] },
+                        { "question": "¿Por qué los arquitectos senior recomiendan colocar cada columna proyectada en una nueva línea?", "options": [ {"text": "Para facilitar la lectura del código y hacer el troubleshooting más eficiente.", "isCorrect": true, "feedback": "¡Correcto! El código legible salva horas de trabajo."}, {"text": "Porque escribir todas las columnas en la misma línea consume más memoria RAM.", "isCorrect": false, "feedback": "Falso. Los espacios no afectan el rendimiento del servidor."} ] },
+                        { "question": "Si seleccionas las columnas 'Precio', 'Stock' y 'Descuento', ¿cuántas comas necesitas en el código?", "options": [ {"text": "Tres comas, una después de cada columna.", "isCorrect": false, "feedback": "Error. La última columna de la lista JAMÁS lleva coma."}, {"text": "Dos comas, para separar las tres columnas.", "isCorrect": true, "feedback": "¡Exacto! Las comas solo separan, no terminan la lista."} ] }
+                    ]
+                },
+                {
+                    diff: "med", escenario: "Necesitamos identificar si un producto específico sigue activo en nuestro catálogo. El nombre del producto es 'Webcam HD'.", requerimiento: "Selecciona TODAS las columnas de Warehouse_StockItems, pero filtra para que SOLO se muestre el producto cuyo StockItemName sea exactamente 'Webcam HD'.", tip: "Los textos van en comillas simples.", schemaLine: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", schemaTitle: "Inventario Central", schemaCols: [], expectedQuery: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  StockItemName = 'Webcam HD';", hints: ["Usa WHERE StockItemName = 'Webcam HD'"],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: EL PODER DEL CONDICIONAL", bestPracticeText: "El WHERE es la compuerta de seguridad. Aplica siempre tus filtros lógicos para no congestionar la base de datos enviando datos que el negocio no pidió.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: ORDEN DE EJECUCIÓN", errorIntro: "Colocar la cláusula WHERE antes que el FROM.",
+                        errorBadCode: "SELECT\n  name\nWHERE\n  area > 1000\nFROM\n  world;", errorImpact: "El motor de SQL lee de arriba a abajo en fases. Si pones el WHERE primero, no sabrá a qué tabla aplicar la condición.", errorGoodCode: "SELECT\n  name\nFROM\n  world\nWHERE\n  area > 1000;",
+                        exampleContext: "Buscar al cliente Tailwind:", exampleCode: "SELECT\n  *\nFROM\n  Sales_Customers\nWHERE\n  CustomerName = 'Tailwind Toys';"
+                    },
+                    quizzes: [
+                        { "question": "Basado en la lógica del motor, ¿cuál es el orden estructural correcto que debes teclear?", "options": [ {"text": "SELECT -> WHERE -> FROM", "isCorrect": false, "feedback": "Incorrecto. Debes decirle de dónde sacar los datos antes de filtrarlos."}, {"text": "SELECT -> FROM -> WHERE", "isCorrect": true, "feedback": "¡Correcto! Esa es la anatomía inquebrantable de una consulta."} ] },
+                        { "question": "Si quieres mostrar a la empresa llamada 'Contoso', ¿qué sintaxis es correcta?", "options": [ {"text": "WHERE CustomerName = 'Contoso'", "isCorrect": true, "feedback": "¡Perfecto! El texto siempre debe ir entre comillas simples."}, {"text": "WHERE CustomerName = Contoso", "isCorrect": false, "feedback": "Incorrecto. Sin comillas, SQL pensará que es una columna."} ] },
+                        { "question": "¿Dónde se coloca el WHERE si tuvieras múltiples tablas en el FROM?", "options": [ {"text": "Inmediatamente después de definir la(s) tabla(s) en la cláusula FROM.", "isCorrect": true, "feedback": "¡Acertaste! Siempre va después del origen de los datos."}, {"text": "Justo debajo de la cláusula SELECT.", "isCorrect": false, "feedback": "Falso. Rompería la compilación lógica."} ] }
+                    ]
+                },
+                {
+                    diff: "med", escenario: "Se requiere identificar rápidamente a los clientes VIP para asignarles un ejecutivo de cuenta dedicado.", requerimiento: "Filtra y devuelve CustomerName y CreditLimit de Sales_Customers, SOLO para registros donde CreditLimit sea MAYOR a 3000.", tip: "Agrega WHERE CreditLimit > 3000.", schemaLine: "Sales_Customers (CustomerID, CustomerName, Country, Score, CreditLimit)", schemaTitle: "Clientes VIP.", schemaCols: [], expectedQuery: "SELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 3000;", hints: ["El WHERE va después del FROM."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: FILTROS MATEMÁTICOS", bestPracticeText: "Aplica operadores como >, <, o = directamente a los números. Es la operación más rápida para el servidor.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: COMILLAS EN NÚMEROS", errorIntro: "Colocar un valor numérico entre comillas simples.",
+                        errorBadCode: "SELECT\n  *\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > '3000';", errorImpact: "El motor se ve obligado a hacer una 'conversión implícita' de texto a número en cada fila, volviendo lenta la consulta.", errorGoodCode: "SELECT\n  *\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 3000;",
+                        exampleContext: "Extraer artículos caros:", exampleCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice > 100;"
+                    },
+                    quizzes: [
+                        { "question": "Si escribes `WHERE Quantity < 50`, ¿se incluirá el artículo si tiene exactamente 50 unidades?", "options": [ {"text": "No, excluirá al artículo porque no incluye el límite.", "isCorrect": true, "feedback": "¡Excelente lógica matemática!"}, {"text": "Sí, lo incluye por defecto.", "isCorrect": false, "feedback": "Incorrecto. Deberías usar `<=` para incluir el 50."} ] },
+                        { "question": "¿Los números deben llevar comillas simples ('100') en el bloque WHERE?", "options": [ {"text": "No, los tipos de dato numérico no llevan comillas en SQL.", "isCorrect": true, "feedback": "¡Correcto! Solo los textos y fechas las necesitan."}, {"text": "Sí, es una regla universal para cualquier valor.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "Si necesitas obtener los productos cuyo precio sea de $15.00 exactos, ¿qué operador matemático usas?", "options": [ {"text": "El símbolo = (igual a).", "isCorrect": true, "feedback": "¡Perfecto! Ese es el operador de igualdad."}, {"text": "La palabra clave LIKE.", "isCorrect": false, "feedback": "Falso. LIKE es solo para patrones de texto."} ] }
+                    ]
+                },
+                {
+                    diff: "med", escenario: "El gerente de almacén necesita localizar repuestos baratos pero en grandes cantidades.", requerimiento: "Proyecta 'StockItemName' de la tabla Warehouse_StockItems, pero filtra para que el 'UnitPrice' sea MENOR a 20 Y a la vez el 'Quantity' sea MAYOR a 100.", tip: "Usa la compuerta AND.", schemaLine: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", schemaTitle: "Inventario Central", schemaCols: [], expectedQuery: "SELECT\n  StockItemName\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice < 20\n  AND Quantity > 100;", hints: ["Une con AND las dos condiciones."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: LÓGICA CONJUNTA", bestPracticeText: "Divide tus operadores lógicos AND en múltiples líneas para hacer el código mantenible a largo plazo.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: CONFUSIÓN DE COMPUERTAS", errorIntro: "Usar OR cuando el requerimiento exigía el cumplimiento estricto de ambas cosas.",
+                        errorBadCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice < 20\n  OR Quantity > 100;", errorImpact: "El reporte traerá productos carísimos solo porque hay muchas unidades, destruyendo el objetivo financiero.", errorGoodCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice < 20\n  AND Quantity > 100;",
+                        exampleContext: "Buscar países de Europa muy poblados:", exampleCode: "SELECT\n  *\nFROM\n  world\nWHERE\n  continent = 'Europe'\n  AND population > 50000000;"
+                    },
+                    quizzes: [
+                        { "question": "¿Qué hace el operador AND en el filtrado?", "options": [ {"text": "Obliga a que ambas condiciones sean ciertas para incluir la fila.", "isCorrect": true, "feedback": "¡Brillante!"}, {"text": "Suma los resultados de dos columnas.", "isCorrect": false, "feedback": "Falso. No es un operador aritmético."} ] },
+                        { "question": "Si una fila cumple la primera condición del AND pero falla la segunda, ¿aparece en pantalla?", "options": [ {"text": "Aparece, porque ya cumplió una.", "isCorrect": false, "feedback": "Error. Esa es la definición del operador OR."}, {"text": "No aparece, la fila es rechazada.", "isCorrect": true, "feedback": "¡Totalmente correcto!"} ] },
+                        { "question": "¿Puedes usar más de un AND en un solo WHERE?", "options": [ {"text": "Sí, puedes encadenar múltiples operadores lógicos.", "isCorrect": true, "feedback": "¡Así es! Las consultas complejas suelen tener varios AND."}, {"text": "No, el límite del motor SQL es de uno por tabla.", "isCorrect": false, "feedback": "Falso."} ] }
+                    ]
+                },
+                {
+                    diff: "hard", escenario: "Logística requiere encontrar dos productos específicos que se extraviaron en el envío. Saben que sus IDs son el 104 o el 107.", requerimiento: "Proyecta 'StockItemName' de Warehouse_StockItems usando explícitamente el operador IN para ubicar los IDs 104 y 107.", tip: "La sintaxis es IN (104, 107).", schemaLine: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", schemaTitle: "Inventario Central", schemaCols: [], expectedQuery: "SELECT\n  StockItemName\nFROM\n  Warehouse_StockItems\nWHERE\n  StockItemID IN (104, 107);", hints: ["Reemplaza los OR usando IN ()."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: OPTIMIZACIÓN DEL IN", bestPracticeText: "Utilizar el operador IN es la forma profesional y escalable de sustituir decenas de cláusulas OR repetitivas en el código de producción.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: MULTITUD DE OR's", errorIntro: "Escribir consultas cavernícolas gigantes llenas de OR.",
+                        errorBadCode: "SELECT\n  *\nFROM\n  world\nWHERE\n  name = 'France'\n  OR name = 'Italy'\n  OR name = 'Spain';", errorImpact: "El código es feo, difícil de mantener y propenso a errores tipográficos irreparables.", errorGoodCode: "SELECT\n  *\nFROM\n  world\nWHERE\n  name IN ('France', 'Italy', 'Spain');",
+                        exampleContext: "Encontrar tres clientes por ID:", exampleCode: "SELECT\n  *\nFROM\n  Sales_Customers\nWHERE\n  CustomerID IN (1, 2, 4);"
+                    },
+                    quizzes: [
+                        { "question": "¿A qué operador lógico sustituye la función IN()?", "options": [ {"text": "Al operador OR, validando múltiples valores en una misma columna.", "isCorrect": true, "feedback": "¡Excelente analogía!"}, {"text": "Al operador AND, forzando múltiples igualdades simultáneas.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "Si usas `NOT IN (104, 107)`, ¿qué pasará?", "options": [ {"text": "Traerá el catálogo entero, ocultando exclusivamente los productos 104 y 107.", "isCorrect": true, "feedback": "¡Correcto! El NOT invierte la validación de la lista."}, {"text": "Ocultará la tabla entera.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "¿El contenido de los paréntesis del IN() debe ir separado por comas?", "options": [ {"text": "Sí, es el separador de elementos estandarizado en SQL.", "isCorrect": true, "feedback": "¡Perfecto!"}, {"text": "No, se separan con punto y coma.", "isCorrect": false, "feedback": "Incorrecto."} ] }
+                    ]
+                },
+                {
+                    diff: "hard", escenario: "El área de contabilidad necesita revisar productos cuyos precios oscilan en un margen medio de facturación, ni muy baratos ni muy caros.", requerimiento: "Proyecta 'StockItemName' y 'UnitPrice' de Warehouse_StockItems, filtrando estrictamente los productos cuyo precio esté contenido entre 50 y 100 usando la cláusula BETWEEN.", tip: "Usa BETWEEN X AND Y.", schemaLine: "Warehouse_StockItems (StockItemID, StockItemName, UnitPrice, Quantity)", schemaTitle: "Inventario Central", schemaCols: [], expectedQuery: "SELECT\n  StockItemName,\n  UnitPrice\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice BETWEEN 50 AND 100;", hints: ["Aplica BETWEEN 50 AND 100."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: RANGOS CERRADOS", bestPracticeText: "La función BETWEEN hace que las revisiones de código de rangos temporales o financieros sean mucho más ágiles de leer para los arquitectos humanos.",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: INVERSIÓN DE RANGO", errorIntro: "Colocar el número mayor primero en la función BETWEEN.",
+                        errorBadCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice BETWEEN 100 AND 50;", errorImpact: "El motor devolverá CERO resultados, ya que evalúa linealmente de menor a mayor.", errorGoodCode: "SELECT\n  *\nFROM\n  Warehouse_StockItems\nWHERE\n  UnitPrice BETWEEN 50 AND 100;",
+                        exampleContext: "Buscar países con un PBI medio:", exampleCode: "SELECT\n  *\nFROM\n  world\nWHERE\n  gdp BETWEEN 100000 AND 500000;"
+                    },
+                    quizzes: [
+                        { "question": "¿El operador BETWEEN incluye a los límites declarados?", "options": [ {"text": "Sí, matemáticamente equivale a `>=` y `<=`.", "isCorrect": true, "feedback": "¡Totalmente correcto!"}, {"text": "No, los límites quedan fuera del resultado.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "¿Puedes usar BETWEEN para fechas?", "options": [ {"text": "Es su uso principal a nivel corporativo.", "isCorrect": true, "feedback": "¡Exacto!"}, {"text": "No, solo para números enteros.", "isCorrect": false, "feedback": "Falso."} ] },
+                        { "question": "¿A qué equivale internamente `UnitPrice BETWEEN 10 AND 20`?", "options": [ {"text": "UnitPrice >= 10 AND UnitPrice <= 20", "isCorrect": true, "feedback": "¡Brillante!"}, {"text": "UnitPrice = 10 OR UnitPrice = 20", "isCorrect": false, "feedback": "Incorrecto."} ] }
+                    ]
+                },
+                {
+                    diff: "hard", escenario: "La junta directiva exige un extracto formal y documentado de entidades cuyo límite de crédito sea de alto riesgo (superior a $4,000).", requerimiento: "Escribe una consulta que devuelva CustomerName y CreditLimit filtrando por > 4000. OBLIGATORIO: La primera línea debe ser el comentario corporativo '-- Reporte Gerencial'.", tip: "Los comentarios de línea inician con --", schemaLine: "Sales_Customers (CustomerID, CustomerName, Country, Score, CreditLimit)", schemaTitle: "Auditoría Directiva", schemaCols: [], expectedQuery: "-- Reporte Gerencial\nSELECT\n  CustomerName,\n  CreditLimit\nFROM\n  Sales_Customers\nWHERE\n  CreditLimit > 4000;", hints: ["Escribe '-- Reporte Gerencial' y da enter."],
+                    theoryUpdate: {
+                        bestPracticeTitle: "💡 BUENAS PRÁCTICAS CORPORATIVAS: DOCUMENTACIÓN ESTRICTA", bestPracticeText: "En los bancos y empresas TOP, si envías un script sin comentarios corporativos al inicio, es rechazado automáticamente por el equipo de QA (Control de Calidad).",
+                        errorTitle: "⚠️ UN ERROR HABITUAL: COMENTARIOS ROTOS", errorIntro: "Dejar texto explicativo suelto sin los guiones correspondientes.",
+                        errorBadCode: "Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;", errorImpact: "El servidor intentará ejecutar la palabra 'Reporte' como comando y detendrá el proceso.", errorGoodCode: "-- Reporte de ventas\nSELECT\n  *\nFROM\n  ventas;",
+                        exampleContext: "Comentar código para revisión.", exampleCode: "-- Extraer poblacion europea\nSELECT\n  name\nFROM\n  world;"
+                    },
+                    quizzes: [
+                        { "question": "¿Qué sucede si colocas `--` delante de una línea de código SQL completamente funcional?", "options": [ {"text": "El código se optimiza y corre más rápido.", "isCorrect": false, "feedback": "Falso. Los comentarios no alteran la velocidad."}, {"text": "El motor de base de datos ignorará por completo esa línea.", "isCorrect": true, "feedback": "¡Exacto! El código comentado se vuelve invisible para el ejecutor."} ] },
+                        { "question": "¿Cuál de estos es el formato válido para realizar un comentario de una línea en SQL Server?", "options": [ {"text": "-- Esto es un comentario corporativo.", "isCorrect": true, "feedback": "¡Excelente!"}, {"text": "// Esto es un comentario corporativo.", "isCorrect": false, "feedback": "Error. Sintaxis de Java/C++, no de SQL."} ] },
+                        { "question": "¿Por qué es vital documentar los scripts SQL en el ámbito profesional?", "options": [ {"text": "Para que otro programador sepa el propósito del código sin descifrarlo.", "isCorrect": true, "feedback": "¡Totalmente cierto!"}, {"text": "Para que consuma menos RAM.", "isCorrect": false, "feedback": "Falso."} ] }
+                    ]
                 }
             ]
         };
 
         let TOPICS = [];
 
-        window.buildTopicDatabase = function(topic) {
-            if (db) { try { db.close(); } catch(e){} }
-            db = new windowSQLite.Database(); 
-            let tableDictionary = {}; 
-
-            if (topic.tables && topic.tables.length > 0) {
-                topic.tables.forEach(t => {
-                    db.run(`CREATE TABLE ${t.tableName} (${t.schema});`);
-                    
-                    let cols = t.schema.split(',').map(c => c.trim().split(' ')[0]);
-                    tableDictionary[t.tableName] = cols;
-
-                    if (t.mockData && t.mockData.length > 0) {
-                        t.mockData.forEach(row => {
-                            const keys = Object.keys(row);
-                            const values = keys.map(k => typeof row[k] === 'string' ? `'${row[k].replace(/'/g, "''")}'` : (row[k]===null ? 'NULL' : row[k]));
-                            db.run(`INSERT INTO ${t.tableName} (${keys.join(', ')}) VALUES (${values.join(', ')});`);
-                        });
-                    }
-                });
-            }
-            // INYECCIÓN DE MEJORA: Reasigna el diccionario de tablas y asegura el uso del custom hint premium
-            if(sqlEditor) { sqlEditor.setOption("hintOptions", { hint: CodeMirror.hint.premiumSql, tables: tableDictionary, completeSingle: false }); }
-        }
-
-        window.setupMockLogin = function() {
-            const loginModal = document.getElementById('login-modal-backdrop');
-            const loginCard = document.getElementById('login-card');
-            const spinner = document.getElementById('auth-loading-spinner');
-            const btn = document.getElementById('btn-google-login');
-            
-            btn.innerHTML = `<span class="text-xl">🧪</span> Entrar en Modo Prueba (Vista Previa)`;
-            btn.className = "w-full bg-indigo-600 text-white hover:bg-indigo-500 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)]";
-            
-            btn.onclick = async () => {
-                syncUserId = "usuario_prueba_vista_previa";
-                isUserLoggedIn = true;
-                document.getElementById('user-id-display').innerHTML = `MODO PRUEBA <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">✏️</span>`;
-                
-                loginModal.classList.add('opacity-0');
-                setTimeout(() => {
-                    loginModal.classList.add('hidden');
-                    if(spinner) spinner.classList.add('hidden');
-                }, 500);
-
-                await loadFromCloud();
-                window.updateProgressUI();
-                window.renderExercisePills();
-                window.showToast("Modo Prueba", "Inicio de sesión simulado activado.", "success");
-                window.updateSyncBadge('offline');
-            };
-            
-            loginModal.classList.remove('hidden');
-            requestAnimationFrame(() => loginModal.classList.remove('opacity-0'));
-
-            if(spinner) {
-                spinner.classList.add('hidden');
-                loginCard.classList.remove('hidden');
-                requestAnimationFrame(() => {
-                    loginCard.classList.remove('opacity-0', 'scale-95');
-                    loginCard.classList.add('opacity-100', 'scale-100');
-                });
-            }
-        };
-
         async function initApp() {
-            if (firebaseConfig.apiKey) {
-                firebase.initializeApp(firebaseConfig); 
-                dbFirestore = firebase.firestore();
-                dbAuth = firebase.auth();
-                
-                const isPreviewEnv = window.location.protocol === 'blob:' || window.location.protocol === 'data:' || window.location.protocol === 'about:';
-
-                if (isPreviewEnv) {
-                    console.warn("Entorno de vista previa detectado. Activando Modo Prueba de forma preventiva.");
-                    window.setupMockLogin();
-                } else {
-                    const btn = document.getElementById('btn-google-login');
-                    btn.onclick = () => {
-                        btn.innerHTML = `<div class="w-5 h-5 border-2 border-slate-800 border-t-slate-400 rounded-full animate-spin"></div> Conectando...`;
-                        btn.disabled = true;
-                        dbAuth.signInWithPopup(provider).catch(error => {
-                            console.error("Error al iniciar sesión con Google:", error);
-                            btn.innerHTML = `<svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.16v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.16C1.43 8.55 1 10.22 1 12s.43 3.45 1.16 4.93l3.68-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.16 7.07l3.68 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Continuar con Google`;
-                            btn.disabled = false;
-                            alert(`Error Técnico Firebase:\nCódigo: ${error.code}\nMensaje: ${error.message}`);
-                        });
-                    };
-
-                    dbAuth.onAuthStateChanged(async (user) => {
-                        const loginModal = document.getElementById('login-modal-backdrop');
-                        const loginCard = document.getElementById('login-card');
-                        const spinner = document.getElementById('auth-loading-spinner');
-                        
-                        if (user) {
-                            syncUserId = user.uid;
-                            isUserLoggedIn = true;
-                            
-                            await loadFromCloud(); 
-                            
-                            let displayName = playerState.customName || user.displayName || user.email.split('@')[0];
-                            document.getElementById('user-id-display').innerHTML = `${displayName.toUpperCase()} <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">✏️</span>`;
-                            
-                            let displayAvatar = playerState.customAvatar || user.photoURL || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
-                            document.getElementById('user-avatar').src = displayAvatar;
-                            
-                            loginModal.classList.add('opacity-0');
-                            setTimeout(() => {
-                                loginModal.classList.add('hidden');
-                                if(spinner) spinner.classList.add('hidden');
-                            }, 500);
-
-                            window.updateProgressUI();
-                            window.renderExercisePills();
-                            window.showToast("¡Autenticado!", `Bienvenido ${displayName.split(' ')[0]}`, "success");
-                            window.updateSyncBadge('online');
-                        } else {
-                            isUserLoggedIn = false;
-                            
-                            if(spinner && loginCard) {
-                                spinner.classList.add('opacity-0');
-                                setTimeout(() => {
-                                    spinner.classList.add('hidden');
-                                    loginCard.classList.remove('hidden');
-                                    requestAnimationFrame(() => {
-                                        loginCard.classList.remove('opacity-0', 'scale-95');
-                                        loginCard.classList.add('opacity-100', 'scale-100');
-                                    });
-                                }, 300);
-                            } else {
-                                loginModal.classList.remove('hidden');
-                                requestAnimationFrame(() => loginModal.classList.remove('opacity-0'));
-                            }
-
-                            document.getElementById('user-id-display').innerHTML = `USUARIO <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">✏️</span>`;
-                            window.updateSyncBadge('offline');
-                        }
-                    });
-                }
-            }
-
+            await loadFromCloud();
             TOPICS.push(createTopicFromJSON(RAW_TOPIC_1));
 
             let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
@@ -1038,12 +853,20 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             
             customTopics.forEach(d => { 
                 try {
-                    if (!d.id) { d.id = "t" + Math.random().toString(36).substr(2, 9); requiresSave = true; } 
+                    if (!d.id) { 
+                        d.id = "t" + Math.random().toString(36).substr(2, 9); 
+                        requiresSave = true; 
+                    } 
                     TOPICS.push(createTopicFromJSON(d)); 
-                } catch(e) { console.error("Ignorando tema corrupto:", e); }
+                } catch(e) {
+                    console.error("Ignorando tema corrupto:", e);
+                }
             });
 
-            if (requiresSave) { localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); syncToCloud(); }
+            if (requiresSave) {
+                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+                syncToCloud(); 
+            }
 
             let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "null");
             if (savedOrder) {
@@ -1054,52 +877,10 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             }
 
             try {
-                windowSQLite = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
-                
-                // INYECCIÓN DE MEJORA: Wrapper personalizado de CodeMirror Hint para el Diseño Premium
-                CodeMirror.hint.premiumSql = function(editor, options) {
-                    let result = CodeMirror.hint.sql(editor, options);
-                    if (result && result.list) {
-                        let enhancedList = result.list.map(word => {
-                            let textStr = typeof word === 'string' ? word : word.text;
-                            let type = 'keyword';
-                            
-                            // Validamos si la sugerencia es una Tabla o una Columna
-                            if (options.tables && options.tables.hasOwnProperty(textStr)) {
-                                type = 'table';
-                            } else if (options.tables) {
-                                for (let t in options.tables) {
-                                    if (options.tables[t].includes(textStr)) {
-                                        type = 'column';
-                                        break;
-                                    }
-                                }
-                            }
-                            
-                            return {
-                                text: textStr,
-                                render: function(Element, data, cur) {
-                                    // Esta es la inyección de diseño HTML personalizado dentro de la lista
-                                    Element.className = "px-4 py-2.5 flex justify-between items-center w-full transition-colors cursor-pointer";
-                                    if (type === 'table') {
-                                        Element.innerHTML = `<span class="text-cyan-400 font-bold">${textStr}</span>`;
-                                    } else if (type === 'column') {
-                                        Element.innerHTML = `<span class="text-gray-200">${textStr}</span><span class="text-[10px] font-bold text-emerald-500 border border-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded shadow-sm ml-4 uppercase">COL</span>`;
-                                    } else {
-                                        Element.innerHTML = `<span class="text-white font-bold tracking-wide">${textStr}</span>`;
-                                    }
-                                }
-                            };
-                        });
-                        result.list = enhancedList;
-                    }
-                    return result;
-                };
-
                 sqlEditor = CodeMirror.fromTextArea(document.getElementById("sql-editor"), {
                     mode: "text/x-sql", theme: "dracula", lineNumbers: true, lineWrapping: true,
-                    extraKeys: { "Ctrl-Space": "autocomplete", "Tab": "autocomplete" },
-                    hintOptions: { hint: CodeMirror.hint.premiumSql, tables: {}, completeSingle: false }
+                    extraKeys: { "Ctrl-Space": "autocomplete", "Tab": "autocomplete", "Enter": function(cm) { if (cm.state.completionActive) { cm.state.completionActive.pick(); } else { return CodeMirror.Pass; } } },
+                    hintOptions: { tables: { "Sales_Customers": ["CustomerID", "CustomerName", "Country", "Score", "CreditLimit"], "Warehouse_StockItems": ["StockItemID", "StockItemName", "UnitPrice", "Quantity"] }, completeSingle: false }
                 });
 
                 sqlEditor.on("change", function(instance, changeObj) {
@@ -1117,6 +898,25 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 document.getElementById('next-btn').addEventListener('click', () => { window.loadExercise(currentTopicIdx, currentExerciseIdx + 1); });
                 document.getElementById('reset-btn').addEventListener('click', window.resetConsole);
 
+                const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
+                db = new SQL.Database();
+                
+                db.run(`
+                    CREATE TABLE Sales_Customers (CustomerID INT, CustomerName VARCHAR, Country VARCHAR, Score INT, CreditLimit DECIMAL);
+                    INSERT INTO Sales_Customers VALUES (1, 'Tailwind Toys', 'USA', 900, 1500.00); 
+                    INSERT INTO Sales_Customers VALUES (2, 'Wingtip Toys', 'UK', 750, 3000.00);
+                    INSERT INTO Sales_Customers VALUES (3, 'A Datum Corporation', 'Germany', 350, 3000.00); 
+                    INSERT INTO Sales_Customers VALUES (4, 'Contoso Retail', 'USA', 0, 5000.00);
+                    CREATE TABLE Warehouse_StockItems (StockItemID INT, StockItemName VARCHAR, UnitPrice DECIMAL, Quantity INT);
+                    INSERT INTO Warehouse_StockItems VALUES (101, 'USB Drive 8GB', 15.00, 200); 
+                    INSERT INTO Warehouse_StockItems VALUES (102, 'Teclado Mecanico', 85.50, 45);
+                    INSERT INTO Warehouse_StockItems VALUES (103, 'Monitor 24 pulgadas', 150.00, 15); 
+                    INSERT INTO Warehouse_StockItems VALUES (104, 'Raton Inalambrico', 55.00, 80);
+                    INSERT INTO Warehouse_StockItems VALUES (105, 'Silla Ergonomica', 120.00, 10); 
+                    INSERT INTO Warehouse_StockItems VALUES (106, 'Cable HDMI', 12.00, 50);
+                    INSERT INTO Warehouse_StockItems VALUES (107, 'Webcam HD', 60.00, 30);
+                `);
+                
                 window.renderTopicsSidebar();
                 window.loadExercise(0, 0);
 
@@ -1153,17 +953,12 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 btn.addEventListener('dragend', (e) => { btn.classList.remove('opacity-30', 'border-dashed', 'border-slate-500'); draggedTopicIndex = null; window.renderTopicsSidebar(); });
                 btn.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (draggedTopicIndex !== null && draggedTopicIndex !== idx) { btn.classList.add('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20'); } });
                 btn.addEventListener('dragleave', (e) => { btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20'); });
-                
                 btn.addEventListener('drop', (e) => {
                     e.preventDefault(); btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20');
                     if (draggedTopicIndex !== null && draggedTopicIndex !== idx) {
-                        let activeId = TOPICS[currentTopicIdx].id; 
-                        const item = TOPICS.splice(draggedTopicIndex, 1)[0]; 
-                        TOPICS.splice(idx, 0, item); 
-                        const newOrder = TOPICS.map(t => t.id); 
-                        localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
-                        currentTopicIdx = TOPICS.findIndex(t => t.id === activeId); 
-                        window.renderTopicsSidebar();
+                        let activeId = TOPICS[currentTopicIdx].id; const item = TOPICS.splice(draggedTopicIndex, 1)[0]; TOPICS.splice(idx, 0, item);
+                        const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
+                        currentTopicIdx = TOPICS.findIndex(t => t.id === activeId); window.renderTopicsSidebar();
                         syncToCloud(); 
                     }
                 });
@@ -1172,24 +967,33 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
         };
 
         window.openTopicActionModal = function(e, topicId, title) {
-            e.stopPropagation(); selectedTopicIdForAction = topicId; document.getElementById('action-topic-name').textContent = title;
-            const modal = document.getElementById('topic-action-modal'); modal.classList.remove('hidden'); requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.firstElementChild.classList.remove('scale-95'); });
+            e.stopPropagation(); 
+            selectedTopicIdForAction = topicId;
+            document.getElementById('action-topic-name').textContent = title;
+            const modal = document.getElementById('topic-action-modal');
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.firstElementChild.classList.remove('scale-95'); });
         };
 
         window.closeTopicActionModal = function() {
-            const modal = document.getElementById('topic-action-modal'); modal.classList.add('opacity-0'); modal.firstElementChild.classList.add('scale-95'); setTimeout(() => modal.classList.add('hidden'), 300);
+            const modal = document.getElementById('topic-action-modal');
+            modal.classList.add('opacity-0'); modal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
         };
 
         document.getElementById('btn-edit-topic').addEventListener('click', () => {
-            const topic = TOPICS.find(t => t.id === selectedTopicIdForAction); if(!topic) return;
+            const topic = TOPICS.find(t => t.id === selectedTopicIdForAction);
+            if(!topic) return;
             const newTitle = prompt("✏️ Escribe el nuevo título para el módulo:", topic.title);
             if(newTitle && newTitle.trim() !== "") {
                 topic.title = newTitle.trim();
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
                 let ct = customTopics.find(t => t.id === selectedTopicIdForAction);
                 if(ct) { ct.topicName = topic.title; localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); }
-                window.renderTopicsSidebar(); if(currentTopicIdx === TOPICS.findIndex(t => t.id === selectedTopicIdForAction)) { document.getElementById('topic-title').textContent = topic.title; }
-                window.showToast("Título Actualizado", "Nombre modificado con éxito.", "success"); syncToCloud();
+                window.renderTopicsSidebar();
+                if(currentTopicIdx === TOPICS.findIndex(t => t.id === selectedTopicIdForAction)) { document.getElementById('topic-title').textContent = topic.title; }
+                window.showToast("Título Actualizado", "Nombre modificado con éxito.", "success");
+                syncToCloud();
             }
             window.closeTopicActionModal();
         });
@@ -1197,14 +1001,22 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
         document.getElementById('btn-delete-topic').addEventListener('click', () => {
             const confirmDelete = confirm("⚠️ ¿Estás absolutamente seguro de ELIMINAR este módulo?\nSe perderá su contenido y tendrás que importarlo de nuevo si lo necesitas.");
             if(confirmDelete) {
-                const idx = TOPICS.findIndex(t => t.id === selectedTopicIdForAction); if(idx > -1) TOPICS.splice(idx, 1);
+                const idx = TOPICS.findIndex(t => t.id === selectedTopicIdForAction);
+                if(idx > -1) TOPICS.splice(idx, 1);
+                
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
-                customTopics = customTopics.filter(t => t.id !== selectedTopicIdForAction); localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+                customTopics = customTopics.filter(t => t.id !== selectedTopicIdForAction);
+                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+                
                 let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "[]");
-                savedOrder = savedOrder.filter(id => id !== selectedTopicIdForAction); localStorage.setItem('sql_topic_order', JSON.stringify(savedOrder));
+                savedOrder = savedOrder.filter(id => id !== selectedTopicIdForAction);
+                localStorage.setItem('sql_topic_order', JSON.stringify(savedOrder));
+
                 window.renderTopicsSidebar();
+                
                 if(currentTopicIdx === idx || currentTopicIdx >= TOPICS.length) { window.loadExercise(0, 0); }
-                window.showToast("Módulo Eliminado", "El módulo fue borrado de tu cuenta.", "success"); syncToCloud();
+                window.showToast("Módulo Eliminado", "El módulo fue borrado de tu cuenta.", "success");
+                syncToCloud();
             }
             window.closeTopicActionModal();
         });
@@ -1213,15 +1025,20 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             currentTopicIdx = topicIdx; currentExerciseIdx = exIdx; revealedHintsCount = 0;
             const topic = TOPICS[topicIdx]; const exercise = topic.exercises[exIdx]; const dynamicData = exercise.data; 
 
-            if (activeDbTopicId !== topic.id) { window.buildTopicDatabase(topic); activeDbTopicId = topic.id; }
-
             document.getElementById('topic-title').textContent = topic.title; 
             
             const topBar = document.getElementById('theory-top-bar');
-            if (topicIdx === 0) { topBar.className = "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"; } 
-            else {
-                const gradients = [ "from-cyan-400 to-blue-600", "from-amber-400 to-purple-600", "from-emerald-400 to-cyan-500", "from-pink-500 to-violet-600" ];
-                let chosenGrad = gradients[(topicIdx - 1) % gradients.length]; topBar.className = `absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${chosenGrad}`;
+            if (topicIdx === 0) {
+                topBar.className = "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400";
+            } else {
+                const gradients = [
+                    "from-cyan-400 to-blue-600",
+                    "from-amber-400 to-purple-600",
+                    "from-emerald-400 to-cyan-500",
+                    "from-pink-500 to-violet-600"
+                ];
+                let chosenGrad = gradients[(topicIdx - 1) % gradients.length];
+                topBar.className = `absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${chosenGrad}`;
             }
 
             let theoryHTML = topic.baseTheory || "";
@@ -1242,11 +1059,13 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     let qState = savedQuizState[idx];
                     let isAnsweredCorrectly = qState && qState.correct;
 
-                    // INYECCIÓN DE MEJORA: Coloreado y saltos de línea para Quizzes (sin font-mono)
                     let optionsHTML = qz.options.map((opt, optIdx) => {
-                        let disabledAttr = isAnsweredCorrectly ? 'disabled' : ''; let extraClass = '';
-                        if (isAnsweredCorrectly && optIdx === qState.selectedOpt) { extraClass = 'correct'; }
-                        return `<button ${disabledAttr} onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}', ${idx}, ${optIdx})" class="quiz-option w-full text-left p-3 rounded-lg bg-slate-800/50 flex gap-3 items-center ${extraClass}"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><span class="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode ? window.highlightSQLCode(opt.text) : opt.text}</span></button>`;
+                        let disabledAttr = isAnsweredCorrectly ? 'disabled' : '';
+                        let extraClass = '';
+                        if (isAnsweredCorrectly && optIdx === qState.selectedOpt) {
+                            extraClass = 'correct';
+                        }
+                        return `<button ${disabledAttr} onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}', ${idx}, ${optIdx})" class="quiz-option w-full text-left p-2.5 rounded-lg bg-slate-800/50 flex gap-2 items-center ${extraClass}"><div class="quiz-circle w-4 h-4 rounded-full border-2 border-slate-500 shrink-0"></div><span class="text-sm text-slate-300">${opt.text}</span></button>`;
                     }).join('');
 
                     let feedbackClass = isAnsweredCorrectly ? "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2" : "quiz-feedback hidden";
@@ -1258,7 +1077,8 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 theoryHTML += `</div>`;
             }
 
-            document.getElementById('topic-theory').innerHTML = theoryHTML; document.getElementById('theory-scroll-container').scrollTop = 0; 
+            document.getElementById('topic-theory').innerHTML = theoryHTML;
+            document.getElementById('theory-scroll-container').scrollTop = 0; 
 
             document.getElementById('ex-task').innerHTML = dynamicData.taskHtml; document.getElementById('ex-schema').innerHTML = dynamicData.schemaLine;
             document.getElementById('ex-schema-desc').innerHTML = dynamicData.descHtml; document.getElementById('ex-xp-badge').textContent = `+${exercise.xp} XP`;
@@ -1266,70 +1086,40 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             
             window.renderExercisePills(); document.getElementById('run-btn').classList.remove('hidden'); document.getElementById('next-btn').classList.add('hidden');
             window.resetConsole(); window.renderTopicsSidebar();
-            window.updateHintsUI();
         };
 
-        window.checkQuiz = function(btn, isCorrect, feedbackMsg, quizIdx, optIdx) {
-            const container = btn.closest('.quiz-container'); 
-            const buttons = container.querySelectorAll('.quiz-option'); 
-            buttons.forEach(b => b.disabled = true);
-            const feedbackDiv = container.querySelector('.quiz-feedback'); 
-            feedbackDiv.classList.remove('hidden');
-
+        window.revealHint = function() {
             const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
-            playerState.quizStates = playerState.quizStates || {};
-            playerState.quizStates[exercise.id] = playerState.quizStates[exercise.id] || {};
-
-            if (isCorrect) {
-                btn.classList.add('correct'); 
-                feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
-                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
-                
-                if (!playerState.quizStates[exercise.id][quizIdx]) {
-                    window.fireConfetti(); 
-                    window.grantRewards(5, 1);
-                    playerState.quizStates[exercise.id][quizIdx] = { selectedOpt: optIdx, correct: true };
-                    syncToCloud();
-                }
-            } else {
-                btn.classList.add('incorrect', 'shake-animation'); 
-                feedbackDiv.innerHTML = `<span class="text-red-400 text-lg">❌</span> <span class="text-red-300">${feedbackMsg}</span>`;
-                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-red-900/30 border border-red-500/50 flex items-start gap-2";
-                setTimeout(() => { 
-                    btn.classList.remove('incorrect', 'shake-animation'); 
-                    feedbackDiv.classList.add('hidden'); 
-                    buttons.forEach(b => b.disabled = false); 
-                }, 2000);
+            if (revealedHintsCount < exercise.hints.length) {
+                const hintsList = document.getElementById('hints-list'); const newHint = document.createElement('div');
+                newHint.className = 'bg-blue-950/30 border border-blue-800/50 p-4 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.1)] relative overflow-hidden group min-w-0';
+                newHint.style.animation = 'slideIn 0.3s ease-out forwards';
+                newHint.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-blue-400 to-cyan-500"></div><div class="text-blue-400 font-black text-xs uppercase tracking-widest mb-1.5 flex items-center gap-2"><span>🔍</span> Pista ${revealedHintsCount + 1}</div><div class="text-slate-300 text-sm font-medium leading-relaxed pl-1 break-words">${exercise.hints[revealedHintsCount]}</div>`;
+                hintsList.prepend(newHint); revealedHintsCount++; window.updateHintsUI();
             }
+        };
+
+        window.revealSolution = function() {
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; const hintsList = document.getElementById('hints-list'); const solDiv = document.createElement('div');
+            solDiv.className = 'bg-emerald-950/30 border border-emerald-800/50 p-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.15)] relative overflow-hidden mb-2 min-w-0';
+            solDiv.style.animation = 'slideIn 0.3s ease-out forwards';
+            solDiv.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-green-500"></div><div class="text-emerald-400 font-black text-xs uppercase tracking-widest mb-2 flex items-center gap-2"><span>🗝️</span> Solución Oficial</div><div class="bg-black/60 p-3 rounded-lg border border-emerald-900/50 shadow-inner"><pre class="font-mono text-xs text-emerald-100 overflow-x-auto whitespace-pre-wrap leading-relaxed">${exercise.expectedQuery}</pre></div>`;
+            hintsList.prepend(solDiv); document.getElementById('btn-show-solution').classList.add('hidden');
+        };
+
+        window.updateHintsUI = function() {
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; const btnNext = document.getElementById('btn-next-hint'); const noMoreMsg = document.getElementById('no-more-hints'); const btnShowSol = document.getElementById('btn-show-solution');
+            const remaining = exercise.hints.length - revealedHintsCount;
+            if (remaining > 0) { btnNext.classList.remove('hidden'); document.getElementById('hints-left').textContent = remaining; noMoreMsg.classList.add('hidden'); btnShowSol.classList.add('hidden'); } 
+            else { btnNext.classList.add('hidden'); noMoreMsg.classList.remove('hidden'); btnShowSol.classList.remove('hidden'); }
         };
 
         window.executeUserQuery = function() {
             const query = sqlEditor.getValue().trim(); if (!query) return;
-            const resContainer = document.getElementById('results-container'); const rowCountEl = document.getElementById('row-count'); 
-            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; 
-            document.getElementById('error-container').classList.add('hidden');
+            const resContainer = document.getElementById('results-container'); const rowCountEl = document.getElementById('row-count'); const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; document.getElementById('error-container').classList.add('hidden');
 
             try {
-                const upperQuery = query.toUpperCase();
-                if (upperQuery.startsWith("CREATE PROCEDURE") || upperQuery.startsWith("CREATE PROC")) {
-                    if (upperQuery.includes("AS") && upperQuery.includes("BEGIN") && upperQuery.includes("END")) {
-                        rowCountEl.textContent = 'COMPLETADO';
-                        resContainer.innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-emerald-950/20"><div class="w-16 h-16 rounded-full bg-emerald-900/30 border border-emerald-500/30 flex items-center justify-center mb-3 shadow-[0_0_15px_rgba(16,185,129,0.2)]"><span class="text-3xl drop-shadow-[0_0_10px_rgba(16,185,129,0.4)]">✅</span></div><span class="text-emerald-400 font-black uppercase tracking-widest text-sm mb-1 drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]">Comandos completados exitosamente.</span><span class="text-emerald-200/60 text-xs max-w-[80%] font-medium">El Procedimiento Almacenado ha sido compilado y guardado en la memoria temporal (Modo Simulación T-SQL).</span></div>`;
-                        
-                        if (exercise.expectedQuery.toUpperCase().includes("CREATE PROC")) {
-                            if (!playerState.completedExercises.includes(exercise.id)) {
-                                playerState.completedExercises.push(exercise.id); window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti();
-                                if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); }
-                            }
-                        }
-                        return; 
-                    } else {
-                        throw new Error("Sintaxis T-SQL Inválida. Un procedimiento almacenado requiere la estructura estructural: CREATE PROCEDURE nombre AS BEGIN ... END");
-                    }
-                }
-
                 const userResult = db.exec(query);
-                
                 if (userResult.length > 0) {
                     const columns = userResult[0].columns; const values = userResult[0].values; rowCountEl.textContent = `${values.length} FILAS`;
                     let tableHTML = '<table class="sql-table"><thead><tr>'; columns.forEach(col => tableHTML += `<th>${col}</th>`); tableHTML += '</tr></thead><tbody>';
@@ -1341,69 +1131,13 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 }
 
                 let isCorrect = false; let expectedResult;
-                let diag = ""; let titleMsg = "LOS DATOS EXTRAÍDOS NO COINCIDEN";
-
                 try {
                     let hasCommentIfRequired = exercise.expectedQuery.includes("--") ? query.includes("--") : true;
-                    const cleanExpected = exercise.expectedQuery.replace(/--.*?\n/g, ""); 
+                    const cleanExpected = exercise.expectedQuery.replace(/--.*?\n/g, ""); const cleanUser = query.replace(/--.*?\n/g, "");
                     expectedResult = db.exec(cleanExpected);
-
-                    let userCount = userResult.length > 0 ? userResult[0].values.length : 0;
-                    let expectedCount = expectedResult.length > 0 ? expectedResult[0].values.length : 0;
-                    let userCols = userResult.length > 0 ? userResult[0].columns : [];
-                    let expectedCols = expectedResult.length > 0 ? expectedResult[0].columns : [];
-
-                    if (!hasCommentIfRequired) {
-                        titleMsg = "FALTA DOCUMENTACIÓN CORPORATIVA";
-                        diag = "- Los datos extraídos son correctos, pero olvidaste poner el comentario requerido (usando --).\n- Un script no documentado será rechazado en un entorno de producción real.";
-                    } else if (userCount === 0 && expectedCount === 0) {
-                         isCorrect = true; 
-                    } else if (userCount === 0 && expectedCount > 0) {
-                        diag = "- Tu código devolvió una tabla vacía (0 registros), pero el negocio espera ver datos.\n- Revisa tus filtros matemáticos (WHERE) porque excluyeron absolutamente todas las filas requeridas.";
-                    } else if (userCount > 0 && expectedCount === 0) {
-                        diag = "- Tu código devolvió datos, pero el negocio esperaba que la consulta no retornara nada bajo esas condiciones.\n- Revisa tu filtrado y tus operadores lógicos, estás siendo poco restrictivo.";
-                    } else if (userCols.length !== expectedCols.length) {
-                        diag = `- Extraes ${userCols.length} columnas, pero el requerimiento exige exactamente ${expectedCols.length}.\n- Revisa tu cláusula SELECT. ¿Acaso usaste '*' cuando debías especificar columnas, o viceversa?`;
-                    } else if (userCount !== expectedCount) {
-                        diag = `- Extraes ${userCount} registros, pero el requerimiento espera exactamente ${expectedCount}.\n- Tu filtro (WHERE) es incorrecto. Verifica los operadores usados (>, <, AND, OR, IN).`;
-                    } else {
-                        let colMap = [];
-                        let missingCols = [];
-                        
-                        for(let i=0; i<expectedCols.length; i++) {
-                            let idx = userCols.findIndex(c => c.toLowerCase() === expectedCols[i].toLowerCase());
-                            if(idx === -1) missingCols.push(expectedCols[i]);
-                            colMap.push({ expIdx: i, usrIdx: idx });
-                        }
-
-                        if (missingCols.length > 0) {
-                            diag = `- Te faltan las siguientes columnas requeridas: ${missingCols.join(', ')}.\n- Revisa los nombres en tu SELECT, tal vez cometiste un 'typo' al escribirlas.`;
-                        } else {
-                            let allMatch = true;
-                            let usrVals = userResult[0].values;
-                            let expVals = expectedResult[0].values;
-
-                            for(let r = 0; r < expVals.length; r++) {
-                                for(let c = 0; c < colMap.length; c++) {
-                                    let ev = expVals[r][colMap[c].expIdx];
-                                    let uv = usrVals[r][colMap[c].usrIdx];
-                                    
-                                    if (ev != uv) {
-                                        allMatch = false; 
-                                        break;
-                                    }
-                                }
-                                if(!allMatch) break;
-                            }
-
-                            if(allMatch) {
-                                isCorrect = true;
-                            } else {
-                                diag = "- Las columnas y la cantidad de filas son correctas, pero los datos internos no coinciden con la solución esperada.\n- Verifica si te equivocaste en algún operador de comparación o si estás filtrando valores que no corresponden.";
-                            }
-                        }
-                    }
-                } catch(e) { console.error("Error en validación profunda:", e); }
+                    if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && hasCommentIfRequired) { isCorrect = true; } 
+                    else if (JSON.stringify(userResult) === JSON.stringify(expectedResult) && !hasCommentIfRequired) { window.showErrorBox("Falta Documentación Corporativa", "- Los datos extraídos son correctos, pero olvidaste poner el comentario requerido (usando --).\n- Un script no documentado será rechazado en el trabajo real."); return; }
+                } catch(e) {}
 
                 if (isCorrect) {
                     if (!playerState.completedExercises.includes(exercise.id)) {
@@ -1414,190 +1148,32 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                         if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); }
                     }
                 } else {
-                    window.showErrorBox(titleMsg, diag);
+                    let diag = ""; let expectedCount = expectedResult && expectedResult.length > 0 ? expectedResult[0].values.length : 0; let userCount = userResult.length > 0 ? userResult[0].values.length : 0;
+                    if(userCount === 0 && expectedCount > 0) { diag = "- Tu código devolvió una tabla vacía (0 registros), pero el negocio espera ver datos.\n- Revisa tus filtros matemáticos (WHERE) porque excluyeron absolutamente todas las filas."; } 
+                    else if (userCount > 0 && expectedCount === 0) { diag = "- Tu código devolvió datos, pero el negocio esperaba que la consulta no retornara nada bajo esas condiciones.\n- Revisa tu filtrado y tus operadores lógicos."; } 
+                    else { diag = "- Tu código arrojó un resultado diferente al esperado.\n- Revisa el panel 'Salida de Datos' y compáralo con el Requerimiento de la Misión.\n- Asegúrate de invocar exactamente las columnas pedidas en el SELECT."; }
+                    window.showErrorBox("LOS DATOS EXTRAÍDOS NO COINCIDEN", diag);
                 }
             } catch (err) {
                 rowCountEl.textContent = 'ERROR'; resContainer.innerHTML = ''; let errorMsg = err.message; let titleMsg = "FALLO DE COMPILACIÓN"; let liveDiagnosis = "";
                 if (errorMsg.includes("near") && !query.includes(",")) liveDiagnosis = "\n\n⚠️ ¡Posible falta de coma! En SQL Server, cuando seleccionas múltiples columnas en el SELECT, debes separarlas obligatoriamente con una coma (,).";
-                if (errorMsg.includes("no such table")) titleMsg = "TABLA NO ENCONTRADA EN BASE DE DATOS"; else if (errorMsg.includes("no such column")) titleMsg = "COLUMNA NO ENCONTRADA EN ESQUEMA"; else if (errorMsg.includes("syntax error") || errorMsg.includes("Sintaxis")) titleMsg = "ERROR DE SINTAXIS FATAL";
+                if (errorMsg.includes("no such table")) titleMsg = "TABLA NO ENCONTRADA EN BASE DE DATOS"; else if (errorMsg.includes("no such column")) titleMsg = "COLUMNA NO ENCONTRADA EN ESQUEMA"; else if (errorMsg.includes("syntax error")) titleMsg = "ERROR DE SINTAXIS FATAL";
                 window.showErrorBox(titleMsg, "Detalle Técnico del Servidor (SQLite):\n" + errorMsg + liveDiagnosis);
             }
         };
 
-        window.revealHint = function() {
-            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
-            const btn = document.getElementById('btn-next-hint');
-            
-            if (revealedHintsCount < exercise.hints.length) {
-                if (playerState.coins >= 5) {
-                    playerState.coins -= 5;
-                    document.getElementById('ui-coins').textContent = playerState.coins;
-                    syncToCloud();
-                    
-                    const hintsList = document.getElementById('hints-list'); const newHint = document.createElement('div');
-                    newHint.className = 'bg-blue-950/30 border border-blue-800/50 p-4 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.1)] relative overflow-hidden group min-w-0';
-                    newHint.style.animation = 'slideIn 0.3s ease-out forwards';
-                    newHint.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-blue-400 to-cyan-500"></div><div class="text-blue-400 font-black text-xs uppercase tracking-widest mb-1.5 flex items-center gap-2"><span>🔍</span> Pista ${revealedHintsCount + 1}</div><div class="text-slate-300 text-sm font-medium leading-relaxed pl-1 break-words">${exercise.hints[revealedHintsCount]}</div>`;
-                    hintsList.prepend(newHint); revealedHintsCount++; window.updateHintsUI();
-                } else {
-                    btn.classList.add('shake-denied');
-                    setTimeout(() => btn.classList.remove('shake-denied'), 300);
-                    window.showToast("Sin Oro", "Necesitas al menos 5 monedas.", "error");
-                }
-            }
-        };
-
-        window.revealSolution = function() {
-            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
-            const btn = document.getElementById('btn-show-solution');
-            
-            if (playerState.coins >= 20) {
-                playerState.coins -= 20;
-                document.getElementById('ui-coins').textContent = playerState.coins;
-                syncToCloud();
-
-                const hintsList = document.getElementById('hints-list'); const solDiv = document.createElement('div');
-                solDiv.className = 'bg-emerald-950/30 border border-emerald-800/50 p-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.15)] relative overflow-hidden mb-2 min-w-0';
-                solDiv.style.animation = 'slideIn 0.3s ease-out forwards';
-                solDiv.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-green-500"></div><div class="text-emerald-400 font-black text-xs uppercase tracking-widest mb-2 flex items-center gap-2"><span>🗝️</span> Solución Oficial</div><div class="bg-black/60 p-3 rounded-lg border border-emerald-900/50 shadow-inner"><pre class="font-mono text-xs text-emerald-100 overflow-x-auto whitespace-pre-wrap leading-relaxed">${exercise.expectedQuery}</pre></div>`;
-                hintsList.prepend(solDiv); btn.classList.add('hidden');
-            } else {
-                btn.classList.add('shake-denied');
-                setTimeout(() => btn.classList.remove('shake-denied'), 300);
-                window.showToast("Sin Oro", "Necesitas al menos 20 monedas.", "error");
-            }
-        };
-
-        window.updateHintsUI = function() {
-            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; 
-            const btnNext = document.getElementById('btn-next-hint'); 
-            const noMoreMsg = document.getElementById('no-more-hints'); 
-            const btnShowSol = document.getElementById('btn-show-solution');
-            const remaining = exercise.hints.length - revealedHintsCount;
-            
-            if (remaining > 0) { 
-                btnNext.classList.remove('hidden'); 
-                noMoreMsg.classList.add('hidden'); 
-                btnShowSol.classList.add('hidden'); 
-            } else { 
-                btnNext.classList.add('hidden'); 
-                noMoreMsg.classList.remove('hidden'); 
-                btnShowSol.classList.remove('hidden'); 
-            }
-        };
-
-        window.switchDbTab = function(tabName) {
-            const btnDatos = document.getElementById('tab-datos');
-            const btnDiagrama = document.getElementById('tab-diagrama');
-            const contentDatos = document.getElementById('db-modal-content');
-            const contentDiagrama = document.getElementById('db-modal-diagram');
-
-            if(tabName === 'datos') {
-                btnDatos.className = "px-4 py-1.5 rounded-md text-xs font-bold transition-all bg-cyan-900/50 text-cyan-300 shadow-inner";
-                btnDiagrama.className = "px-4 py-1.5 rounded-md text-xs font-bold transition-all text-slate-400 hover:text-white";
-                contentDatos.classList.remove('hidden');
-                contentDiagrama.classList.remove('flex');
-                contentDiagrama.classList.add('hidden');
-            } else {
-                btnDiagrama.className = "px-4 py-1.5 rounded-md text-xs font-bold transition-all bg-purple-900/50 text-purple-300 shadow-inner";
-                btnDatos.className = "px-4 py-1.5 rounded-md text-xs font-bold transition-all text-slate-400 hover:text-white";
-                contentDatos.classList.add('hidden');
-                contentDiagrama.classList.remove('hidden');
-                contentDiagrama.classList.add('flex');
-                window.renderMermaidDiagram();
-            }
-        };
-
-        window.renderMermaidDiagram = async function() {
-            const container = document.getElementById('mermaid-container');
-            let mermaidCode = "erDiagram\n";
-            
-            try {
-                const tablesRes = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
-                if (tablesRes.length > 0) {
-                    const tables = tablesRes[0].values.map(v => v[0]);
-                    let schemas = {};
-
-                    tables.forEach(tableName => {
-                        schemas[tableName] = { pk: null, cols: [] };
-                        const colsRes = db.exec(`PRAGMA table_info(${tableName});`);
-                        
-                        if (colsRes.length > 0) {
-                            colsRes[0].values.forEach((col, index) => {
-                                let colName = col[1].replace(/\s+/g, '_');
-                                let colType = (col[2] || 'VARCHAR').replace(/[^a-zA-Z0-9_]/g, '');
-                                if(!colType) colType = 'VARCHAR';
-                                
-                                let isPk = col[5] === 1 || colName.toLowerCase() === tableName.toLowerCase() + 'id' || colName.toLowerCase() === tableName.replace(/s$/, '').toLowerCase() + 'id' || (index === 0 && colName.toLowerCase().endsWith('id'));
-                                
-                                if(isPk && !schemas[tableName].pk) schemas[tableName].pk = colName;
-                                schemas[tableName].cols.push({ name: colName, type: colType, isPk: isPk });
-                            });
-                        }
-                    });
-
-                    tables.forEach(tableName => {
-                        mermaidCode += `    ${tableName} {\n`;
-                        schemas[tableName].cols.forEach(c => {
-                            let keyType = c.isPk ? 'PK' : '';
-                            let isFk = !c.isPk && tables.some(otherT => otherT !== tableName && schemas[otherT].pk && schemas[otherT].pk.toLowerCase() === c.name.toLowerCase());
-                            if(isFk) keyType = 'FK';
-                            
-                            mermaidCode += `        ${c.type} ${c.name} ${keyType}\n`;
-                        });
-                        mermaidCode += `    }\n`;
-                    });
-
-                    tables.forEach(t1 => {
-                        schemas[t1].cols.forEach(c => {
-                            let isFk = !c.isPk && tables.some(otherT => otherT !== t1 && schemas[otherT].pk && schemas[otherT].pk.toLowerCase() === c.name.toLowerCase());
-                            if(isFk) {
-                                let targetTable = tables.find(otherT => schemas[otherT].pk && schemas[otherT].pk.toLowerCase() === c.name.toLowerCase());
-                                if(targetTable) {
-                                    mermaidCode += `    ${targetTable} ||--o{ ${t1} : "1:N (Unidos por ${c.name})"\n`;
-                                }
-                            }
-                        });
-                    });
-                }
-            } catch(e) { console.error("Error generando ERD:", e); }
-
-            container.innerHTML = `<div class="mermaid">${mermaidCode}</div>`;
-            try {
-                mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
-                await mermaid.init(undefined, container.querySelectorAll('.mermaid'));
-            } catch (err) {
-                console.error("Fallo de renderizado Mermaid:", err);
-                container.innerHTML = `<span class="text-slate-400 font-bold text-center w-full block mt-10">El diagrama no pudo ser renderizado.<br>Asegúrate de no usar espacios en los nombres de las columnas.</span>`;
-            }
-        };
-
         window.openDatabaseModal = function() {
-            const backdrop = document.getElementById('db-modal-backdrop'); 
-            const card = document.getElementById('db-modal-card'); 
-            const content = document.getElementById('db-modal-content'); 
-            
-            window.switchDbTab('datos');
-
-            let html = '';
-            try {
-                const tablesRes = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
-                if (tablesRes.length > 0) {
-                    const tables = tablesRes[0].values.map(v => v[0]);
-                    tables.forEach(tableName => {
-                        const res = db.exec("SELECT * FROM " + tableName);
-                        if (res.length > 0) {
-                            html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span></h3></div><div class="bg-[#05060a] rounded-xl border border-cyan-900/50 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all group-hover:border-cyan-700/80"><div class="overflow-x-auto"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
-                            res[0].columns.forEach(col => html += `<th>${col}</th>`); html += `</tr></thead><tbody>`;
-                            res[0].values.forEach(row => { html += `<tr>`; row.forEach(val => html += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`); html += `</tr>`; });
-                            html += `</tbody></table></div></div></div>`;
-                        } else {
-                            html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span> <span class="text-slate-500 text-xs">(Sin Registros)</span></h3></div></div>`;
-                        }
-                    });
+            const backdrop = document.getElementById('db-modal-backdrop'); const card = document.getElementById('db-modal-card'); const content = document.getElementById('db-modal-content'); const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; const schemaText = exercise.data.schemaLine || "";
+            let tablesToQuery = []; if (schemaText.includes("Sales_Customers")) tablesToQuery.push("Sales_Customers"); if (schemaText.includes("Warehouse_StockItems")) tablesToQuery.push("Warehouse_StockItems");
+            let html = ''; tablesToQuery.forEach(tableName => {
+                const res = db.exec("SELECT * FROM " + tableName);
+                if (res.length > 0) {
+                    html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span></h3></div><div class="bg-[#05060a] rounded-xl border border-cyan-900/50 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all group-hover:border-cyan-700/80"><div class="overflow-x-auto"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
+                    res[0].columns.forEach(col => html += `<th>${col}</th>`); html += `</tr></thead><tbody>`;
+                    res[0].values.forEach(row => { html += `<tr>`; row.forEach(val => html += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`); html += `</tr>`; });
+                    html += `</tbody></table></div></div></div>`;
                 }
-            } catch(e) { console.error("Error leyendo DB:", e); }
-
+            });
             content.innerHTML = html === '' ? "<div class='text-slate-400 text-center font-bold'>Sin datos asociados al esquema actual.</div>" : html;
             backdrop.classList.remove('hidden'); requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); });
         };
@@ -1662,11 +1238,16 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 playerState.xp -= xpNext; playerState.level++; xpNext = playerState.level * 1000; 
                 window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success"); 
                 
+                // Animación visual extra al subir de nivel
                 const badgeContainer = document.getElementById('level-badge-container');
                 badgeContainer.classList.add('level-up-anim');
                 setTimeout(() => badgeContainer.classList.remove('level-up-anim'), 1000);
             }
-            window.updateProgressUI();
+            const xpPct = (playerState.xp / xpNext) * 100; 
+            document.getElementById('ui-level-badge').textContent = playerState.level; 
+            document.getElementById('ui-xp-bar').style.width = `${xpPct}%`; 
+            document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`; 
+            document.getElementById('ui-coins').textContent = playerState.coins;
             syncToCloud(); 
         };
 
