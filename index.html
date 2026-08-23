@@ -532,8 +532,8 @@
             // 1. Escapar HTML para evitar romper el DOM al inyectarlo en párrafos
             let safeCode = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             
-            // 2. Single-Pass Regex unificada
-            const sqlRegex = /(--.*)|('[^']*')|\b(SELECT|FROM|WHERE|AND|OR|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|UPDATE|SET|DELETE|INSERT INTO|VALUES|CREATE|DROP|ALTER|TABLE|PRIMARY KEY|FOREIGN KEY|REFERENCES|AS|IN|IS NULL|IS NOT NULL|EXISTS|BETWEEN|LIKE|UNION|ALL|EXCEPT|INTERSECT|PROCEDURE|PROC|BEGIN|END)\b|\b(\d+(?:\.\d+)?)\b/gi;
+            // 2. Single-Pass Regex unificada (AHORA INCLUYE FUNCIONES AVANZADAS)
+            const sqlRegex = /(--.*)|('[^']*')|\b(SELECT|FROM|WHERE|AND|OR|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|UPDATE|SET|DELETE|INSERT INTO|VALUES|CREATE|DROP|ALTER|TABLE|PRIMARY KEY|FOREIGN KEY|REFERENCES|AS|IN|IS NULL|IS NOT NULL|EXISTS|BETWEEN|LIKE|UNION|ALL|EXCEPT|INTERSECT|PROCEDURE|PROC|BEGIN|END|UPPER|LOWER|TRIM|LTRIM|RTRIM|REPLACE|LEN|LENGTH|SUBSTRING|SUBSTR|CONCAT|COALESCE)\b|\b(\d+(?:\.\d+)?)\b/gi;
             
             // 3. Reemplazo inyectando estilos CSS estáticos idénticos al editor nativo
             return safeCode.replace(sqlRegex, function(match, p1, p2, p3, p4) {
@@ -619,6 +619,11 @@ No imprimas texto fuera del JSON.
 
 ### REGLA DE QUIZZES (ESTILO SQL ZOO):
 Cada nivel DEBE tener EXACTAMENTE 3 preguntas en el array "quizzes". Al menos 2 de ellas deben ser PRÁCTICAS. Plantea un caso en la pregunta y pon BLOQUES DE CÓDIGO SQL como opciones de respuesta ("text") para que el usuario analice la sintaxis correcta. (Recuerda usar "\\n" en el código de las opciones para mantener el formato vertical).
+
+### LIMITACIONES DEL MOTOR (SQLITE VIA WEBASSEMBLY):
+La plataforma ejecuta las consultas del usuario utilizando SQLite en el navegador. 
+- NO utilizes sintaxis exclusiva de T-SQL que rompa SQLite (ej. DECLARE @var, funciones propietarias sin equivalente).
+- Si el tema incluye T-SQL puro (ej. Procedimientos Almacenados, Variables), la teoría DEBE explicar la sintaxis de SQL Server, pero el "expectedQuery" y las validaciones deben adaptarse al estándar universal o proveer un bypass si está programado en la plataforma.
 
 ### ESTRUCTURA ESTRICTA DEL JSON ESPERADO:
 {
@@ -761,7 +766,6 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
         }
 
         window.createMissionHTML = function(escenario, requerimiento, tip, schemaLine, descObj) {
-            // Aplicamos resaltador inmersivo a los textos de la misión
             let safeEscenario = window.highlightSQLCode(escenario || '');
             let safeReq = window.highlightSQLCode(requerimiento || '');
             let safeTip = window.highlightSQLCode(tip || '');
@@ -818,7 +822,6 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     baseTheoryHTML += `<div class="mt-8 space-y-6">`;
                     d.quizzes.forEach((qz, idx) => {
                         let safeQ = window.highlightSQLCode(qz.question || '');
-                        // Corrección de Quizzes: fuente normal (font-sans) respetando saltos de línea (whitespace-pre-wrap)
                         let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-4 rounded-xl bg-slate-800/50 flex gap-4 items-start hover:bg-slate-700/60 transition-all"><div class="quiz-circle w-5 h-5 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><div class="text-sm text-slate-300 font-sans whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode(opt.text)}</div></button>`).join('');
                         baseTheoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz ${idx+1}/${d.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${safeQ}</pre><div class="space-y-3">${optionsHTML}</div><div class="quiz-feedback hidden"></div></div>`;
                     });
@@ -1153,7 +1156,8 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                         }
                     }
 
-                    ['SELECT', 'FROM', 'WHERE', 'JOIN', 'SET', 'UNION', 'ALL', 'EXCEPT', 'INTERSECT', 'AND', 'OR'].forEach(cmd => {
+                    // Array expandido con comandos estructurales y funciones escalares para el Autocompletado
+                    ['SELECT', 'FROM', 'WHERE', 'JOIN', 'SET', 'UNION', 'ALL', 'EXCEPT', 'INTERSECT', 'AND', 'OR', 'INSERT', 'UPDATE', 'DELETE', 'UPPER', 'LOWER', 'TRIM', 'REPLACE', 'LEN', 'LENGTH', 'SUBSTRING', 'SUBSTR', 'LEFT', 'RIGHT', 'CONCAT', 'COALESCE'].forEach(cmd => {
                         if (cmd.startsWith(searchWord) || searchWord === "") {
                             wordsMap.set(cmd, { text: cmd, type: 'keyword' });
                         }
