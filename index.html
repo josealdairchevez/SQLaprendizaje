@@ -236,7 +236,7 @@
                 <div class="absolute inset-0 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-10">
                     <span class="text-white text-lg">📸</span>
                 </div>
-                <img id="user-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" class="w-12 h-12 rounded-full border border-slate-700 object-cover shadow-[0_0_15px_rgba(0,229,255,0.3)] bg-slate-800" alt="Avatar">
+                <img id="user-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" class="w-12 h-12 rounded-full border border-slate-700 object-cover shadow-[0_0_15px_rgba(0,229,255,0.3)] bg-slate-800" alt="Avatar">
             </div>
             <div>
                 <h1 class="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400">SQL MASTERY</h1>
@@ -882,6 +882,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     baseTheoryHTML += `<div class="mt-8 space-y-6">`;
                     d.quizzes.forEach((qz, idx) => {
                         let safeQ = window.highlightSQLCode(qz.question || '');
+                        // Corrección de Quizzes: fuente normal (font-sans) respetando saltos de línea (whitespace-pre-wrap)
                         let optionsHTML = qz.options.map(opt => `<button onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}')" class="quiz-option w-full text-left p-4 rounded-xl bg-slate-800/50 flex gap-4 items-start hover:bg-slate-700/60 transition-all"><div class="quiz-circle w-5 h-5 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><div class="text-sm text-slate-300 font-sans whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode(opt.text)}</div></button>`).join('');
                         baseTheoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz ${idx+1}/${d.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${safeQ}</pre><div class="space-y-3">${optionsHTML}</div><div class="quiz-feedback hidden"></div></div>`;
                     });
@@ -1347,7 +1348,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                             let displayName = playerState.customName || user.displayName || user.email.split('@')[0];
                             document.getElementById('user-id-display').innerHTML = `${displayName.toUpperCase()} <span class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">✏️</span>`;
 
-                            let displayAvatar = playerState.customAvatar || user.photoURL || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
+                            let displayAvatar = playerState.customAvatar || user.photoURL || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
                             document.getElementById('user-avatar').src = displayAvatar;
 
                             loginModal.classList.add('opacity-0');
@@ -1494,6 +1495,567 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
 
             } catch (err) { console.error("Error crítico:", err); }
         }
+
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('sidebar'); const backdrop = document.getElementById('sidebar-backdrop');
+            if (window.innerWidth < 768) { sidebar.classList.toggle('mobile-open'); backdrop.classList.toggle('show'); } 
+            else { sidebar.classList.toggle('collapsed'); }
+        };
+
+        window.renderTopicsSidebar = function() {
+            const container = document.getElementById('topics-container');
+            container.innerHTML = ''; let draggedTopicIndex = null;
+
+            TOPICS.forEach((topic, idx) => {
+                const btn = document.createElement('div'); const isActive = idx === currentTopicIdx;
+                btn.className = `w-full text-left p-3 rounded-xl mb-2 transition-all font-bold text-sm flex justify-between items-center cursor-grab active:cursor-grabbing border ${isActive ? 'bg-cyan-900/40 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(0,229,255,0.15)]' : 'bg-slate-800/40 text-slate-400 border-transparent hover:bg-slate-700/50'}`;
+
+                let optionsHtml = (topic.id === "t1_base") 
+                    ? `<span class="opacity-50 pointer-events-none text-lg leading-none mb-1">⋮</span>`
+                    : `<button class="opacity-50 hover:opacity-100 hover:text-cyan-400 px-2 py-1 text-xl leading-none transition-all z-20 relative" onclick="window.openTopicActionModal(event, '${topic.id}', '${topic.title.replace(/'/g, "\\'")}')">⋮</button>`;
+
+                btn.innerHTML = `<span class="truncate pr-2 pointer-events-none">${topic.title}</span>${optionsHtml}`;
+                btn.draggable = true;
+
+                btn.onclick = () => { 
+                    window.loadExercise(idx, 0); 
+                    if(window.innerWidth < 768) { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('sidebar-backdrop').classList.remove('show'); }
+                };
+
+                btn.addEventListener('dragstart', (e) => { draggedTopicIndex = idx; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => { btn.classList.add('opacity-30', 'border-dashed', 'border-slate-500'); }, 0); });
+                btn.addEventListener('dragend', (e) => { btn.classList.remove('opacity-30', 'border-dashed', 'border-slate-500'); draggedTopicIndex = null; window.renderTopicsSidebar(); });
+                btn.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (draggedTopicIndex !== null && draggedTopicIndex !== idx) { btn.classList.add('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20'); } });
+                btn.addEventListener('dragleave', (e) => { btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20'); });
+
+                btn.addEventListener('drop', (e) => {
+                    e.preventDefault(); btn.classList.remove('border-t-2', 'border-t-cyan-400', 'bg-cyan-900/20');
+                    if (draggedTopicIndex !== null && draggedTopicIndex !== idx) {
+                        let activeId = TOPICS[currentTopicIdx].id; 
+                        const item = TOPICS.splice(draggedTopicIndex, 1)[0]; 
+                        TOPICS.splice(idx, 0, item); 
+                        const newOrder = TOPICS.map(t => t.id); 
+                        localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
+                        currentTopicIdx = TOPICS.findIndex(t => t.id === activeId); 
+                        window.renderTopicsSidebar();
+                        syncToCloud(); 
+                    }
+                });
+                container.appendChild(btn);
+            });
+        };
+
+        window.openTopicActionModal = function(e, topicId, title) {
+            e.stopPropagation(); selectedTopicIdForAction = topicId; document.getElementById('action-topic-name').textContent = title;
+            const modal = document.getElementById('topic-action-modal'); modal.classList.remove('hidden'); requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.firstElementChild.classList.remove('scale-95'); });
+        };
+
+        window.closeTopicActionModal = function() {
+            const modal = document.getElementById('topic-action-modal'); modal.classList.add('opacity-0'); modal.firstElementChild.classList.add('scale-95'); setTimeout(() => modal.classList.add('hidden'), 300);
+        };
+
+        document.getElementById('btn-edit-topic').addEventListener('click', () => {
+            const topic = TOPICS.find(t => t.id === selectedTopicIdForAction); if(!topic) return;
+            const newTitle = prompt("✏️ Escribe el nuevo título para el módulo:", topic.title);
+            if(newTitle && newTitle.trim() !== "") {
+                topic.title = newTitle.trim();
+                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
+                let ct = customTopics.find(t => t.id === selectedTopicIdForAction);
+                if(ct) { ct.topicName = topic.title; localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); }
+                window.renderTopicsSidebar(); if(currentTopicIdx === TOPICS.findIndex(t => t.id === selectedTopicIdForAction)) { document.getElementById('topic-title').textContent = topic.title; }
+                window.showToast("Título Actualizado", "Nombre modificado con éxito.", "success"); syncToCloud();
+            }
+            window.closeTopicActionModal();
+        });
+
+        document.getElementById('btn-delete-topic').addEventListener('click', () => {
+            const confirmDelete = confirm("⚠️ ¿Estás absolutamente seguro de ELIMINAR este módulo?\nSe perderá su contenido y tendrás que importarlo de nuevo si lo necesitas.");
+            if(confirmDelete) {
+                const idx = TOPICS.findIndex(t => t.id === selectedTopicIdForAction); if(idx > -1) TOPICS.splice(idx, 1);
+                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
+                customTopics = customTopics.filter(t => t.id !== selectedTopicIdForAction); localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+                let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "[]");
+                savedOrder = savedOrder.filter(id => id !== selectedTopicIdForAction); localStorage.setItem('sql_topic_order', JSON.stringify(savedOrder));
+                window.renderTopicsSidebar();
+                if(currentTopicIdx === idx || currentTopicIdx >= TOPICS.length) { window.loadExercise(0, 0); }
+                window.showToast("Módulo Eliminado", "El módulo fue borrado de tu cuenta.", "success"); syncToCloud();
+            }
+            window.closeTopicActionModal();
+        });
+
+        window.loadExercise = function(topicIdx, exIdx) {
+            currentTopicIdx = topicIdx; currentExerciseIdx = exIdx; revealedHintsCount = 0;
+            const topic = TOPICS[topicIdx]; const exercise = topic.exercises[exIdx]; const dynamicData = exercise.data; 
+
+            if (activeDbTopicId !== topic.id) { window.buildTopicDatabase(topic); activeDbTopicId = topic.id; }
+
+            document.getElementById('topic-title').textContent = topic.title; 
+
+            const topBar = document.getElementById('theory-top-bar');
+            if (topicIdx === 0) { topBar.className = "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-400"; } 
+            else {
+                const gradients = [ "from-cyan-400 to-blue-600", "from-amber-400 to-purple-600", "from-emerald-400 to-cyan-500", "from-pink-500 to-violet-600" ];
+                let chosenGrad = gradients[(topicIdx - 1) % gradients.length]; topBar.className = `absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${chosenGrad}`;
+            }
+
+            let theoryHTML = topic.baseTheory || "";
+            if (exercise.theoryUpdate && exercise.theoryUpdate.bestPracticeTitle) {
+                let tu = exercise.theoryUpdate;
+                let safeBP = window.highlightSQLCode(tu.bestPracticeText || '');
+                let safeIntro = window.highlightSQLCode(tu.errorIntro || '');
+                let safeImpact = window.highlightSQLCode(tu.errorImpact || '');
+                let safeCtx = window.highlightSQLCode(tu.exampleContext || '');
+                let safeBadCode = window.highlightSQLCode(tu.errorBadCode || '');
+                let safeGoodCode = window.highlightSQLCode(tu.errorGoodCode || '');
+                let safeExampleCode = window.highlightSQLCode(tu.exampleCode || '');
+
+                theoryHTML += `
+                    <div class="mb-6 bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(99,102,241,0.1)] relative overflow-hidden group hover:border-indigo-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-purple-500"></div><h4 class="text-indigo-300 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2"><span>🛡️</span> ${tu.bestPracticeTitle}</h4><p class="text-sm text-slate-300 mb-3 whitespace-pre-wrap">${safeBP}</p></div>
+                    <div class="mb-6 error-panel"><div class="flex items-start gap-5 relative z-10 min-w-0"><div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative"><div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div><svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1 pt-1 min-w-0"><h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">${tu.errorTitle}</h4><p class="text-sm text-slate-300 mb-4 font-medium">${safeIntro}</p><div class="relative mb-4"><div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap">${safeBadCode}</pre></div><div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4"><h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5><p class="text-sm text-slate-300 whitespace-pre-wrap">${safeImpact}</p></div><div class="relative"><div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed">${safeGoodCode}</pre></div></div></div></div>
+                    <div class="mb-8 bg-slate-900/80 border border-amber-500/30 rounded-2xl p-5 shadow-[0_0_25px_rgba(251,191,36,0.15)] relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300"><div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500"></div><h4 class="text-amber-400 font-black mb-3 uppercase tracking-widest text-xs flex items-center gap-2 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]"><span>💡</span> Ejemplo Práctico</h4><div class="bg-black/50 p-4 rounded-xl border border-slate-800 shadow-inner mb-4"><p class="text-sm text-amber-100/80 italic flex items-start gap-2"><span class="text-lg not-italic mt-0.5">🏢</span> "${safeCtx}"</p></div><div class="relative mt-2"><div class="absolute -top-3 right-3 bg-blue-900/80 border border-blue-500/50 px-2 py-0.5 rounded text-[9px] text-blue-200 font-bold uppercase tracking-widest z-10 shadow-md">Solución SQL</div><pre class="code-glow overflow-x-auto pt-5 pb-4 px-4 rounded-xl text-sm font-mono whitespace-pre-wrap leading-relaxed">${safeExampleCode}</pre></div></div>
+                `;
+            }
+
+            if (exercise.quizzes && exercise.quizzes.length > 0) {
+                theoryHTML += `<div class="mt-8 space-y-6">`;
+                const savedQuizState = (playerState.quizStates && playerState.quizStates[exercise.id]) || {};
+
+                exercise.quizzes.forEach((qz, idx) => {
+                    let qState = savedQuizState[idx];
+                    let isAnsweredCorrectly = qState && qState.correct;
+                    let safeQ = window.highlightSQLCode(qz.question || '');
+
+                    let optionsHTML = qz.options.map((opt, optIdx) => {
+                        let disabledAttr = isAnsweredCorrectly ? 'disabled' : ''; let extraClass = '';
+                        if (isAnsweredCorrectly && optIdx === qState.selectedOpt) { extraClass = 'correct'; }
+                        return `<button ${disabledAttr} onclick="window.checkQuiz(this, ${opt.isCorrect}, '${(opt.feedback||'').replace(/'/g, "\\'")}', ${idx}, ${optIdx})" class="quiz-option w-full text-left p-4 rounded-xl bg-slate-800/50 flex gap-4 items-start ${extraClass} hover:bg-slate-700/60 transition-all"><div class="quiz-circle w-5 h-5 rounded-full border-2 border-slate-500 shrink-0 mt-0.5"></div><div class="text-sm text-slate-300 font-sans whitespace-pre-wrap leading-relaxed flex-1">${window.highlightSQLCode(opt.text)}</div></button>`;
+                    }).join('');
+
+                    let feedbackClass = isAnsweredCorrectly ? "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2" : "quiz-feedback hidden";
+                    let safeFeedbackMsg = isAnsweredCorrectly && qz.options[qState.selectedOpt] ? (qz.options[qState.selectedOpt].feedback || '').replace(/</g, "&lt;").replace(/>/g, "&gt;") : "";
+                    let feedbackText = isAnsweredCorrectly ? `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${safeFeedbackMsg}</span>` : "";
+
+                    theoryHTML += `<div class="bg-slate-900/60 border border-purple-500/30 rounded-xl p-5 relative overflow-hidden quiz-container"><div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-cyan-400"></div><h4 class="text-white font-bold mb-3 text-base flex items-center gap-2"><span>🧠</span> Quiz Práctico ${idx+1}/${exercise.quizzes.length}</h4><pre class="text-sm text-slate-200 mb-4 font-medium whitespace-pre-wrap font-sans font-bold bg-black/30 p-3 rounded-lg border border-slate-700/50 leading-relaxed">${safeQ}</pre><div class="space-y-2">${optionsHTML}</div><div class="${feedbackClass}">${feedbackText}</div></div>`;
+                });
+                theoryHTML += `</div>`;
+            }
+
+            document.getElementById('topic-theory').innerHTML = theoryHTML; document.getElementById('theory-scroll-container').scrollTop = 0; 
+
+            document.getElementById('ex-task').innerHTML = dynamicData.taskHtml; document.getElementById('ex-schema').innerHTML = dynamicData.schemaLine;
+            document.getElementById('ex-schema-desc').innerHTML = dynamicData.descHtml; document.getElementById('ex-xp-badge').textContent = `+${exercise.xp} XP`;
+            document.getElementById('ex-coin-badge').textContent = `+${exercise.coins} 🪙`;
+
+            window.renderExercisePills(); document.getElementById('run-btn').classList.remove('hidden'); document.getElementById('next-btn').classList.add('hidden');
+            window.resetConsole(); window.renderTopicsSidebar();
+            window.updateHintsUI();
+        };
+
+        window.checkQuiz = function(btn, isCorrect, feedbackMsg, quizIdx, optIdx) {
+            const container = btn.closest('.quiz-container'); 
+            const buttons = container.querySelectorAll('.quiz-option'); 
+            buttons.forEach(b => b.disabled = true);
+            const feedbackDiv = container.querySelector('.quiz-feedback'); 
+            feedbackDiv.classList.remove('hidden');
+
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            playerState.quizStates = playerState.quizStates || {};
+            playerState.quizStates[exercise.id] = playerState.quizStates[exercise.id] || {};
+
+            if (isCorrect) {
+                btn.classList.add('correct'); 
+                feedbackDiv.innerHTML = `<span class="text-emerald-400 text-lg">✅</span> <span class="text-emerald-300">${feedbackMsg}</span>`;
+                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-emerald-900/30 border border-emerald-500/50 flex items-start gap-2";
+
+                if (!playerState.quizStates[exercise.id][quizIdx]) {
+                    window.fireConfetti(); 
+                    window.grantRewards(5, 1);
+                    playerState.quizStates[exercise.id][quizIdx] = { selectedOpt: optIdx, correct: true };
+                    syncToCloud();
+                }
+            } else {
+                btn.classList.add('incorrect', 'shake-animation'); 
+                feedbackDiv.innerHTML = `<span class="text-red-400 text-lg">❌</span> <span class="text-red-300">${feedbackMsg}</span>`;
+                feedbackDiv.className = "quiz-feedback mt-4 p-3 rounded-lg text-sm font-bold bg-red-900/30 border border-red-500/50 flex items-start gap-2";
+                setTimeout(() => { 
+                    btn.classList.remove('incorrect', 'shake-animation'); 
+                    feedbackDiv.classList.add('hidden'); 
+                    buttons.forEach(b => b.disabled = false); 
+                }, 2000);
+            }
+        };
+
+        window.executeUserQuery = function() {
+            const query = sqlEditor.getValue().trim(); if (!query) return;
+            const resContainer = document.getElementById('results-container'); const rowCountEl = document.getElementById('row-count'); 
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; 
+            document.getElementById('error-container').classList.add('hidden');
+
+            try {
+                const upperQuery = query.toUpperCase();
+                if (upperQuery.startsWith("CREATE PROCEDURE") || upperQuery.startsWith("CREATE PROC")) {
+                    if (upperQuery.includes("AS") && upperQuery.includes("BEGIN") && upperQuery.includes("END")) {
+                        rowCountEl.textContent = 'COMPLETADO';
+                        resContainer.innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-emerald-950/20"><div class="w-16 h-16 rounded-full bg-emerald-900/30 border border-emerald-500/30 flex items-center justify-center mb-3 shadow-[0_0_15px_rgba(16,185,129,0.2)]"><span class="text-3xl drop-shadow-[0_0_10px_rgba(16,185,129,0.4)]">✅</span></div><span class="text-emerald-400 font-black uppercase tracking-widest text-sm mb-1 drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]">Comandos completados exitosamente.</span><span class="text-emerald-200/60 text-xs max-w-[80%] font-medium">El Procedimiento Almacenado ha sido compilado y guardado en la memoria temporal (Modo Simulación T-SQL).</span></div>`;
+
+                        if (exercise.expectedQuery.toUpperCase().includes("CREATE PROC")) {
+                            if (!playerState.completedExercises.includes(exercise.id)) {
+                                playerState.completedExercises.push(exercise.id); window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti();
+                                if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); }
+                            }
+                        }
+                        return; 
+                    } else {
+                        throw new Error("Sintaxis T-SQL Inválida. Un procedimiento almacenado requiere la estructura estructural: CREATE PROCEDURE nombre AS BEGIN ... END");
+                    }
+                }
+
+                const userResult = db.exec(query);
+
+                if (userResult.length > 0) {
+                    const columns = userResult[0].columns; const values = userResult[0].values; rowCountEl.textContent = `${values.length} FILAS`;
+                    let tableHTML = '<table class="sql-table"><thead><tr>'; columns.forEach(col => tableHTML += `<th>${col}</th>`); tableHTML += '</tr></thead><tbody>';
+                    values.forEach(row => { tableHTML += '<tr>'; row.forEach(val => tableHTML += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`); tableHTML += '</tr>'; });
+                    tableHTML += '</tbody></table>'; resContainer.innerHTML = tableHTML;
+                } else {
+                    rowCountEl.textContent = '0 FILAS';
+                    resContainer.innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center"><div class="w-16 h-16 rounded-full bg-amber-900/30 border border-amber-500/30 flex items-center justify-center mb-3 shadow-[0_0_15px_rgba(251,191,36,0.2)]"><span class="text-3xl drop-shadow-[0_0_10px_rgba(251,191,36,0.4)]">👻</span></div><span class="text-amber-400 font-black uppercase tracking-widest text-sm mb-1 drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]">Tabla Vacía</span><span class="text-amber-200/60 text-xs max-w-[80%] font-medium">La sintaxis es correcta, pero 0 registros cumplieron las condiciones de tu filtro.</span></div>`;
+                }
+
+                let isCorrect = false; let expectedResult;
+                let diag = ""; let titleMsg = "LOS DATOS EXTRAÍDOS NO COINCIDEN";
+
+                try {
+                    let hasCommentIfRequired = exercise.expectedQuery.includes("--") ? query.includes("--") : true;
+                    const cleanExpected = exercise.expectedQuery.replace(/--.*?\n/g, ""); 
+                    expectedResult = db.exec(cleanExpected);
+
+                    let userCount = userResult.length > 0 ? userResult[0].values.length : 0;
+                    let expectedCount = expectedResult.length > 0 ? expectedResult[0].values.length : 0;
+                    let userCols = userResult.length > 0 ? userResult[0].columns : [];
+                    let expectedCols = expectedResult.length > 0 ? expectedResult[0].columns : [];
+
+                    if (!hasCommentIfRequired) {
+                        titleMsg = "FALTA DOCUMENTACIÓN CORPORATIVA";
+                        diag = "- Los datos extraídos son correctos, pero olvidaste poner el comentario requerido (usando --).\n- Un script no documentado será rechazado en un entorno de producción real.";
+                    } else if (userCount === 0 && expectedCount === 0) {
+                         isCorrect = true; 
+                    } else if (userCount === 0 && expectedCount > 0) {
+                        diag = "- Tu código devolvió una tabla vacía (0 registros), pero el negocio espera ver datos.\n- Revisa tus filtros matemáticos (WHERE) porque excluyeron absolutamente todas las filas requeridas.";
+                    } else if (userCount > 0 && expectedCount === 0) {
+                        diag = "- Tu código devolvió datos, pero el negocio esperaba que la consulta no retornara nada bajo esas condiciones.\n- Revisa tu filtrado y tus operadores lógicos, estás siendo poco restrictivo.";
+                    } else if (userCols.length !== expectedCols.length) {
+                        diag = `- Extraes ${userCols.length} columnas, pero el requerimiento exige exactamente ${expectedCols.length}.\n- Revisa tu cláusula SELECT. ¿Acaso usaste '*' cuando debías especificar columnas, o viceversa?`;
+                    } else if (userCount !== expectedCount) {
+                        diag = `- Extraes ${userCount} registros, pero el requerimiento espera exactamente ${expectedCount}.\n- Tu filtro (WHERE) es incorrecto. Verifica los operadores usados (>, <, AND, OR, IN).`;
+                    } else {
+                        let colMap = [];
+                        let missingCols = [];
+
+                        for(let i=0; i<expectedCols.length; i++) {
+                            let idx = userCols.findIndex(c => c.toLowerCase() === expectedCols[i].toLowerCase());
+                            if(idx === -1) missingCols.push(expectedCols[i]);
+                            colMap.push({ expIdx: i, usrIdx: idx });
+                        }
+
+                        if (missingCols.length > 0) {
+                            diag = `- Te faltan las siguientes columnas requeridas: ${missingCols.join(', ')}.\n- Revisa los nombres en tu SELECT, tal vez cometiste un 'typo' al escribirlas.`;
+                        } else {
+                            let allMatch = true;
+                            let usrVals = userResult[0].values;
+                            let expVals = expectedResult[0].values;
+
+                            for(let r = 0; r < expVals.length; r++) {
+                                for(let c = 0; c < colMap.length; c++) {
+                                    let ev = expVals[r][colMap[c].expIdx];
+                                    let uv = usrVals[r][colMap[c].usrIdx];
+
+                                    if (ev != uv) {
+                                        allMatch = false; 
+                                        break;
+                                    }
+                                }
+                                if(!allMatch) break;
+                            }
+
+                            if(allMatch) {
+                                isCorrect = true;
+                            } else {
+                                diag = "- Las columnas y la cantidad de filas son correctas, pero los datos internos no coinciden con la solución esperada.\n- Verifica si te equivocaste en algún operador de comparación o si estás filtrando valores que no corresponden.";
+                            }
+                        }
+                    }
+                } catch(e) { console.error("Error en validación profunda:", e); }
+
+                if (isCorrect) {
+                    if (!playerState.completedExercises.includes(exercise.id)) {
+                        playerState.completedExercises.push(exercise.id); window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti();
+                        if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); } else { setTimeout(() => window.showToast("🏆 Módulo Dominado", "Has completado todos los ejercicios de este tema.", "success"), 1000); }
+                    } else {
+                        window.showToast("Consulta Válida", "Código correcto (Recompensa ya cobrada).", "hint");
+                        if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); }
+                    }
+                } else {
+                    window.showErrorBox(titleMsg, diag);
+                }
+            } catch (err) {
+                rowCountEl.textContent = 'ERROR'; resContainer.innerHTML = ''; let errorMsg = err.message; let titleMsg = "FALLO DE COMPILACIÓN"; let liveDiagnosis = "";
+                if (errorMsg.includes("near") && !query.includes(",")) liveDiagnosis = "\n\n⚠️ ¡Posible falta de coma! En SQL Server, cuando seleccionas múltiples columnas en el SELECT, debes separarlas obligatoriamente con una coma (,).";
+                if (errorMsg.includes("no such table")) titleMsg = "TABLA NO ENCONTRADA EN BASE DE DATOS"; else if (errorMsg.includes("no such column")) titleMsg = "COLUMNA NO ENCONTRADA EN ESQUEMA"; else if (errorMsg.includes("syntax error") || errorMsg.includes("Sintaxis")) titleMsg = "ERROR DE SINTAXIS FATAL";
+                window.showErrorBox(titleMsg, "Detalle Técnico del Servidor (SQLite):\n" + errorMsg + liveDiagnosis);
+            }
+        };
+
+        window.revealHint = function() {
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            const btn = document.getElementById('btn-next-hint');
+
+            if (revealedHintsCount < exercise.hints.length) {
+                if (playerState.coins >= 5) {
+                    playerState.coins -= 5;
+                    document.getElementById('ui-coins').textContent = playerState.coins;
+                    syncToCloud();
+
+                    const hintsList = document.getElementById('hints-list'); const newHint = document.createElement('div');
+                    newHint.className = 'bg-blue-950/30 border border-blue-800/50 p-4 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.1)] relative overflow-hidden group min-w-0';
+                    newHint.style.animation = 'slideIn 0.3s ease-out forwards';
+                    newHint.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-blue-400 to-cyan-500"></div><div class="text-blue-400 font-black text-xs uppercase tracking-widest mb-1.5 flex items-center gap-2"><span>🔍</span> Pista ${revealedHintsCount + 1}</div><div class="text-slate-300 text-sm font-medium leading-relaxed pl-1 break-words">${exercise.hints[revealedHintsCount]}</div>`;
+                    hintsList.prepend(newHint); revealedHintsCount++; window.updateHintsUI();
+                } else {
+                    btn.classList.add('shake-denied');
+                    setTimeout(() => btn.classList.remove('shake-denied'), 300);
+                    window.showToast("Sin Oro", "Necesitas al menos 5 monedas.", "error");
+                }
+            }
+        };
+
+        window.revealSolution = function() {
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+            const btn = document.getElementById('btn-show-solution');
+
+            if (playerState.coins >= 20) {
+                playerState.coins -= 20;
+                document.getElementById('ui-coins').textContent = playerState.coins;
+                syncToCloud();
+
+                let safeExpectedQuery = window.highlightSQLCode(exercise.expectedQuery || '');
+
+                const hintsList = document.getElementById('hints-list'); const solDiv = document.createElement('div');
+                solDiv.className = 'bg-emerald-950/30 border border-emerald-800/50 p-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.15)] relative overflow-hidden mb-2 min-w-0';
+                solDiv.style.animation = 'slideIn 0.3s ease-out forwards';
+                solDiv.innerHTML = `<div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-green-500"></div><div class="text-emerald-400 font-black text-xs uppercase tracking-widest mb-2 flex items-center gap-2"><span>🗝️</span> Solución Oficial</div><div class="bg-black/60 p-3 rounded-lg border border-emerald-900/50 shadow-inner"><pre class="font-mono text-xs text-slate-100 overflow-x-auto whitespace-pre-wrap leading-relaxed">${safeExpectedQuery}</pre></div>`;
+                hintsList.prepend(solDiv); btn.classList.add('hidden');
+            } else {
+                btn.classList.add('shake-denied');
+                setTimeout(() => btn.classList.remove('shake-denied'), 300);
+                window.showToast("Sin Oro", "Necesitas al menos 20 monedas.", "error");
+            }
+        };
+
+        window.updateHintsUI = function() {
+            const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; 
+            const btnNext = document.getElementById('btn-next-hint'); 
+            const noMoreMsg = document.getElementById('no-more-hints'); 
+            const btnShowSol = document.getElementById('btn-show-solution');
+            const remaining = exercise.hints.length - revealedHintsCount;
+
+            if (remaining > 0) { 
+                btnNext.classList.remove('hidden'); 
+                noMoreMsg.classList.add('hidden'); 
+                btnShowSol.classList.add('hidden'); 
+            } else { 
+                btnNext.classList.add('hidden'); 
+                noMoreMsg.classList.remove('hidden'); 
+                btnShowSol.classList.remove('hidden'); 
+            }
+        };
+
+        window.switchDbTab = function(tabName) {
+            const btnDatos = document.getElementById('tab-datos');
+            const btnDiagrama = document.getElementById('tab-diagrama');
+            const contentDatos = document.getElementById('db-modal-content');
+            const contentDiagrama = document.getElementById('db-modal-diagram');
+
+            if(tabName === 'datos') {
+                btnDatos.className = "px-4 py-1.5 rounded-md text-xs font-bold transition-all bg-cyan-900/50 text-cyan-300 shadow-inner";
+                btnDiagrama.className = "px-4 py-1.5 rounded-md text-xs font-bold transition-all text-slate-400 hover:text-white";
+                contentDatos.classList.remove('hidden');
+                contentDiagrama.classList.remove('flex');
+                contentDiagrama.classList.add('hidden');
+            } else {
+                btnDiagrama.className = "px-4 py-1.5 rounded-md text-xs font-bold transition-all bg-purple-900/50 text-purple-300 shadow-inner";
+                btnDatos.className = "px-4 py-1.5 rounded-md text-xs font-bold transition-all text-slate-400 hover:text-white";
+                contentDatos.classList.add('hidden');
+                contentDiagrama.classList.remove('hidden');
+                contentDiagrama.classList.add('flex');
+                window.renderMermaidDiagram();
+            }
+        };
+
+        window.renderMermaidDiagram = async function() {
+            const container = document.getElementById('mermaid-container');
+            let mermaidCode = "erDiagram\n";
+
+            try {
+                const tablesRes = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
+                if (tablesRes.length > 0) {
+                    const tables = tablesRes[0].values.map(v => v[0]);
+                    let schemas = {};
+
+                    tables.forEach(tableName => {
+                        schemas[tableName] = { pk: null, cols: [] };
+                        const colsRes = db.exec(`PRAGMA table_info(${tableName});`);
+
+                        if (colsRes.length > 0) {
+                            colsRes[0].values.forEach((col, index) => {
+                                let colName = col[1].replace(/\s+/g, '_');
+                                let colType = (col[2] || 'VARCHAR').replace(/[^a-zA-Z0-9_]/g, '');
+                                if(!colType) colType = 'VARCHAR';
+
+                                let isPk = col[5] === 1 || colName.toLowerCase() === tableName.toLowerCase() + 'id' || colName.toLowerCase() === tableName.replace(/s$/, '').toLowerCase() + 'id' || (index === 0 && colName.toLowerCase().endsWith('id'));
+
+                                if(isPk && !schemas[tableName].pk) schemas[tableName].pk = colName;
+                                schemas[tableName].cols.push({ name: colName, type: colType, isPk: isPk });
+                            });
+                        }
+                    });
+
+                    tables.forEach(tableName => {
+                        mermaidCode += `    ${tableName} {\n`;
+                        schemas[tableName].cols.forEach(c => {
+                            let keyType = c.isPk ? 'PK' : '';
+                            let isFk = !c.isPk && tables.some(otherT => otherT !== tableName && schemas[otherT].pk && schemas[otherT].pk.toLowerCase() === c.name.toLowerCase());
+                            if(isFk) keyType = 'FK';
+
+                            mermaidCode += `        ${c.type} ${c.name} ${keyType}\n`;
+                        });
+                        mermaidCode += `    }\n`;
+                    });
+
+                    tables.forEach(t1 => {
+                        schemas[t1].cols.forEach(c => {
+                            let isFk = !c.isPk && tables.some(otherT => otherT !== t1 && schemas[otherT].pk && schemas[otherT].pk.toLowerCase() === c.name.toLowerCase());
+                            if(isFk) {
+                                let targetTable = tables.find(otherT => schemas[otherT].pk && schemas[otherT].pk.toLowerCase() === c.name.toLowerCase());
+                                if(targetTable) {
+                                    mermaidCode += `    ${targetTable} ||--o{ ${t1} : "1:N (Unidos por ${c.name})"\n`;
+                                }
+                            }
+                        });
+                    });
+                }
+            } catch(e) { console.error("Error generando ERD:", e); }
+
+            container.innerHTML = `<div class="mermaid">${mermaidCode}</div>`;
+            try {
+                mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+                await mermaid.init(undefined, container.querySelectorAll('.mermaid'));
+            } catch (err) {
+                console.error("Fallo de renderizado Mermaid:", err);
+                container.innerHTML = `<span class="text-slate-400 font-bold text-center w-full block mt-10">El diagrama no pudo ser renderizado.<br>Asegúrate de no usar espacios en los nombres de las columnas.</span>`;
+            }
+        };
+
+        window.openDatabaseModal = function() {
+            const backdrop = document.getElementById('db-modal-backdrop'); 
+            const card = document.getElementById('db-modal-card'); 
+            const content = document.getElementById('db-modal-content'); 
+
+            window.switchDbTab('datos');
+
+            let html = '';
+            try {
+                const tablesRes = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
+                if (tablesRes.length > 0) {
+                    const tables = tablesRes[0].values.map(v => v[0]);
+                    tables.forEach(tableName => {
+                        const res = db.exec("SELECT * FROM " + tableName);
+                        if (res.length > 0) {
+                            html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span></h3></div><div class="bg-[#05060a] rounded-xl border border-cyan-900/50 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all group-hover:border-cyan-700/80"><div class="overflow-x-auto"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
+                            res[0].columns.forEach(col => html += `<th>${col}</th>`); html += `</tr></thead><tbody>`;
+                            res[0].values.forEach(row => { html += `<tr>`; row.forEach(val => html += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`); html += `</tr>`; });
+                            html += `</tbody></table></div></div></div>`;
+                        } else {
+                            html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span> <span class="text-slate-500 text-xs">(Sin Registros)</span></h3></div></div>`;
+                        }
+                    });
+                }
+            } catch(e) { console.error("Error leyendo DB:", e); }
+
+            content.innerHTML = html === '' ? "<div class='text-slate-400 text-center font-bold'>Sin datos asociados al esquema actual.</div>" : html;
+            backdrop.classList.remove('hidden'); requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); });
+        };
+
+        window.closeDatabaseModal = function() { const backdrop = document.getElementById('db-modal-backdrop'); const card = document.getElementById('db-modal-card'); backdrop.classList.add('opacity-0'); card.classList.add('scale-95'); setTimeout(() => { backdrop.classList.add('hidden'); }, 300); };
+        window.openAIModal = function() { const backdrop = document.getElementById('ai-modal-backdrop'); const card = document.getElementById('ai-modal-card'); backdrop.classList.remove('hidden'); requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); }); };
+        window.closeAIModal = function() { const backdrop = document.getElementById('ai-modal-backdrop'); const card = document.getElementById('ai-modal-card'); backdrop.classList.add('opacity-0'); card.classList.add('scale-95'); setTimeout(() => { backdrop.classList.add('hidden'); }, 300); };
+
+        window.importJSONTopic = function() {
+            const rawJson = document.getElementById('ai-json-input').value.trim(); if (!rawJson) return alert("Por favor pega el código JSON.");
+            try {
+                let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); 
+                const parsedData = JSON.parse(cleanJson); 
+
+                let nextNumber = TOPICS.length + 1;
+                let rawName = parsedData.topicName || parsedData.title || "Nuevo Módulo";
+                rawName = rawName.replace(/^\d+[\.\-]\s*/, '');
+                parsedData.topicName = `${nextNumber}. ${rawName}`;
+
+                const newTopic = createTopicFromJSON(parsedData); 
+                parsedData.id = newTopic.id;
+
+                TOPICS.push(newTopic);
+                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); 
+                customTopics.push(parsedData); 
+                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+
+                const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
+
+                window.renderTopicsSidebar(); 
+
+                let newTopicIndex = TOPICS.findIndex(t => t.id === newTopic.id);
+                window.loadExercise(newTopicIndex, 0);
+
+                if(window.innerWidth < 768) {
+                    document.getElementById('sidebar').classList.remove('mobile-open');
+                    document.getElementById('sidebar-backdrop').classList.remove('show');
+                }
+
+                document.getElementById('ai-json-input').value = ''; 
+                window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success"); 
+                window.fireConfetti();
+                window.closeAIModal();
+                syncToCloud(); 
+            } catch (e) { alert("Error al parsear el JSON. Asegúrate de copiar todo el objeto correctamente.\nDetalle: " + e.message); }
+        };
+
+        window.renderExercisePills = function() {
+            const nav = document.getElementById('exercise-navigator'); nav.innerHTML = ''; const exercises = TOPICS[currentTopicIdx].exercises;
+            exercises.forEach((ex, idx) => {
+                const isCompleted = playerState.completedExercises.includes(ex.id); const isActive = idx === currentExerciseIdx;
+                let baseClass = (ex.diff === "easy") ? "pill-easy" : (ex.diff === "med") ? "pill-med" : "pill-hard"; let stateClass = isActive ? "active" : (isCompleted ? "completed" : "");
+                const btn = document.createElement('div'); btn.className = `ex-pill ${baseClass} ${stateClass}`; btn.textContent = idx + 1; btn.onclick = () => window.loadExercise(currentTopicIdx, idx);
+                if (isCompleted && !isActive) { btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`; }
+                nav.appendChild(btn);
+            });
+        };
+
+        window.grantRewards = function(xp, coins) {
+            playerState.xp += xp; playerState.coins += coins; let xpNext = playerState.level * 1000;
+            if (playerState.xp >= xpNext) { 
+                playerState.xp -= xpNext; playerState.level++; xpNext = playerState.level * 1000; 
+                window.showToast("⚡ ¡SUBISTE DE NIVEL!", `Alcanzaste el Nivel ${playerState.level}`, "success"); 
+
+                const badgeContainer = document.getElementById('level-badge-container');
+                badgeContainer.classList.add('level-up-anim');
+                setTimeout(() => badgeContainer.classList.remove('level-up-anim'), 1000);
+            }
+            const xpPct = (playerState.xp / xpNext) * 100; 
+            document.getElementById('ui-level-badge').textContent = playerState.level; 
+            document.getElementById('ui-xp-bar').style.width = `${xpPct}%`; 
+            document.getElementById('ui-xp-text').textContent = `${playerState.xp}/${xpNext}`; 
+            document.getElementById('ui-coins').textContent = playerState.coins;
+            syncToCloud(); 
+        };
 
         window.addEventListener('DOMContentLoaded', initApp);
     </script>
