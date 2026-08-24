@@ -676,7 +676,7 @@
 
         window.fireConfetti = function() { if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); };
 
-        // 🌟 NUEVO SÚPER PROMPT MAESTRO (10 REGISTROS + TABLAS PUENTE OBLIGATORIAS)
+        // 🌟 NUEVO SÚPER PROMPT MAESTRO (8 REGISTROS + TABLAS PUENTE OBLIGATORIAS)
         window.copyPrompt = function() {
             const prompt = `Actúa como un Arquitecto de Bases de Datos SQL Senior, Diseñador Instruccional y experto en SQL Server. 
 Tu misión es generar un módulo de aprendizaje interactivo estructurado EXCLUSIVAMENTE en formato JSON. 
@@ -687,7 +687,7 @@ No imprimas texto fuera del JSON.
    - PROHIBIDO: "SELECT * FROM Tabla WHERE id = 1;"
    - OBLIGATORIO: "SELECT\\n  *\\nFROM\\n  Tabla\\nWHERE\\n  id = 1;"
 2. ESQUEMA Y DIAGRAMA ERD (VITAL): En el array "tables", el campo "schema" DEBE incluir explícitamente "PRIMARY KEY" y, cuando aplique, "REFERENCES tabla(columna)". Si las tablas principales no tienen relación directa, ESTÁS OBLIGADO a crear una "Tabla Puente o Transaccional" (ej. Sales_Orders, Logs) que contenga las Foreign Keys para que el Diagrama ERD no quede con tablas sueltas.
-3. DATOS SEMILLA (MOCK DATA - WIDE WORLD IMPORTERS): Genera EXACTAMENTE 10 registros por tabla en el array "mockData". Los datos deben basarse en el universo de Microsoft SQL Server (Wide World Importers / Contoso). Si el tema trata sobre limpieza de datos, inyecta intencionalmente datos sucios en estos 10 registros.
+3. DATOS SEMILLA (MOCK DATA - WIDE WORLD IMPORTERS): Genera EXACTAMENTE 8 registros por tabla en el array "mockData". Los datos deben basarse en el universo de Microsoft SQL Server (Wide World Importers / Contoso). Si el tema trata sobre limpieza de datos, inyecta intencionalmente datos sucios en estos 10 registros.
 4. CANTIDAD DE NIVELES: Genera EXACTAMENTE 9 niveles dentro del array "levels" (3 "easy", 3 "med", 3 "hard"). La dificultad debe ser lógica y progresiva.
 5. DESCRIPCIÓN DE TABLAS (schemaCols): NUNCA dejes este array vacío. Define al menos 1 o 2 columnas relevantes del nivel con su "name" y "desc".
 6. ADAPTABILIDAD DML/DDL: El "expectedQuery" debe adaptarse al tema. Si el tema es UPDATE, usa UPDATE. El simulador soporta SELECT, INSERT, UPDATE, DELETE y CREATE PROCEDURE.
