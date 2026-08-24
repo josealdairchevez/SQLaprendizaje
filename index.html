@@ -223,11 +223,13 @@
 
     <!-- 🌟 MODAL DE LOGIN (FIREBASE AUTH) -->
     <div id="login-modal-backdrop" class="fixed inset-0 bg-[#020617]/95 backdrop-blur-md z-[200] flex items-center justify-center transition-opacity duration-500">
+        <!-- SPINNER DE CARGA INICIAL -->
         <div id="auth-loading-spinner" class="flex flex-col items-center justify-center absolute inset-0 z-10 transition-opacity duration-500">
             <div class="w-16 h-16 border-4 border-slate-800 border-t-cyan-400 rounded-full animate-spin mb-4 shadow-[0_0_20px_rgba(0,229,255,0.4)]"></div>
             <span class="text-cyan-400 font-black tracking-[0.2em] text-xs uppercase animate-pulse drop-shadow-[0_0_8px_rgba(0,229,255,0.5)]">Verificando Sesión...</span>
         </div>
 
+        <!-- TARJETA DE LOGIN OCULTA POR DEFECTO -->
         <div id="login-card" class="bg-[#0f111a] border border-cyan-500/30 rounded-2xl p-8 max-w-sm w-11/12 shadow-[0_0_50px_rgba(0,229,255,0.15)] flex flex-col items-center text-center relative overflow-hidden hidden opacity-0 scale-95 transition-all duration-500 z-20">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500"></div>
             <div class="w-20 h-20 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-4xl mb-4 shadow-inner">
@@ -603,8 +605,8 @@
             // Escapar HTML para evitar romper el DOM al inyectarlo en párrafos
             let safeCode = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             
-            // Single-Pass Regex unificada
-            const sqlRegex = /(--.*)|('[^']*')|\b(SELECT|FROM|WHERE|AND|OR|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|UPDATE|SET|DELETE|INSERT INTO|VALUES|CREATE|DROP|ALTER|TABLE|PRIMARY KEY|FOREIGN KEY|REFERENCES|AS|IN|IS NULL|IS NOT NULL|EXISTS|BETWEEN|LIKE|UNION|ALL|EXCEPT|INTERSECT|PROCEDURE|PROC|BEGIN|END|UPPER|LOWER|TRIM|LTRIM|RTRIM|REPLACE|LEN|LENGTH|SUBSTRING|SUBSTR|CONCAT|COALESCE)\b|\b(\d+(?:\.\d+)?)\b/gi;
+            // Regex evolucionada con "Lookarounds" negativos para soportar tildes en español y no romper palabras
+            const sqlRegex = /(--.*)|('[^']*')|(?<![a-zA-ZáéíóúÁÉÍÓÚñÑ_])(SELECT|FROM|WHERE|AND|OR|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|UPDATE|SET|DELETE|INSERT INTO|VALUES|CREATE|DROP|ALTER|TABLE|PRIMARY KEY|FOREIGN KEY|REFERENCES|AS|IN|IS NULL|IS NOT NULL|EXISTS|BETWEEN|LIKE|UNION|ALL|EXCEPT|INTERSECT|PROCEDURE|PROC|BEGIN|END|UPPER|LOWER|TRIM|LTRIM|RTRIM|REPLACE|LEN|LENGTH|SUBSTRING|SUBSTR|CONCAT|COALESCE)(?![a-zA-ZáéíóúÁÉÍÓÚñÑ_])|\b(\d+(?:\.\d+)?)\b/gi;
             
             return safeCode.replace(sqlRegex, function(match, p1, p2, p3, p4) {
                 if (p1) return `<span style="color: #608b4e; font-style: italic;">${p1}</span>`; 
@@ -676,7 +678,7 @@
 
         window.fireConfetti = function() { if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); };
 
-        // 🌟 NUEVO SÚPER PROMPT MAESTRO (8 REGISTROS + TABLAS PUENTE OBLIGATORIAS)
+        // 🌟 NUEVO SÚPER PROMPT MAESTRO (8 REGISTROS + TABLAS PUENTE OBLIGATORIAS + 9 NIVELES ESTRICTOS)
         window.copyPrompt = function() {
             const prompt = `Actúa como un Arquitecto de Bases de Datos SQL Senior, Diseñador Instruccional y experto en SQL Server. 
 Tu misión es generar un módulo de aprendizaje interactivo estructurado EXCLUSIVAMENTE en formato JSON. 
@@ -687,8 +689,8 @@ No imprimas texto fuera del JSON.
    - PROHIBIDO: "SELECT * FROM Tabla WHERE id = 1;"
    - OBLIGATORIO: "SELECT\\n  *\\nFROM\\n  Tabla\\nWHERE\\n  id = 1;"
 2. ESQUEMA Y DIAGRAMA ERD (VITAL): En el array "tables", el campo "schema" DEBE incluir explícitamente "PRIMARY KEY" y, cuando aplique, "REFERENCES tabla(columna)". Si las tablas principales no tienen relación directa, ESTÁS OBLIGADO a crear una "Tabla Puente o Transaccional" (ej. Sales_Orders, Logs) que contenga las Foreign Keys para que el Diagrama ERD no quede con tablas sueltas.
-3. DATOS SEMILLA (MOCK DATA - WIDE WORLD IMPORTERS): Genera EXACTAMENTE 8 registros por tabla en el array "mockData". Los datos deben basarse en el universo de Microsoft SQL Server (Wide World Importers / Contoso). Si el tema trata sobre limpieza de datos, inyecta intencionalmente datos sucios en estos 10 registros.
-4. CANTIDAD DE NIVELES: Genera EXACTAMENTE 9 niveles dentro del array "levels" (3 "easy", 3 "med", 3 "hard"). La dificultad debe ser lógica y progresiva.
+3. DATOS SEMILLA (MOCK DATA - WIDE WORLD IMPORTERS): Genera EXACTAMENTE 8 registros por tabla en el array "mockData". Los datos deben basarse en el universo de Microsoft SQL Server (Wide World Importers / Contoso). Si el tema trata sobre limpieza de datos, inyecta intencionalmente datos sucios en estos 8 registros.
+4. CANTIDAD DE NIVELES: Genera EXACTAMENTE 9 niveles dentro del array "levels" (3 "easy", 3 "med", 3 "hard"). La dificultad debe ser lógica y progresiva. ¡ESTRICTAMENTE 9 NIVELES, NO RECORTES LA CANTIDAD!
 5. DESCRIPCIÓN DE TABLAS (schemaCols): NUNCA dejes este array vacío. Define al menos 1 o 2 columnas relevantes del nivel con su "name" y "desc".
 6. ADAPTABILIDAD DML/DDL: El "expectedQuery" debe adaptarse al tema. Si el tema es UPDATE, usa UPDATE. El simulador soporta SELECT, INSERT, UPDATE, DELETE y CREATE PROCEDURE.
 
