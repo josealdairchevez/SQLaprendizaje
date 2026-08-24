@@ -181,6 +181,22 @@
             border-left: 3px solid #00e5ff; 
         }
 
+        /* 🌟 STYLES DEL ACORDEÓN DE TABLAS */
+        .table-collapse-wrapper {
+            display: grid;
+            grid-template-rows: 1fr;
+            transition: grid-template-rows 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 1;
+        }
+        .table-collapse-wrapper.collapsed {
+            grid-template-rows: 0fr;
+            opacity: 0;
+            margin-top: 0;
+        }
+        .table-collapse-wrapper > div {
+            overflow: hidden;
+        }
+
         #mermaid-container {
             width: 100%;
             display: flex;
@@ -207,13 +223,11 @@
 
     <!-- 🌟 MODAL DE LOGIN (FIREBASE AUTH) -->
     <div id="login-modal-backdrop" class="fixed inset-0 bg-[#020617]/95 backdrop-blur-md z-[200] flex items-center justify-center transition-opacity duration-500">
-        <!-- SPINNER DE CARGA INICIAL -->
         <div id="auth-loading-spinner" class="flex flex-col items-center justify-center absolute inset-0 z-10 transition-opacity duration-500">
             <div class="w-16 h-16 border-4 border-slate-800 border-t-cyan-400 rounded-full animate-spin mb-4 shadow-[0_0_20px_rgba(0,229,255,0.4)]"></div>
             <span class="text-cyan-400 font-black tracking-[0.2em] text-xs uppercase animate-pulse drop-shadow-[0_0_8px_rgba(0,229,255,0.5)]">Verificando Sesión...</span>
         </div>
 
-        <!-- TARJETA DE LOGIN OCULTA POR DEFECTO -->
         <div id="login-card" class="bg-[#0f111a] border border-cyan-500/30 rounded-2xl p-8 max-w-sm w-11/12 shadow-[0_0_50px_rgba(0,229,255,0.15)] flex flex-col items-center text-center relative overflow-hidden hidden opacity-0 scale-95 transition-all duration-500 z-20">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500"></div>
             <div class="w-20 h-20 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-4xl mb-4 shadow-inner">
@@ -472,7 +486,7 @@
         </div>
     </div>
 
-    <!-- MODAL EXPLORADOR BD -->
+    <!-- 🌟 MODAL EXPLORADOR BD (ACTUALIZADO CON ACORDEÓN) -->
     <div id="db-modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-md z-40 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <div class="bg-[#090b14] border border-cyan-500/30 rounded-2xl w-11/12 max-w-5xl max-h-[85vh] flex flex-col shadow-[0_0_50px_rgba(0,229,255,0.15)] transform scale-95 transition-transform duration-300 relative overflow-hidden" id="db-modal-card">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 z-50"></div>
@@ -662,6 +676,7 @@
 
         window.fireConfetti = function() { if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); };
 
+        // 🌟 NUEVO SÚPER PROMPT MAESTRO (10 REGISTROS + TABLAS PUENTE OBLIGATORIAS)
         window.copyPrompt = function() {
             const prompt = `Actúa como un Arquitecto de Bases de Datos SQL Senior, Diseñador Instruccional y experto en SQL Server. 
 Tu misión es generar un módulo de aprendizaje interactivo estructurado EXCLUSIVAMENTE en formato JSON. 
@@ -671,74 +686,19 @@ No imprimas texto fuera del JSON.
 1. FORMATO DE CÓDIGO CON SALTOS DE LÍNEA: En TODOS los campos que contengan código SQL (expectedQuery, errorBadCode, errorGoodCode, exampleCode y opciones de quizzes), DEBES utilizar el salto de línea "\\n" y espacios para estructurar el código verticalmente. 
    - PROHIBIDO: "SELECT * FROM Tabla WHERE id = 1;"
    - OBLIGATORIO: "SELECT\\n  *\\nFROM\\n  Tabla\\nWHERE\\n  id = 1;"
-2. ESQUEMA Y DIAGRAMA ERD (VITAL): En el array "tables", el campo "schema" DEBE incluir explícitamente "PRIMARY KEY" y, cuando aplique, "REFERENCES tabla(columna)". El sistema usa esto para dibujar el Mapa ERD automáticamente.
-3. DATOS SEMILLA (MOCK DATA - WIDE WORLD IMPORTERS): Genera EXACTAMENTE 15 registros por tabla en el array "mockData". Los datos deben basarse en el universo de Microsoft SQL Server (Wide World Importers / Contoso). Si el tema trata sobre limpieza de datos (ej. TRIM, REPLACE, funciones de cadenas), INYECTA INTENCIONALMENTE datos sucios (espacios extra, guiones mal puestos, mayúsculas erráticas, nulos) dentro de estos 15 registros para dar sentido a los ejercicios.
+2. ESQUEMA Y DIAGRAMA ERD (VITAL): En el array "tables", el campo "schema" DEBE incluir explícitamente "PRIMARY KEY" y, cuando aplique, "REFERENCES tabla(columna)". Si las tablas principales no tienen relación directa, ESTÁS OBLIGADO a crear una "Tabla Puente o Transaccional" (ej. Sales_Orders, Logs) que contenga las Foreign Keys para que el Diagrama ERD no quede con tablas sueltas.
+3. DATOS SEMILLA (MOCK DATA - WIDE WORLD IMPORTERS): Genera EXACTAMENTE 10 registros por tabla en el array "mockData". Los datos deben basarse en el universo de Microsoft SQL Server (Wide World Importers / Contoso). Si el tema trata sobre limpieza de datos, inyecta intencionalmente datos sucios en estos 10 registros.
 4. CANTIDAD DE NIVELES: Genera EXACTAMENTE 9 niveles dentro del array "levels" (3 "easy", 3 "med", 3 "hard"). La dificultad debe ser lógica y progresiva.
 5. DESCRIPCIÓN DE TABLAS (schemaCols): NUNCA dejes este array vacío. Define al menos 1 o 2 columnas relevantes del nivel con su "name" y "desc".
 6. ADAPTABILIDAD DML/DDL: El "expectedQuery" debe adaptarse al tema. Si el tema es UPDATE, usa UPDATE. El simulador soporta SELECT, INSERT, UPDATE, DELETE y CREATE PROCEDURE.
 
 ### REGLA DE QUIZZES (ESTILO SQL ZOO):
-Cada nivel DEBE tener EXACTAMENTE 3 preguntas en el array "quizzes". Al menos 2 de ellas deben ser PRÁCTICAS. Plantea un caso en la pregunta y pon BLOQUES DE CÓDIGO SQL como opciones de respuesta ("text") para que el usuario analice la sintaxis correcta. (Recuerda usar "\\n" en el código de las opciones para mantener el formato vertical).
+Cada nivel DEBE tener EXACTAMENTE 3 preguntas en el array "quizzes". Al menos 2 de ellas deben ser PRÁCTICAS. Plantea un caso en la pregunta y pon BLOQUES DE CÓDIGO SQL como opciones de respuesta ("text") para que el usuario analice la sintaxis correcta.
 
 ### LIMITACIONES DEL MOTOR (SQLITE VIA WEBASSEMBLY):
-La plataforma ejecuta las consultas del usuario utilizando SQLite en el navegador. 
-- NO utilizes sintaxis exclusiva de T-SQL que rompa SQLite (ej. DECLARE @var, funciones propietarias sin equivalente).
-- Si el tema incluye T-SQL puro (ej. Procedimientos Almacenados, Variables), la teoría DEBE explicar la sintaxis de SQL Server, pero el "expectedQuery" y las validaciones deben adaptarse al estándar universal o proveer un bypass si está programado en la plataforma.
-
-### ESTRUCTURA ESTRICTA DEL JSON ESPERADO:
-{
-  "topicName": "Número. Título del Tema",
-  "introTitle": "Título impactante",
-  "introText": "Explicación profunda y corporativa del tema.",
-  "commands": [
-    {"name": "Comando/Operador", "desc": "Descripción técnica"}
-  ],
-  "tables": [
-    {
-      "tableName": "NombreTabla",
-      "schema": "Columna1 TIPO PRIMARY KEY, Columna2 TIPO REFERENCES OtraTabla(ColumnaX)",
-      "mockData": [
-        {"Columna1": 1, "Columna2": "Dato", "Columna3": null}
-      ]
-    }
-  ],
-  "levels": [
-    {
-      "diff": "easy",
-      "escenario": "Contexto corporativo del problema.",
-      "requerimiento": "Instrucción clara de lo que el usuario debe consultar o modificar.",
-      "tip": "Un consejo corto.",
-      "schemaLine": "TablaA a | TablaB b",
-      "schemaTitle": "Título del paso",
-      "schemaCols": [
-        {"name": "Columna", "desc": "Significado"}
-      ],
-      "expectedQuery": "SELECT\\n  *\\nFROM\\n  Tabla;",
-      "hints": ["Pista 1", "Pista 2", "Pista 3"],
-      "theoryUpdate": {
-        "bestPracticeTitle": "💡 BUENAS PRÁCTICAS: [TEMA]",
-        "bestPracticeText": "Consejo de arquitecto de bases de datos.",
-        "errorTitle": "⚠️ UN ERROR HABITUAL: [TEMA]",
-        "errorIntro": "Por qué suele fallar esto.",
-        "errorBadCode": "CÓDIGO\\nMALO",
-        "errorImpact": "Consecuencias en el servidor o reporte.",
-        "errorGoodCode": "CÓDIGO\\nBUENO",
-        "exampleContext": "Ejemplo extra aplicable:",
-        "exampleCode": "SELECT\\n  *\\nFROM\\n  Ejemplo;"
-      },
-      "quizzes": [
-        {
-          "question": "Pregunta práctica o teórica",
-          "options": [
-            {"text": "SELECT\\n  *\\nFROM\\n  A;", "isCorrect": true, "feedback": "Por qué es correcta."},
-            {"text": "SELECT * FROM A;", "isCorrect": false, "feedback": "Por qué es incorrecta."}
-          ],
-          "references": { "question_reference": [], "hint_reference": [] }
-        }
-      ]
-    }
-  ]
-}
+La plataforma ejecuta las consultas utilizando SQLite en el navegador. 
+- NO utilizes sintaxis exclusiva de T-SQL que rompa SQLite (ej. funciones propietarias sin equivalente).
+- Explica T-SQL en la teoría si aplica, pero el "expectedQuery" debe adaptarse al estándar ANSI/SQLite.
 
 TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             navigator.clipboard.writeText(prompt); window.showToast("¡Prompt Copiado!", "Pégalo en la IA junto con tu tema a estudiar.", "success");
@@ -871,7 +831,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     let safeGoodCode = window.highlightSQLCode(d.errorGoodCode || '');
                     let safeErrorIntro = window.highlightSQLCode(d.errorIntro || '');
                     let safeErrorImpact = window.highlightSQLCode(d.errorImpact || '');
-                    baseTheoryHTML += `<div class="mb-6 error-panel"><div class="flex items-start gap-5 relative z-10 min-w-0"><div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative"><div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div><svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1 pt-1 min-w-0"><h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">${d.errorTitle}</h4><p class="text-sm text-slate-300 mb-4 font-medium">${safeErrorIntro}</p><div class="relative mb-4"><div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap">${safeBadCode}</pre></div><div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4"><h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5><p class="text-sm text-slate-300 whitespace-pre-wrap">${safeErrorImpact}</p></div><div class="relative"><div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed">${safeGoodCode}</pre></div></div></div></div>`;
+                    baseTheoryHTML += `<div class="mb-6 error-panel"><div class="flex items-start gap-5 relative z-10 min-w-0"><div class="w-11 h-11 rounded-full bg-[#2a1215] border border-[#ff4757] flex items-center justify-center text-[#ff4757] shrink-0 shadow-[0_0_15px_rgba(255,71,87,0.2)] mt-0.5 relative"><div class="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(255,71,87,0.4)] mix-blend-screen"></div><svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1 pt-1 min-w-0"><h4 class="text-white font-black uppercase tracking-wider text-[13px] drop-shadow-md leading-tight mb-4 break-words">${d.errorTitle}</h4><p class="text-sm text-slate-300 mb-4 font-medium">${safeErrorIntro}</p><div class="relative mb-4"><div class="absolute -top-3 left-3 bg-[#2a1215] border border-[#ff4757] px-2 py-0.5 rounded text-[10px] text-[#ff4757] font-bold uppercase tracking-wider z-10 shadow-md">❌ Código Incorrecto</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap">${safeBadCode}</pre></div><div class="bg-black/50 p-4 rounded-xl border border-red-900/30 shadow-inner mb-4"><h5 class="text-amber-400 font-bold mb-1 text-xs uppercase tracking-wide flex items-center gap-2"><span>⚠️</span> Impacto en el Análisis</h5><p class="text-sm text-slate-300 whitespace-pre-wrap">${safeImpact}</p></div><div class="relative"><div class="absolute -top-3 left-3 bg-[#064e3b] border border-[#10b981] px-2 py-0.5 rounded text-[10px] text-[#10b981] font-bold uppercase tracking-wider z-10 shadow-md">✅ Código Corregido</div><pre class="code-glow overflow-x-auto pt-5 pb-3 px-4 rounded-xl text-xs font-mono whitespace-pre-wrap leading-relaxed">${safeGoodCode}</pre></div></div></div></div>`;
                 }
                 if (d.exampleContext) {
                     let safeExampleCode = window.highlightSQLCode(d.exampleCode || '');
@@ -1955,6 +1915,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             }
         };
 
+        // 🌟 NUEVO COMPORTAMIENTO: TABLAS ACORDEÓN DINÁMICO
         window.openDatabaseModal = function() {
             const backdrop = document.getElementById('db-modal-backdrop'); 
             const card = document.getElementById('db-modal-card'); 
@@ -1969,20 +1930,55 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     const tables = tablesRes[0].values.map(v => v[0]);
                     tables.forEach(tableName => {
                         const res = db.exec("SELECT * FROM " + tableName);
+                        
+                        html += `
+                        <div class="mb-6 relative group">
+                            <div class="flex items-center justify-between cursor-pointer mb-2 p-2 hover:bg-cyan-900/20 rounded-xl transition-colors border border-transparent hover:border-cyan-500/30" onclick="window.toggleTableVisibility('${tableName}-wrapper', this)">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)] transition-transform hover:scale-110">🗄️</div>
+                                    <h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span> ${res.length === 0 ? '<span class="text-slate-500 text-xs normal-case tracking-normal ml-2">(Sin Registros)</span>' : ''}</h3>
+                                </div>
+                                <span class="text-cyan-400 transition-transform duration-300 text-lg">▼</span>
+                            </div>
+                            <div id="${tableName}-wrapper" class="table-collapse-wrapper">
+                                <div>
+                        `;
+
                         if (res.length > 0) {
-                            html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span></h3></div><div class="bg-[#05060a] rounded-xl border border-cyan-900/50 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all group-hover:border-cyan-700/80"><div class="overflow-x-auto"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
-                            res[0].columns.forEach(col => html += `<th>${col}</th>`); html += `</tr></thead><tbody>`;
-                            res[0].values.forEach(row => { html += `<tr>`; row.forEach(val => html += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`); html += `</tr>`; });
-                            html += `</tbody></table></div></div></div>`;
+                            html += `<div class="bg-[#05060a] rounded-xl border border-cyan-900/50 overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all group-hover:border-cyan-700/80"><div class="overflow-x-auto"><table class="sql-table" style="margin-top:0;"><thead><tr>`;
+                            res[0].columns.forEach(col => html += `<th>${col}</th>`); 
+                            html += `</tr></thead><tbody>`;
+                            res[0].values.forEach(row => { 
+                                html += `<tr>`; 
+                                row.forEach(val => html += `<td>${val !== null ? val : '<i class="text-slate-500">NULL</i>'}</td>`); 
+                                html += `</tr>`; 
+                            });
+                            html += `</tbody></table></div></div>`;
                         } else {
-                            html += `<div class="mb-8 relative group"><div class="flex items-center gap-3 mb-3"><div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-[0_0_10px_rgba(0,229,255,0.2)]">🗄️</div><h3 class="text-white font-black uppercase tracking-widest text-sm drop-shadow-md">TABLA: <span class="text-cyan-400">${tableName}</span> <span class="text-slate-500 text-xs">(Sin Registros)</span></h3></div></div>`;
+                            html += `<div class="p-4 bg-[#05060a] rounded-xl border border-slate-800 text-center text-slate-500 italic text-sm shadow-inner">Esta tabla actualmente no contiene datos.</div>`;
                         }
+                        
+                        html += `
+                                </div>
+                            </div>
+                        </div>`;
                     });
                 }
             } catch(e) { console.error("Error leyendo DB:", e); }
 
             content.innerHTML = html === '' ? "<div class='text-slate-400 text-center font-bold'>Sin datos asociados al esquema actual.</div>" : html;
             backdrop.classList.remove('hidden'); requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); });
+        };
+
+        window.toggleTableVisibility = function(wrapperId, headerElement) {
+            const wrapper = document.getElementById(wrapperId);
+            const chevron = headerElement.querySelector('span.text-cyan-400');
+            wrapper.classList.toggle('collapsed');
+            if (wrapper.classList.contains('collapsed')) {
+                chevron.style.transform = 'rotate(-90deg)';
+            } else {
+                chevron.style.transform = 'rotate(0deg)';
+            }
         };
 
         window.closeDatabaseModal = function() { const backdrop = document.getElementById('db-modal-backdrop'); const card = document.getElementById('db-modal-card'); backdrop.classList.add('opacity-0'); card.classList.add('scale-95'); setTimeout(() => { backdrop.classList.add('hidden'); }, 300); };
