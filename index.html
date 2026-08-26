@@ -1007,6 +1007,102 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     }
                 });
             }
+            
+            // 🌟 PARCHE DE SIMULACIÓN T-SQL (MICROSOFT SQL SERVER) EXTREMO
+            try {
+                db.create_function("YEAR", function(d) { return d ? parseInt(String(d).substring(0,4)) : null; });
+                db.create_function("MONTH", function(d) { return d ? parseInt(String(d).substring(5,7)) : null; });
+                db.create_function("DAY", function(d) { return d ? parseInt(String(d).substring(8,10)) : null; });
+                db.create_function("GETDATE", function() { return new Date().toISOString().replace('T', ' ').substring(0, 19); });
+                db.create_function("ISDATE", function(d) { return (d && !isNaN(Date.parse(String(d).replace(' ', 'T')))) ? 1 : 0; });
+                db.create_function("EOMONTH", function(d) {
+                    if(!d) return null; let date = new Date(String(d).replace(' ', 'T')); if(isNaN(date)) return null;
+                    let eom = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+                    let m = String(eom.getMonth() + 1).padStart(2, '0'); let day = String(eom.getDate()).padStart(2, '0');
+                    return `${eom.getFullYear()}-${m}-${day}`;
+                });
+                db.create_function("LEN", function(s) { return s !== null ? String(s).length : null; });
+                db.create_function("ISNULL", function(a, b) { return a !== null ? a : b; });
+                db.create_function("DATEADD", function(part, num, d) {
+                    if(!d) return null; let date = new Date(String(d).replace(' ', 'T')); if(isNaN(date)) return null;
+                    num = parseInt(num); part = String(part).toLowerCase();
+                    if(['year','yy','yyyy'].includes(part)) date.setFullYear(date.getFullYear() + num);
+                    else if(['month','mm','m'].includes(part)) date.setMonth(date.getMonth() + num);
+                    else if(['day','dd','d'].includes(part)) date.setDate(date.getDate() + num);
+                    else if(['hour','hh'].includes(part)) date.setHours(date.getHours() + num);
+                    else if(['minute','mi','n'].includes(part)) date.setMinutes(date.getMinutes() + num);
+                    let iso = date.toISOString().replace('T', ' ').substring(0, 19);
+                    return String(d).length <= 10 ? iso.substring(0, 10) : iso; 
+                });
+                db.create_function("DATEDIFF", function(part, d1, d2) {
+                    if(!d1 || !d2) return null;
+                    let date1 = new Date(String(d1).replace(' ', 'T')); let date2 = new Date(String(d2).replace(' ', 'T'));
+                    if(isNaN(date1) || isNaN(date2)) return null;
+                    let diffMs = date2 - date1; part = String(part).toLowerCase();
+                    if(['day','dd','d'].includes(part)) return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                    if(['hour','hh'].includes(part)) return Math.floor(diffMs / (1000 * 60 * 60));
+                    if(['minute','mi','n'].includes(part)) return Math.floor(diffMs / (1000 * 60));
+                    if(['month','mm','m'].includes(part)) return (date2.getFullYear() - date1.getFullYear()) * 12 + (date2.getMonth() - date1.getMonth());
+                    if(['year','yy','yyyy'].includes(part)) return date2.getFullYear() - date1.getFullYear();
+                    return 0;
+                });
+                db.create_function("DATEPART", function(part, d) {
+                    if(!d) return null; let date = new Date(String(d).replace(' ', 'T')); if(isNaN(date)) return null;
+                    part = String(part).toLowerCase();
+                    if(['year','yy','yyyy'].includes(part)) return date.getFullYear();
+                    if(['month','mm','m'].includes(part)) return date.getMonth() + 1;
+                    if(['day','dd','d'].includes(part)) return date.getDate();
+                    if(['hour','hh'].includes(part)) return date.getHours();
+                    if(['minute','mi','n'].includes(part)) return date.getMinutes();
+                    if(['quarter','qq','q'].includes(part)) return Math.floor(date.getMonth() / 3) + 1;
+                    if(['weekday','dw'].includes(part)) return date.getDay() + 1;
+                    return null;
+                });
+                db.create_function("DATENAME", function(part, d) {
+                    if(!d) return null; let date = new Date(String(d).replace(' ', 'T')); if(isNaN(date)) return null;
+                    part = String(part).toLowerCase();
+                    if(['month','mm','m'].includes(part)) { const months = ['January','February','March','April','May','June','July','August','September','October','November','December']; return months[date.getMonth()]; }
+                    if(['weekday','dw'].includes(part)) { const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']; return days[date.getDay()]; }
+                    return null;
+                });
+                db.create_function("DATETRUNC", function(part, d) {
+                    if(!d) return null; let date = new Date(String(d).replace(' ', 'T')); if(isNaN(date)) return null;
+                    part = String(part).toLowerCase();
+                    let y = date.getFullYear(); let m = date.getMonth(); let day = date.getDate();
+                    if(['year','yy','yyyy'].includes(part)) { m = 0; day = 1; date.setHours(0,0,0,0); }
+                    else if(['month','mm','m'].includes(part)) { day = 1; date.setHours(0,0,0,0); }
+                    else if(['day','dd','d'].includes(part)) { date.setHours(0,0,0,0); }
+                    date.setFullYear(y, m, day);
+                    let iso = date.toISOString().replace('T', ' ').substring(0, 19);
+                    return String(d).length <= 10 ? iso.substring(0, 10) : iso; 
+                });
+                db.create_function("CONVERT", function(type, val, style) {
+                    if(val === null || val === undefined) return null;
+                    if(style === 112) {
+                        let date = new Date(String(val).replace(' ', 'T')); if(isNaN(date)) return String(val);
+                        let y = date.getFullYear(); let m = String(date.getMonth() + 1).padStart(2, '0'); let d = String(date.getDate()).padStart(2, '0');
+                        return `${y}${m}${d}`;
+                    }
+                    if(style === 103) {
+                        let date = new Date(String(val).replace(' ', 'T')); if(isNaN(date)) return String(val);
+                        let y = date.getFullYear(); let m = String(date.getMonth() + 1).padStart(2, '0'); let d = String(date.getDate()).padStart(2, '0');
+                        return `${d}/${m}/${y}`;
+                    }
+                    if(style === 120) {
+                        let date = new Date(String(val).replace(' ', 'T')); if(isNaN(date)) return String(val);
+                        return date.toISOString().replace('T', ' ').substring(0, 19);
+                    }
+                    return String(val);
+                });
+                db.create_function("FORMAT", function(val, fmt) {
+                    if(val === null || val === undefined) return null;
+                    let num = parseFloat(val);
+                    if(!isNaN(num) && String(fmt).toUpperCase().startsWith('P')) { return (num * 100).toFixed(0) + '%'; }
+                    if(!isNaN(num) && String(fmt).toUpperCase().startsWith('C')) { return '$' + num.toFixed(2); }
+                    return String(val); 
+                });
+            } catch(e) { console.error("Error injectando T-SQL polyfills:", e); }
+
             if(sqlEditor) { sqlEditor.setOption("hintOptions", { hint: CodeMirror.hint.premiumSql, tables: tableDictionary, completeSingle: false }); }
         }
 
@@ -1372,7 +1468,9 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
 
             try {
                 windowSQLite = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
-
+                
+                // Polyfill T-SQL needs windowSQLite initialization first, which is handled in loadExercise/buildTopicDatabase
+                
                 CodeMirror.hint.premiumSql = function(editor, options) {
                     let cur = editor.getCursor();
                     let token = editor.getTokenAt(cur);
@@ -1671,7 +1769,11 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     }
                 }
 
-                const userResult = db.exec(query);
+                // 🌟 PARCHE T-SQL: Envolver palabras clave de fechas en T-SQL para que SQLite no busque columnas inexistentes.
+                let safeQuery = query.replace(/\b(DATEADD|DATEDIFF|DATEPART|DATENAME|DATETRUNC)\s*\(\s*(year|yy|yyyy|quarter|qq|q|month|mm|m|dayofyear|dy|y|day|dd|d|week|wk|ww|weekday|dw|hour|hh|minute|mi|n|second|ss|s|millisecond|ms)\s*,/gi, "$1('$2',");
+                safeQuery = safeQuery.replace(/\bCONVERT\s*\(\s*(VARCHAR|INT|DATE|DATETIME|DATETIME2|DECIMAL|FLOAT|NUMERIC)(?:\(\d+\))?\s*,/gi, "CONVERT('$1',");
+
+                const userResult = db.exec(safeQuery);
 
                 if (userResult.length > 0) {
                     const columns = userResult[0].columns; const values = userResult[0].values; rowCountEl.textContent = `${values.length} FILAS`;
@@ -1689,7 +1791,11 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 try {
                     let hasCommentIfRequired = exercise.expectedQuery.includes("--") ? query.includes("--") : true;
                     const cleanExpected = exercise.expectedQuery.replace(/--.*?\n/g, ""); 
-                    expectedResult = db.exec(cleanExpected);
+                    
+                    let safeExpected = cleanExpected.replace(/\b(DATEADD|DATEDIFF|DATEPART|DATENAME|DATETRUNC)\s*\(\s*(year|yy|yyyy|quarter|qq|q|month|mm|m|dayofyear|dy|y|day|dd|d|week|wk|ww|weekday|dw|hour|hh|minute|mi|n|second|ss|s|millisecond|ms)\s*,/gi, "$1('$2',");
+                    safeExpected = safeExpected.replace(/\bCONVERT\s*\(\s*(VARCHAR|INT|DATE|DATETIME|DATETIME2|DECIMAL|FLOAT|NUMERIC)(?:\(\d+\))?\s*,/gi, "CONVERT('$1',");
+                    
+                    expectedResult = db.exec(safeExpected);
 
                     let userCount = userResult.length > 0 ? userResult[0].values.length : 0;
                     let expectedCount = expectedResult.length > 0 ? expectedResult[0].values.length : 0;
