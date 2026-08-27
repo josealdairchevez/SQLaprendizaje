@@ -624,8 +624,18 @@
         let dbAuth = null;
         let activeDbTopicId = null; 
 
-        // GAMIFICACIÓN
-        let playerState = { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {}, customName: null, customAvatar: null };
+        // GAMIFICACIÓN Y PERSISTENCIA DE CÓDIGO
+        let playerState = { 
+            xp: 0, 
+            level: 1, 
+            coins: 0, 
+            completedExercises: [], 
+            quizStates: {}, 
+            savedQueries: {}, // 🌟 MEMORIA DE CÓDIGO DEL USUARIO
+            customName: null, 
+            customAvatar: null 
+        };
+        
         let currentTopicIdx = 0; let currentExerciseIdx = 0; let revealedHintsCount = 0;
         let syncUserId = "invitado"; 
         let isUserLoggedIn = false;
@@ -729,8 +739,8 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             } 
         };
 
-        window.resetConsole = function() { 
-            sqlEditor.setValue(""); 
+        window.resetConsole = function(clearEditor = true) { 
+            if(clearEditor && sqlEditor) sqlEditor.setValue(""); 
             document.getElementById('results-container').innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center"><div class="w-16 h-16 rounded-full bg-slate-800/30 border border-slate-700/50 flex items-center justify-center mb-3 shadow-inner"><span class="text-3xl drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">📡</span></div><span class="text-slate-300 font-black uppercase tracking-widest text-sm mb-1">Esperando Consulta...</span><span class="text-slate-500 text-xs max-w-[80%] font-medium">Escribe tu código SQL y presiona Ejecutar para visualizar el dataset.</span></div>`; 
             document.getElementById('row-count').textContent = '0 FILAS'; 
             document.getElementById('error-container').classList.add('hidden'); 
@@ -774,8 +784,9 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 const doc = await dbFirestore.collection("usuarios").doc(syncUserId).get();
                 if (doc.exists) {
                     const data = doc.data();
-                    playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {}, customName: null, customAvatar: null };
+                    playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {}, savedQueries: {}, customName: null, customAvatar: null };
                     if (!playerState.quizStates) playerState.quizStates = {}; 
+                    if (!playerState.savedQueries) playerState.savedQueries = {};
 
                     if (data.customTopics) localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
                     if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
@@ -1535,7 +1546,15 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     hintOptions: { hint: CodeMirror.hint.premiumSql, tables: {}, completeSingle: false }
                 });
 
+                // 🌟 NUEVA FUNCIÓN: MEMORIA EN TIEMPO REAL DEL EDITOR
                 sqlEditor.on("change", function(instance, changeObj) {
+                    if(TOPICS.length > 0 && TOPICS[currentTopicIdx]) {
+                        const ex = TOPICS[currentTopicIdx].exercises[currentExerciseIdx];
+                        if(ex) {
+                            playerState.savedQueries = playerState.savedQueries || {};
+                            playerState.savedQueries[ex.id] = instance.getValue();
+                        }
+                    }
                     if (changeObj.origin === "+input" || changeObj.origin === "*compose") {
                         const lastChar = changeObj.text[0].slice(-1);
                         if (/[a-zA-Z_]/.test(lastChar) && !instance.state.completionActive) { CodeMirror.commands.autocomplete(instance, null, { completeSingle: false }); }
@@ -1546,9 +1565,10 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     if (sqlEditor && !sqlEditor.state.completionActive) { CodeMirror.commands.autocomplete(sqlEditor, null, { completeSingle: false }); sqlEditor.focus(); }
                 };
 
-                document.getElementById('run-btn').addEventListener('click', window.executeUserQuery);
+                // Asegurar que pasamos false para que el listener normal de Clic no lo vuelva "silencioso" por error (pasa el objeto MouseEvent)
+                document.getElementById('run-btn').addEventListener('click', () => window.executeUserQuery(false));
                 document.getElementById('next-btn').addEventListener('click', () => { window.loadExercise(currentTopicIdx, currentExerciseIdx + 1); });
-                document.getElementById('reset-btn').addEventListener('click', window.resetConsole);
+                document.getElementById('reset-btn').addEventListener('click', () => window.resetConsole(true));
 
                 window.renderTopicsSidebar();
                 window.loadExercise(0, 0);
@@ -1705,9 +1725,34 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             document.getElementById('ex-schema-desc').innerHTML = dynamicData.descHtml; document.getElementById('ex-xp-badge').textContent = `+${exercise.xp} XP`;
             document.getElementById('ex-coin-badge').textContent = `+${exercise.coins} 🪙`;
 
-            window.renderExercisePills(); document.getElementById('run-btn').classList.remove('hidden'); document.getElementById('next-btn').classList.add('hidden');
-            window.resetConsole(); window.renderTopicsSidebar();
+            window.renderExercisePills(); 
+            
+            // 🌟 NUEVA LÓGICA DE RECUPERACIÓN DE CÓDIGO Y AUTO-EJECUCIÓN
+            window.resetConsole(false); // Limpia salida visual, pero no el editor temporalmente
+            window.renderTopicsSidebar();
             window.updateHintsUI();
+
+            if (playerState.savedQueries && playerState.savedQueries[exercise.id]) {
+                sqlEditor.setValue(playerState.savedQueries[exercise.id]);
+                if (playerState.completedExercises.includes(exercise.id)) {
+                    document.getElementById('run-btn').classList.add('hidden'); 
+                    document.getElementById('next-btn').classList.remove('hidden');
+                    // Auto-ejecutar en modo silencioso para mostrar la tabla de inmediato
+                    setTimeout(() => window.executeUserQuery(true), 150);
+                } else {
+                    document.getElementById('run-btn').classList.remove('hidden'); 
+                    document.getElementById('next-btn').classList.add('hidden');
+                }
+            } else {
+                sqlEditor.setValue("");
+                if (playerState.completedExercises.includes(exercise.id)) {
+                    document.getElementById('run-btn').classList.add('hidden'); 
+                    document.getElementById('next-btn').classList.remove('hidden');
+                } else {
+                    document.getElementById('run-btn').classList.remove('hidden'); 
+                    document.getElementById('next-btn').classList.add('hidden');
+                }
+            }
         };
 
         window.checkQuiz = function(btn, isCorrect, feedbackMsg, quizIdx, optIdx) {
@@ -1744,7 +1789,8 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             }
         };
 
-        window.executeUserQuery = function() {
+        // 🌟 ACTUALIZACIÓN MODO SILENCIOSO PARA AUTO-RUN
+        window.executeUserQuery = function(isSilent = false) {
             const query = sqlEditor.getValue().trim(); if (!query) return;
             const resContainer = document.getElementById('results-container'); const rowCountEl = document.getElementById('row-count'); 
             const exercise = TOPICS[currentTopicIdx].exercises[currentExerciseIdx]; 
@@ -1759,7 +1805,10 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
 
                         if (exercise.expectedQuery.toUpperCase().includes("CREATE PROC")) {
                             if (!playerState.completedExercises.includes(exercise.id)) {
-                                playerState.completedExercises.push(exercise.id); window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti();
+                                playerState.completedExercises.push(exercise.id); 
+                                playerState.savedQueries[exercise.id] = query;
+                                window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); 
+                                if(!isSilent) { window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti(); }
                                 if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); }
                             }
                         }
@@ -1855,21 +1904,25 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 } catch(e) { console.error("Error en validación profunda:", e); }
 
                 if (isCorrect) {
+                    playerState.savedQueries[exercise.id] = query; // Guarda estado tras éxito
                     if (!playerState.completedExercises.includes(exercise.id)) {
-                        playerState.completedExercises.push(exercise.id); window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti();
-                        if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); } else { setTimeout(() => window.showToast("🏆 Módulo Dominado", "Has completado todos los ejercicios de este tema.", "success"), 1000); }
+                        playerState.completedExercises.push(exercise.id); window.grantRewards(exercise.xp, exercise.coins); window.renderExercisePills(); 
+                        if(!isSilent) { window.showToast("¡Objetivo Completado!", `Completaste el Nivel ${currentExerciseIdx + 1}`, "success"); window.fireConfetti(); }
+                        if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); } else { setTimeout(() => { if(!isSilent) window.showToast("🏆 Módulo Dominado", "Has completado todos los ejercicios de este tema.", "success"); }, 1000); }
                     } else {
-                        window.showToast("Consulta Válida", "Código correcto (Recompensa ya cobrada).", "hint");
+                        if(!isSilent) window.showToast("Consulta Válida", "Código correcto (Recompensa ya cobrada).", "hint");
                         if (currentExerciseIdx < TOPICS[currentTopicIdx].exercises.length - 1) { document.getElementById('run-btn').classList.add('hidden'); document.getElementById('next-btn').classList.remove('hidden'); }
                     }
                 } else {
-                    window.showErrorBox(titleMsg, diag);
+                    if(!isSilent) window.showErrorBox(titleMsg, diag);
                 }
             } catch (err) {
-                rowCountEl.textContent = 'ERROR'; resContainer.innerHTML = ''; let errorMsg = err.message; let titleMsg = "FALLO DE COMPILACIÓN"; let liveDiagnosis = "";
-                if (errorMsg.includes("near") && !query.includes(",")) liveDiagnosis = "\n\n⚠️ ¡Posible falta de coma! En SQL Server, cuando seleccionas múltiples columnas en el SELECT, debes separarlas obligatoriamente con una coma (,).";
-                if (errorMsg.includes("no such table")) titleMsg = "TABLA NO ENCONTRADA EN BASE DE DATOS"; else if (errorMsg.includes("no such column")) titleMsg = "COLUMNA NO ENCONTRADA EN ESQUEMA"; else if (errorMsg.includes("syntax error") || errorMsg.includes("Sintaxis")) titleMsg = "ERROR DE SINTAXIS FATAL";
-                window.showErrorBox(titleMsg, "Detalle Técnico del Servidor (SQLite):\n" + errorMsg + liveDiagnosis);
+                if(!isSilent) {
+                    rowCountEl.textContent = 'ERROR'; resContainer.innerHTML = ''; let errorMsg = err.message; let titleMsg = "FALLO DE COMPILACIÓN"; let liveDiagnosis = "";
+                    if (errorMsg.includes("near") && !query.includes(",")) liveDiagnosis = "\n\n⚠️ ¡Posible falta de coma! En SQL Server, cuando seleccionas múltiples columnas en el SELECT, debes separarlas obligatoriamente con una coma (,).";
+                    if (errorMsg.includes("no such table")) titleMsg = "TABLA NO ENCONTRADA EN BASE DE DATOS"; else if (errorMsg.includes("no such column")) titleMsg = "COLUMNA NO ENCONTRADA EN ESQUEMA"; else if (errorMsg.includes("syntax error") || errorMsg.includes("Sintaxis")) titleMsg = "ERROR DE SINTAXIS FATAL";
+                    window.showErrorBox(titleMsg, "Detalle Técnico del Servidor (SQLite):\n" + errorMsg + liveDiagnosis);
+                }
             }
         };
 
