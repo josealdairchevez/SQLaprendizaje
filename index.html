@@ -828,15 +828,14 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                         console.log("Migración completada. Base de datos aligerada y curada.");
                         localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
                     } else {
-                        // 🌟 CARGA INSTANTÁNEA (Evita que la pantalla "Verificando" se congele)
-                        // Descarga silenciosamente en segundo plano sin hacer esperar al usuario
-                        docRef.collection("mis_modulos").get().then(snapshot => {
-                            let descargados = [];
-                            snapshot.forEach(mDoc => descargados.push(mDoc.data()));
-                            if(descargados.length > 0) {
-                                localStorage.setItem('sql_custom_topics', JSON.stringify(descargados));
-                            }
-                        });
+                        // 🌟 CARGA SEGURA: Dejamos el await. 
+                        // La pantalla de carga dura 1 segundito más, pero garantiza que tus temas aparezcan siempre, incluso en una PC nueva.
+                        const snapshot = await docRef.collection("mis_modulos").get();
+                        let descargados = [];
+                        snapshot.forEach(mDoc => descargados.push(mDoc.data()));
+                        if(descargados.length > 0) {
+                            localStorage.setItem('sql_custom_topics', JSON.stringify(descargados));
+                        }
                     }
 
                     window.updateProgressUI();
