@@ -778,18 +778,21 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             document.getElementById('ui-coins').textContent = playerState.coins;
         };
 
+        // 🌟 REEMPLAZO 1: SYNC TO CLOUD
         async function syncToCloud() {
             if (!navigator.onLine || !dbFirestore || !isUserLoggedIn) return;
 
             window.updateSyncBadge('syncing');
 
             try {
+                // 🌟 CURA DEL ERROR 1MB: Ya no subimos 'customTopics' aquí.
+                // Solo guardamos la XP, el Oro y las calificaciones (La libreta ligera).
                 await dbFirestore.collection("usuarios").doc(syncUserId).set({
                     playerState: playerState,
-                    customTopics: JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"),
                     topicOrder: JSON.parse(localStorage.getItem('sql_topic_order') || "null"),
                     lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                }, { merge: true }); // El 'merge' protege otros datos
+                
                 window.updateSyncBadge('saved');
                 setTimeout(() => { if(navigator.onLine) window.updateSyncBadge('online'); }, 2000);
             } catch (e) { 
@@ -798,18 +801,41 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             }
         }
 
+        // 🌟 REEMPLAZO 2: LOAD FROM CLOUD (AUTO-MIGRACIÓN)
         async function loadFromCloud() {
             if (!dbFirestore || !navigator.onLine) return false;
             try {
-                const doc = await dbFirestore.collection("usuarios").doc(syncUserId).get();
+                const docRef = dbFirestore.collection("usuarios").doc(syncUserId);
+                const doc = await docRef.get();
+                
                 if (doc.exists) {
                     const data = doc.data();
                     playerState = data.playerState || { xp: 0, level: 1, coins: 0, completedExercises: [], quizStates: {}, savedQueries: {}, customName: null, customAvatar: null };
                     if (!playerState.quizStates) playerState.quizStates = {}; 
                     if (!playerState.savedQueries) playerState.savedQueries = {};
 
-                    if (data.customTopics) localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
                     if (data.topicOrder) localStorage.setItem('sql_topic_order', JSON.stringify(data.topicOrder));
+
+                    // 🌟 AUTO-MIGRACIÓN: Rescata los temas pesados y los mete a los "cajones"
+                    if (data.customTopics && data.customTopics.length > 0) {
+                        console.log("Iniciando migración automática de módulos a subcolecciones...");
+                        for (let mod of data.customTopics) {
+                            if(!mod.id) mod.id = "t" + Math.random().toString(36).substr(2, 9);
+                            await docRef.collection("mis_modulos").doc(mod.id).set(mod);
+                        }
+                        // Borra la mochila pesada para siempre (Adiós al error de 1MB)
+                        await docRef.update({ customTopics: firebase.firestore.FieldValue.delete() });
+                        console.log("Migración completada. Base de datos aligerada y curada.");
+                        localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
+                    } else {
+                        // Si ya se migraron antes, simplemente lee los cajones pacíficamente
+                        const snapshot = await docRef.collection("mis_modulos").get();
+                        let descargados = [];
+                        snapshot.forEach(mDoc => descargados.push(mDoc.data()));
+                        if(descargados.length > 0) {
+                            localStorage.setItem('sql_custom_topics', JSON.stringify(descargados));
+                        }
+                    }
 
                     window.updateProgressUI();
                     return true;
@@ -1653,21 +1679,31 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
             const modal = document.getElementById('topic-action-modal'); modal.classList.add('opacity-0'); modal.firstElementChild.classList.add('scale-95'); setTimeout(() => modal.classList.add('hidden'), 300);
         };
 
-        document.getElementById('btn-edit-topic').addEventListener('click', () => {
+        // 🌟 REEMPLAZO 4: EVENTO EDITAR TÓPICO
+        document.getElementById('btn-edit-topic').addEventListener('click', async () => {
             const topic = TOPICS.find(t => t.id === selectedTopicIdForAction); if(!topic) return;
             const newTitle = prompt("✏️ Escribe el nuevo título para el módulo:", topic.title);
             if(newTitle && newTitle.trim() !== "") {
                 topic.title = newTitle.trim();
                 let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]");
                 let ct = customTopics.find(t => t.id === selectedTopicIdForAction);
-                if(ct) { ct.topicName = topic.title; localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); }
+                if(ct) { 
+                    ct.topicName = topic.title; 
+                    localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); 
+                    
+                    // 🌟 NUEVO: Cambia el nombre también en el cajón de Firebase
+                    if (isUserLoggedIn && navigator.onLine) {
+                        await dbFirestore.collection("usuarios").doc(syncUserId).collection("mis_modulos").doc(selectedTopicIdForAction).update({ topicName: topic.title });
+                    }
+                }
                 window.renderTopicsSidebar(); if(currentTopicIdx === TOPICS.findIndex(t => t.id === selectedTopicIdForAction)) { document.getElementById('topic-title').textContent = topic.title; }
                 window.showToast("Título Actualizado", "Nombre modificado con éxito.", "success"); syncToCloud();
             }
             window.closeTopicActionModal();
         });
 
-        document.getElementById('btn-delete-topic').addEventListener('click', () => {
+        // 🌟 REEMPLAZO 5: EVENTO ELIMINAR TÓPICO
+        document.getElementById('btn-delete-topic').addEventListener('click', async () => {
             const confirmDelete = confirm("⚠️ ¿Estás absolutamente seguro de ELIMINAR este módulo?\nSe perderá su contenido y tendrás que importarlo de nuevo si lo necesitas.");
             if(confirmDelete) {
                 const idx = TOPICS.findIndex(t => t.id === selectedTopicIdForAction); if(idx > -1) TOPICS.splice(idx, 1);
@@ -1675,12 +1711,63 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 customTopics = customTopics.filter(t => t.id !== selectedTopicIdForAction); localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
                 let savedOrder = JSON.parse(localStorage.getItem('sql_topic_order') || "[]");
                 savedOrder = savedOrder.filter(id => id !== selectedTopicIdForAction); localStorage.setItem('sql_topic_order', JSON.stringify(savedOrder));
+                
+                // 🌟 NUEVO: Destruye el cajón en Firebase
+                if (isUserLoggedIn && navigator.onLine) {
+                    await dbFirestore.collection("usuarios").doc(syncUserId).collection("mis_modulos").doc(selectedTopicIdForAction).delete();
+                }
+
                 window.renderTopicsSidebar();
                 if(currentTopicIdx === idx || currentTopicIdx >= TOPICS.length) { window.loadExercise(0, 0); }
                 window.showToast("Módulo Eliminado", "El módulo fue borrado de tu cuenta.", "success"); syncToCloud();
             }
             window.closeTopicActionModal();
         });
+
+        // 🌟 REEMPLAZO 3: IMPORTAR JSON TOPIC
+        window.importJSONTopic = async function() {
+            const rawJson = document.getElementById('ai-json-input').value.trim(); if (!rawJson) return alert("Por favor pega el código JSON.");
+            try {
+                let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); 
+                const parsedData = JSON.parse(cleanJson); 
+
+                let nextNumber = TOPICS.length + 1;
+                let rawName = parsedData.topicName || parsedData.title || "Nuevo Módulo";
+                rawName = rawName.replace(/^\d+[\.\-]\s*/, '');
+                parsedData.topicName = `${nextNumber}. ${rawName}`;
+
+                const newTopic = createTopicFromJSON(parsedData); 
+                parsedData.id = newTopic.id;
+
+                TOPICS.push(newTopic);
+                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); 
+                customTopics.push(parsedData); 
+                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
+
+                const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
+
+                // 🌟 NUEVO: Sube este tema individual a su propio "Cajón" en Firebase
+                if (isUserLoggedIn && navigator.onLine) {
+                    await dbFirestore.collection("usuarios").doc(syncUserId).collection("mis_modulos").doc(newTopic.id).set(parsedData);
+                }
+
+                window.renderTopicsSidebar(); 
+
+                let newTopicIndex = TOPICS.findIndex(t => t.id === newTopic.id);
+                window.loadExercise(newTopicIndex, 0);
+
+                if(window.innerWidth < 768) {
+                    document.getElementById('sidebar').classList.remove('mobile-open');
+                    document.getElementById('sidebar-backdrop').classList.remove('show');
+                }
+
+                document.getElementById('ai-json-input').value = ''; 
+                window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success"); 
+                window.fireConfetti();
+                window.closeAIModal();
+                syncToCloud(); 
+            } catch (e) { alert("Error al parsear el JSON. Asegúrate de copiar todo el objeto correctamente.\nDetalle: " + e.message); }
+        };
 
         window.loadExercise = function(topicIdx, exIdx) {
             currentTopicIdx = topicIdx; currentExerciseIdx = exIdx; revealedHintsCount = 0;
@@ -2165,45 +2252,6 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
         window.closeDatabaseModal = function() { const backdrop = document.getElementById('db-modal-backdrop'); const card = document.getElementById('db-modal-card'); backdrop.classList.add('opacity-0'); card.classList.add('scale-95'); setTimeout(() => { backdrop.classList.add('hidden'); }, 300); };
         window.openAIModal = function() { const backdrop = document.getElementById('ai-modal-backdrop'); const card = document.getElementById('ai-modal-card'); backdrop.classList.remove('hidden'); requestAnimationFrame(() => { backdrop.classList.remove('opacity-0'); card.classList.remove('scale-95'); }); };
         window.closeAIModal = function() { const backdrop = document.getElementById('ai-modal-backdrop'); const card = document.getElementById('ai-modal-card'); backdrop.classList.add('opacity-0'); card.classList.add('scale-95'); setTimeout(() => { backdrop.classList.add('hidden'); }, 300); };
-
-        window.importJSONTopic = function() {
-            const rawJson = document.getElementById('ai-json-input').value.trim(); if (!rawJson) return alert("Por favor pega el código JSON.");
-            try {
-                let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); 
-                const parsedData = JSON.parse(cleanJson); 
-
-                let nextNumber = TOPICS.length + 1;
-                let rawName = parsedData.topicName || parsedData.title || "Nuevo Módulo";
-                rawName = rawName.replace(/^\d+[\.\-]\s*/, '');
-                parsedData.topicName = `${nextNumber}. ${rawName}`;
-
-                const newTopic = createTopicFromJSON(parsedData); 
-                parsedData.id = newTopic.id;
-
-                TOPICS.push(newTopic);
-                let customTopics = JSON.parse(localStorage.getItem('sql_custom_topics') || "[]"); 
-                customTopics.push(parsedData); 
-                localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics));
-
-                const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
-
-                window.renderTopicsSidebar(); 
-
-                let newTopicIndex = TOPICS.findIndex(t => t.id === newTopic.id);
-                window.loadExercise(newTopicIndex, 0);
-
-                if(window.innerWidth < 768) {
-                    document.getElementById('sidebar').classList.remove('mobile-open');
-                    document.getElementById('sidebar-backdrop').classList.remove('show');
-                }
-
-                document.getElementById('ai-json-input').value = ''; 
-                window.showToast("¡Módulo Importado!", `Tema "${parsedData.topicName}" añadido con éxito.`, "success"); 
-                window.fireConfetti();
-                window.closeAIModal();
-                syncToCloud(); 
-            } catch (e) { alert("Error al parsear el JSON. Asegúrate de copiar todo el objeto correctamente.\nDetalle: " + e.message); }
-        };
 
         window.renderExercisePills = function() {
             const nav = document.getElementById('exercise-navigator'); nav.innerHTML = ''; const exercises = TOPICS[currentTopicIdx].exercises;
