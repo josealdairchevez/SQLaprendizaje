@@ -828,13 +828,15 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                         console.log("Migración completada. Base de datos aligerada y curada.");
                         localStorage.setItem('sql_custom_topics', JSON.stringify(data.customTopics));
                     } else {
-                        // Si ya se migraron antes, simplemente lee los cajones pacíficamente
-                        const snapshot = await docRef.collection("mis_modulos").get();
-                        let descargados = [];
-                        snapshot.forEach(mDoc => descargados.push(mDoc.data()));
-                        if(descargados.length > 0) {
-                            localStorage.setItem('sql_custom_topics', JSON.stringify(descargados));
-                        }
+                        // 🌟 CARGA INSTANTÁNEA (Evita que la pantalla "Verificando" se congele)
+                        // Descarga silenciosamente en segundo plano sin hacer esperar al usuario
+                        docRef.collection("mis_modulos").get().then(snapshot => {
+                            let descargados = [];
+                            snapshot.forEach(mDoc => descargados.push(mDoc.data()));
+                            if(descargados.length > 0) {
+                                localStorage.setItem('sql_custom_topics', JSON.stringify(descargados));
+                            }
+                        });
                     }
 
                     window.updateProgressUI();
@@ -1680,7 +1682,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
         };
 
         // 🌟 REEMPLAZO 4: EVENTO EDITAR TÓPICO
-        document.getElementById('btn-edit-topic').addEventListener('click', async () => {
+        document.getElementById('btn-edit-topic').addEventListener('click', () => {
             const topic = TOPICS.find(t => t.id === selectedTopicIdForAction); if(!topic) return;
             const newTitle = prompt("✏️ Escribe el nuevo título para el módulo:", topic.title);
             if(newTitle && newTitle.trim() !== "") {
@@ -1692,8 +1694,9 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                     localStorage.setItem('sql_custom_topics', JSON.stringify(customTopics)); 
                     
                     // 🌟 NUEVO: Cambia el nombre también en el cajón de Firebase
+                    // AL QUITAR EL 'await', SE RENOMBRA AL INSTANTE
                     if (isUserLoggedIn && navigator.onLine) {
-                        await dbFirestore.collection("usuarios").doc(syncUserId).collection("mis_modulos").doc(selectedTopicIdForAction).update({ topicName: topic.title });
+                        dbFirestore.collection("usuarios").doc(syncUserId).collection("mis_modulos").doc(selectedTopicIdForAction).update({ topicName: topic.title });
                     }
                 }
                 window.renderTopicsSidebar(); if(currentTopicIdx === TOPICS.findIndex(t => t.id === selectedTopicIdForAction)) { document.getElementById('topic-title').textContent = topic.title; }
@@ -1703,7 +1706,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
         });
 
         // 🌟 REEMPLAZO 5: EVENTO ELIMINAR TÓPICO
-        document.getElementById('btn-delete-topic').addEventListener('click', async () => {
+        document.getElementById('btn-delete-topic').addEventListener('click', () => {
             const confirmDelete = confirm("⚠️ ¿Estás absolutamente seguro de ELIMINAR este módulo?\nSe perderá su contenido y tendrás que importarlo de nuevo si lo necesitas.");
             if(confirmDelete) {
                 const idx = TOPICS.findIndex(t => t.id === selectedTopicIdForAction); if(idx > -1) TOPICS.splice(idx, 1);
@@ -1713,8 +1716,9 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 savedOrder = savedOrder.filter(id => id !== selectedTopicIdForAction); localStorage.setItem('sql_topic_order', JSON.stringify(savedOrder));
                 
                 // 🌟 NUEVO: Destruye el cajón en Firebase
+                // AL QUITAR EL 'await', SE ELIMINA AL INSTANTE
                 if (isUserLoggedIn && navigator.onLine) {
-                    await dbFirestore.collection("usuarios").doc(syncUserId).collection("mis_modulos").doc(selectedTopicIdForAction).delete();
+                    dbFirestore.collection("usuarios").doc(syncUserId).collection("mis_modulos").doc(selectedTopicIdForAction).delete();
                 }
 
                 window.renderTopicsSidebar();
@@ -1725,7 +1729,7 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
         });
 
         // 🌟 REEMPLAZO 3: IMPORTAR JSON TOPIC
-        window.importJSONTopic = async function() {
+        window.importJSONTopic = function() {
             const rawJson = document.getElementById('ai-json-input').value.trim(); if (!rawJson) return alert("Por favor pega el código JSON.");
             try {
                 let cleanJson = rawJson.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim(); 
@@ -1747,8 +1751,9 @@ TEMA A DESARROLLAR: [AQUÍ SE INYECTARÁ EL TEMA]`;
                 const newOrder = TOPICS.map(t => t.id); localStorage.setItem('sql_topic_order', JSON.stringify(newOrder));
 
                 // 🌟 NUEVO: Sube este tema individual a su propio "Cajón" en Firebase
+                // AL QUITAR EL 'await', LA VENTANA SE CIERRA AL INSTANTE
                 if (isUserLoggedIn && navigator.onLine) {
-                    await dbFirestore.collection("usuarios").doc(syncUserId).collection("mis_modulos").doc(newTopic.id).set(parsedData);
+                    dbFirestore.collection("usuarios").doc(syncUserId).collection("mis_modulos").doc(newTopic.id).set(parsedData);
                 }
 
                 window.renderTopicsSidebar(); 
